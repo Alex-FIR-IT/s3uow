@@ -1,4 +1,5 @@
-# s3uow  &middot; ![Static Badge](https://img.shields.io/badge/license-MIT-brightgreen?link=https%3A%2F%2Fgithub.com%2FAlex-FIR-IT%2Fs3uow%3Ftab%3DMIT-1-ov-file)
+# s3uow  &middot; [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen)](https://github.com/Alex-FIR-IT/s3uow/blob/master/LICENSE)
+
 
 
 The Type-Safe Unit of Work for S3. Simplify your cloud storage logic with Pydantic-powered models and atomic transaction-like operations.
