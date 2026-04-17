@@ -1,13 +1,12 @@
-# s3uow
+# s3uow  &middot; ![Static Badge](https://img.shields.io/badge/license-MIT-brightgreen?link=https%3A%2F%2Fgithub.com%2FAlex-FIR-IT%2FWireGuard-Config-Maker%3Ftab%3DMIT-1-ov-file)
 
 The Type-Safe Unit of Work for S3. Simplify your cloud storage logic with Pydantic-powered models and atomic transaction-like operations.
 
 > ⚠️ Project Status: Experimental / Work in Progress  
 > This library is in early development (Alpha). The API is subject to change. Not ready for production use yet.
 
-[![PyPI version](https://shields.io)](https://pypi.org)
-[![Python versions](https://shields.io)](https://pypi.org)
-[![License: MIT](https://shields.io)](https://opensource.org)
+
+
 
 ## Overview
 
