@@ -20,7 +20,7 @@ FoxFlow supports multiple backends for saga metadata and locking, just like Cele
 
 - **In-Memory** — default, great for and tests and development
 - **Redis** — balanced choice for most production workloads  
-- **PostgreSQL** — maximum durability using your existing database (via SQLAlchemy). Just pass your DB URL — FoxFlow handles the rest.
+- **SQLAlchemy** — maximum durability using your existing database (via SQLAlchemy). Just pass your DB URL — FoxFlow handles the rest.
 
 
 | Parameter       | Raw aiobotocore                                      | In-Memory (default)                                      | Redis                                                    | SQLAlchemy                                  |
