@@ -1,32 +1,45 @@
-# s3uow  &middot; [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen)](https://github.com/Alex-FIR-IT/s3uow/blob/master/LICENSE) [![Static Badge](https://img.shields.io/badge/Roadmap-green?logo=github)](https://github.com/users/Alex-FIR-IT/projects/2/views/2) [![last commit](https://img.shields.io/github/last-commit/Alex-FIR-IT/s3uow?logo=github)](https://github.com/Alex-FIR-IT/s3uow/commits/master/)
+# FoxFlow  &middot; [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen)](https://github.com/Alex-FIR-IT/foxflow/blob/master/LICENSE) [![Static Badge](https://img.shields.io/badge/Roadmap-green?logo=github)](https://github.com/users/Alex-FIR-IT/projects/2/views/2) [![last commit](https://img.shields.io/github/last-commit/Alex-FIR-IT/foxflow?logo=github)](https://github.com/Alex-FIR-IT/foxflow/commits/master/)
 
 
-
-Unit of Work for S3. Simplify your cloud storage logic with Pydantic-powered models and atomic-transaction-like operations.
+### <em>FoxFlow is a Python s3 framework designed to help you quickly, confidently, and painlessly manipulate files in your object storage implementing Saga-like compensation flow.</em>
 
 > ⚠️ Project Status: Experimental / Work in Progress  
 > This library is in early development (Alpha). The API is subject to change. **NOT READY** for production use yet.
 
+## Why use FoxFlow?
+
+Working with aiobotocore often feels like handling raw bytes and dicts. `FoxFlow` wraps S3 operations into a high-level Unit of Work pattern, providing:
+- **Atomic-like multi-step operations** — if something fails, previous actions are automatically compensated (Saga Pattern).
+- **Clean Architecture** — treat S3 as proper repositories using mixins (`PutRepository`, `GetRepository`, etc.).
+- **Pydantic-powered models** — work with `TextContent`, `JsonContent`, `ImageContent` and others instead of raw bytes.
 
 
+### Backend Comparison
 
-## Overview
+FoxFlow supports multiple backends for saga metadata and locking, just like Celery.
 
-Working with aiobotocore often feels like handling raw bytes and dicts. `s3uow` wraps S3 operations into a high-level Unit of Work pattern, providing:
-- **Atomic-like Operations**: Best-effort compensation logic to keep your S3 bucket clean if a multi-step operation fails using Saga Pattern.
-- **Clean Architecture**: Treat S3 as a first-class repository. Use mixins to compose bucket capabilities (Put, Get, Delete) and keep infrastructure logic out of your business services.
-- **DDD Models**: Stop juggling binary streams. Work with meaningful OOP models like TextContent, JsonContent, ImageContent, and UrlContent, etc. that handle data transformation and validation for you.
+- **In-Memory** — default, great for and tests and development
+- **Redis** — balanced choice for most production workloads  
+- **PostgreSQL** — maximum durability using your existing database (via SQLAlchemy). Just pass your DB URL — FoxFlow handles the rest.
 
+
+| Parameter       | Raw aiobotocore                                      | In-Memory (default)                                      | Redis                                                    | SQLAlchemy                                  |
+|-----------------|------------------------------------------------------|----------------------------------------------------------|----------------------------------------------------------|----------------------------------------------------------|
+| **Consistency** | 🟡 Eventual at best<br>No link between file and metadata | ✅ **Always consistent**<br>While the process is alive   | ✅ **Always consistent**<br>Survives worker crashes      | ✅ **Highest**<br>Strong ACID guarantees                 |
+| **Reliability** | 🟡 Medium<br>Errors often leave orphaned files       | 🟡 Medium<br>Data is lost on process restart             | ✅ **High**<br>Survives restarts, protects against duplicates | ✅ **Highest**<br>Survives crashes, power loss, and network issues |
+| **Latency**     | ✅ Lowest<br>Pure S3 network overhead                | ✅ **Lowest**<br>Minimal in-process overhead             | 🟡 Medium<br>Network round-trip per saga step            | 🟡 High<br>Additional SQL transaction + disk overhead    |
+| **Complexity**  | ❌ None (raw code as you like)                       | ✅ **Lowest**<br>No extra infrastructure required        | 🟡 Medium<br>Just provide Redis connection URL           | 🟡 Medium<br>Provide your DB connection string (library handles tables) |
 ## Quick Start
 
+Here's a minimal example of FoxFlow:
 ```python3
 import asyncio
-from s3_uow import UnitOfWork, ConfigDict
-from s3_uow.repositories import (
-    PutRepository, DeletedRepository, GetRepository, 
-    GeneratePresignedURLRepository, PutStreamRepository
+from foxflow import UnitOfWork, ConfigDict
+from foxflow.repositories import (
+    PutRepository, DeletedRepository, GetRepository,
+    GeneratePresignedURLRepository
 )
-from s3_uow.files import TextContent
+from foxflow.files import TextContent
 
 # 1. Define your scoped repository with Mixins
 class UserFiles(
@@ -34,7 +47,6 @@ class UserFiles(
     DeletedRepository,
     GetRepository,
     GeneratePresignedURLRepository,
-    PutStreamRepository,
 ):
     BUCKET_NAME = "user-files"
 
@@ -44,32 +56,22 @@ class UOW(UnitOfWork):
     config = ConfigDict(storage='in-memory')
 
 async def main():
-    
-    async with UOW(
-            # auto_commit=True, # Use auto_commit=True for auto commit after exiting the context. True by default.
-            # auto_commit_per_action=False, # Use auto_commit_per_action=True for auto commit after exiting the context. False by default
-    ) as uow:
+    async with UOW() as uow:
         file1 = TextContent.from_text("Hello, World!")
         file2 = TextContent.from_text("Hello, World2!")
 
         # Put files with path scoping
-        await uow.user_files.at("user1/").put(file1)
-        
-        # Scoped storage for multiple operations
+        await uow.user_files.at("user1/").put(file1, file2)
+
         storage = uow.user_files.at("user1/")
 
-        # Type-safe responses (MediaResponse[UrlContent])
         response1 = await storage.generate_presigned_url(file1.filename)
-        
-        # Fetch with content casting (MediaResponse[TextContent])
         response2 = await storage.get(file2.filename)
-        print(response2.content) # "Hello, World2!"
-       
+        print(response2.content)  # "Hello, World2!"
+
         await storage.delete(file1.filename)
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-## Consistency & Saga Pattern
-`s3uow` implements a Saga-like compensation logic. While S3 doesn't support native ACID transactions, s3uow tracks your actions during a session. If an operation fails, it attempts to "undo" previous actions (e.g., deleting uploaded files) to keep your storage clean.
