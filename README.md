@@ -57,8 +57,8 @@ class UOW(UnitOfWork):
 
 async def main():
     async with UOW() as uow:
-        file1 = TextContent.from_text("Hello, World!")
-        file2 = TextContent.from_text("Hello, World2!")
+        file1 = TextContent.from_content("Hello, World!")
+        file2 = TextContent.from_content("Hello, World2!")
 
         # Put files with path scoping
         await uow.user_files.at("user1/").put(file1, file2)

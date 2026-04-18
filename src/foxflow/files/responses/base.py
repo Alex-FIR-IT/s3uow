@@ -14,7 +14,7 @@ class MediaResponse(BaseModel):
     def convert_strs_to_files(cls, media: Sequence[Media | str]) -> tuple[Media, ...]:
         return tuple(
             (
-                TextContent.from_text(file_or_str)
+                TextContent.from_content(file_or_str)
                 if isinstance(file_or_str, str)
                 else file_or_str
             )
