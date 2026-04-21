@@ -41,7 +41,7 @@ from fennflow.repositories import (
 )
 from fennflow.files import TextContent
 
-# 1. Define your scoped repository with Mixins 
+# 1. Define your scoped repository with Mixins
 class UserFiles(
     PutRepository,
     DeletedRepository,
