@@ -14,6 +14,13 @@ dependencies = [
     "certifi>=2023.11.17"
 ]
 
+[dependency-groups]
+dev = [
+    "types_aiobotocore_s3",
+    "black",
+    "mypy",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/fennflow"]
 
