@@ -16,7 +16,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "types_aiobotocore_s3",
+    "types-aiobotocore[s3]",
     "black",
     "mypy",
 ]
