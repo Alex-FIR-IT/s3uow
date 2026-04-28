@@ -17,6 +17,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "types-aiobotocore[s3]",
+    "pytest>=9.0.0"
 ]
 lint = ["mypy>=1.11.2", "ruff>=0.14.14"]
 
