@@ -17,7 +17,8 @@ dependencies = [
 [dependency-groups]
 dev = [
     "types-aiobotocore[s3]",
-    "pytest>=9.0.0"
+    "pytest>=9.0.0",
+    "pytest-asyncio>=1.0.0"
 ]
 lint = ["mypy>=1.11.2", "ruff>=0.14.14"]
 
@@ -54,6 +55,9 @@ ignore = [
     "D107", # ignore missing docstring in __init__ methods
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["D"]
+
 [tool.ruff.lint.isort]
 combine-as-imports = true
 known-first-party = ["fennflow"]
@@ -64,6 +68,8 @@ convention = "google"
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "typing.TypedDict".msg = "Use typing_extensions.TypedDict instead."
 "typing.assert_never".msg = "Use typing_extensions.assert_never instead."
+"typing.overload".msg = "Use typing_extensions.overload instead."
+"typing.Unpack".msg = "Use typing_extensions.Unpack instead."
 
 [tool.ruff.format]
 # don't format python in docstrings, pytest-examples takes care of it
