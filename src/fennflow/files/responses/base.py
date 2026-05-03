@@ -21,6 +21,10 @@ class MediaResponse(BaseModel):
             for file_or_str in media
         )
 
+    @classmethod
+    def join(cls, iterable: Iterable[Self]) -> Self:
+        return cls(media=tuple(file for response in iterable for file in response))
+
     @overload
     def filter[T: Media](self, typ: type[T]) -> tuple[T, ...]: ...
 
