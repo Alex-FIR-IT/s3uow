@@ -1,5 +1,5 @@
 import json
-from typing import Literal, Self
+from typing import Generic, Literal, Self, TypeVar
 
 from pydantic import JsonValue
 
@@ -7,11 +7,14 @@ from .abstract.content import ContentPropertyAbstract
 from .abstract.from_content import FromContentAbstract
 from .binary_content import BinaryContent
 
+Value = TypeVar("Value", bound=JsonValue)
 
-class JsonContent[Value: JsonValue](
+
+class JsonContent(
     BinaryContent,
     FromContentAbstract,
     ContentPropertyAbstract,
+    Generic[Value],
 ):
     kind: Literal["json"] = "json"
     encoding: str = "utf-8"
