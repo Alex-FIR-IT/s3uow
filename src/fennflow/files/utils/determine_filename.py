@@ -24,8 +24,9 @@ def get_determined_filename_by_kwargs(
         **kwargs,
 ) -> str:
     if isinstance(data, str):
-        data: bytes = data.encode("utf-8")
+        prepared_data: bytes = data.encode("utf-8")
+    elif isinstance(data, (bytes, bytearray)):
+        prepared_data = data
     else:
         raise NotImplementedError(f"Expected bytes or str, got {type(data)=} instead.")
-
-    return f"{hashlib.sha256(data).hexdigest()}{extension}"
+    return f"{hashlib.sha256(prepared_data).hexdigest()}{extension}"
