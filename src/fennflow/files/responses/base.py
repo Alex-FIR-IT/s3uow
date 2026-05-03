@@ -62,3 +62,6 @@ class MediaResponse(BaseModel):
 
     def __getitem__(self, item):
         return self.media[item]
+
+    def __len__(self) -> int:
+        return len(self.media)
