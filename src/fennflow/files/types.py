@@ -1,6 +1,26 @@
-from .media import VideoContent, PdfContent, ImageContent, AudioContent, BinaryContent, TextContent, JsonContent, \
-    UrlContent
+from typing import TypeAlias
 
-type VideoOrAudio = VideoContent | AudioContent
-type Media = JsonContent | VideoContent | PdfContent | ImageContent | AudioContent | TextContent | BinaryContent | UrlContent
-type NotTxtFile = VideoContent | PdfContent | ImageContent | AudioContent | BinaryContent | UrlContent
+from .media import (
+    AudioContent,
+    BinaryContent,
+    ImageContent,
+    JsonContent,
+    PdfContent,
+    TextContent,
+    UrlContent,
+    VideoContent,
+)
+
+VideoOrAudio: TypeAlias = VideoContent | AudioContent
+
+BinaryMedia: TypeAlias = (
+    JsonContent
+    | VideoContent
+    | PdfContent
+    | ImageContent
+    | AudioContent
+    | TextContent
+    | BinaryContent
+)
+
+Media: TypeAlias = BinaryMedia | UrlContent
