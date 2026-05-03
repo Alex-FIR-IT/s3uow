@@ -29,7 +29,7 @@ class JsonContent(
         cls,
         data: Value,
         encoding: str = "utf-8",
-        media_type: str = "text/plain",
+        media_type: str = "application/json",
         ensure_ascii: bool = False,
         indent: int = 4,
     ) -> Self:
