@@ -1,17 +1,29 @@
-from typing import Iterator, Sequence, overload
+from __future__ import annotations
 
-from pydantic import BaseModel, field_validator
+from collections.abc import Iterable, Iterator
+from typing import Self, TypeVar
 
-from fennflow.files.media import TextContent, ImageContent, AudioContent, VideoContent, PdfContent
+from pydantic import BaseModel, Field, field_validator
+from typing_extensions import overload
+
+from fennflow.files.media import (
+    AudioContent,
+    ImageContent,
+    PdfContent,
+    TextContent,
+    VideoContent,
+)
 from fennflow.files.types import Media
+
+T = TypeVar("T", bound=Media)
 
 
 class MediaResponse(BaseModel):
-    media: Sequence[Media]
+    media: tuple[Media, ...] = Field(default_factory=tuple)
 
     @field_validator("media", mode="before")
     @classmethod
-    def convert_strs_to_files(cls, media: Sequence[Media | str]) -> tuple[Media, ...]:
+    def convert_strs_to_files(cls, media: Iterable[Media | str]) -> tuple[Media, ...]:
         return tuple(
             (
                 TextContent.from_content(file_or_str)
@@ -26,10 +38,10 @@ class MediaResponse(BaseModel):
         return cls(media=tuple(file for response in iterable for file in response))
 
     @overload
-    def filter[T: Media](self, typ: type[T]) -> tuple[T, ...]: ...
+    def filter(self, typ: type[T]) -> tuple[T, ...]: ...
 
     @overload
-    def filter[T: Media](self, *types: type[T]) -> tuple[T, ...]: ...
+    def filter(self, *types: type[T]) -> tuple[T, ...]: ...
 
     def filter(self, *types):
         return tuple(file for file in self.media if isinstance(file, types))
@@ -38,29 +50,29 @@ class MediaResponse(BaseModel):
         return tuple(file for file in self.media if file.media_type in media_types)
 
     @property
-    def images(self) -> "tuple[ImageContent, ...]":
+    def images(self) -> tuple[ImageContent, ...]:
         return self.filter(ImageContent)
 
     @property
-    def videos(self) -> "tuple[VideoContent, ...]":
+    def videos(self) -> tuple[VideoContent, ...]:
         return self.filter(VideoContent)
 
     @property
-    def texts(self) -> "tuple[TextContent, ...]":
+    def texts(self) -> tuple[TextContent, ...]:
         return self.filter(TextContent)
 
     @property
-    def audios(self) -> "tuple[AudioContent, ...]":
+    def audios(self) -> tuple[AudioContent, ...]:
         return self.filter(AudioContent)
 
     @property
-    def pdfs(self) -> "tuple[PdfContent, ...]":
+    def pdfs(self) -> tuple[PdfContent, ...]:
         return self.filter(PdfContent)
 
     def __iter__(self) -> Iterator[Media]:
         return iter(self.media)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> Media:
         return self.media[item]
 
     def __len__(self) -> int:
