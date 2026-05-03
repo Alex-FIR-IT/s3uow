@@ -83,3 +83,6 @@ packages = ["src/fennflow"]
 
 [tool.hatch.version]
 path = "src/fennflow/__init__.py"
+
+[tool.bandit.tests]
+skips = ["B101", "B105", "B106"]
