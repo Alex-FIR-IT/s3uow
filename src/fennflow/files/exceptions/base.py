@@ -1,3 +1,2 @@
 class FileException(Exception):
     pass
-
