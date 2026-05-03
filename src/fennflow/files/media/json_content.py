@@ -1,5 +1,6 @@
-from typing import Literal, Self
 import json
+from typing import Literal, Self
+
 from pydantic import JsonValue
 
 from .abstract.content import ContentPropertyAbstract

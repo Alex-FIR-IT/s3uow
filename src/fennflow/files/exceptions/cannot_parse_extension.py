@@ -1,5 +1,6 @@
 from .base import FileException
 
+
 class CannotParseExtensionException(FileException):
     """Raised when trying to parse an extension from a filename"""
 

@@ -3,5 +3,4 @@ from typing import Protocol
 
 class HasExtensionPropertyProtocol(Protocol):
     @property
-    def extension(self) -> str:
-        ...
+    def extension(self) -> str: ...

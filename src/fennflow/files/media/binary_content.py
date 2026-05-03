@@ -1,13 +1,21 @@
-from typing import Literal, Any
 import base64
+from typing import Any
 
-from pydantic import Field, field_serializer, field_validator, computed_field
+from pydantic import (
+    Field,
+    computed_field,
+    field_serializer,
+    field_validator,
+)
+
 from fennflow.files.media.base import BaseContent
 
 
 class BinaryContent(BaseContent):
+    """Base class for binary content type."""
+
     data: bytes = Field(repr=False)
-    kind: Literal["binary"] = "binary"
+    kind: str = "binary"
 
     @field_serializer("*", mode="wrap")
     def serialize_numbers(self, value: Any, handler: Any) -> Any:

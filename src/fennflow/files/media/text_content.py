@@ -5,7 +5,11 @@ from .abstract.from_content import FromContentAbstract
 from .binary_content import BinaryContent
 
 
-class TextContent(BinaryContent, FromContentAbstract, ContentPropertyAbstract,):
+class TextContent(
+    BinaryContent,
+    FromContentAbstract,
+    ContentPropertyAbstract,
+):
     kind: Literal["txt"] = "txt"
     encoding: str = "utf-8"
 
@@ -15,7 +19,6 @@ class TextContent(BinaryContent, FromContentAbstract, ContentPropertyAbstract,):
             return self.data.decode(self.encoding)
         except UnicodeDecodeError as e:
             raise ValueError(f"Cannot extract text from {self=}") from e
-
 
     @classmethod
     def from_content(

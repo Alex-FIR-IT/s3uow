@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Self, Any
+from typing import Any, Self
 
 
 class FromContentAbstract(ABC):
-
     @classmethod
     @abstractmethod
     def from_content(
@@ -11,5 +10,4 @@ class FromContentAbstract(ABC):
         data: Any,
         encoding: str = "utf-8",
         media_type: str = "text/plain",
-    ) -> Self:
-        ...
+    ) -> Self: ...

@@ -1,16 +1,18 @@
-from typing import Any
-from functools import cache
+from __future__ import annotations
 
-from pydantic import ValidationError
+from fennflow.files.media import (
+    AudioContent,
+    BinaryContent,
+    ImageContent,
+    JsonContent,
+    PdfContent,
+    TextContent,
+    VideoContent,
+)
 
-from fennflow.files.media import TextContent, ImageContent, AudioContent, BinaryContent, VideoContent, PdfContent, \
-    JsonContent
-from fennflow.files.media.url_content import UrlContent
-from fennflow.files.types import Media
-
-content_registry: dict[str, type[Media]] = {
+content_registry: dict[str, type[BinaryContent]] = {
     "text/plain": TextContent,
-    "text/": TextContent,             # префикс
+    "text/": TextContent,
     "image/": ImageContent,
     "application/json": JsonContent,
     "audio/": AudioContent,
