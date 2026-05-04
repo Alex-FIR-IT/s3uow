@@ -12,19 +12,21 @@ from fennflow._sentinel import NOT_GIVEN
 if TYPE_CHECKING:
     from fennflow._operations.context.types import Context
     from fennflow._operations.enums import OperationTypeEnum
+    from fennflow._sentinel import NotGiven
+    from fennflow.repositories.fields.base import RepoExtra
 
 
 @dataclass(slots=True)
 class OperationRecord:
+    session_id: uuid.UUID
+    filepath: str
+    media_type: str
+    repo_extra: RepoExtra
+    operation_type: OperationTypeEnum
+    context: Context
+    status: Literal["pending", "uploaded", "failed", "compensation_failed", "deleted"]
     operation_id: uuid.UUID = field(default_factory=uuid.uuid4)
-    session_id: uuid.UUID = NOT_GIVEN
-    filepath: str = NOT_GIVEN
-    media_type: str = NOT_GIVEN
-    repo_extra: dict = NOT_GIVEN
-    operation_type: OperationTypeEnum = NOT_GIVEN
-    status: Literal[
-        "pending", "uploaded", "failed", "compensation_failed", "deleted"
-    ] = NOT_GIVEN
+
     created_at: datetime.datetime = field(
         default_factory=lambda: datetime.datetime.now(tz=datetime.UTC)
     )
@@ -36,8 +38,7 @@ class OperationRecord:
             datetime.datetime.now(tz=datetime.UTC) + datetime.timedelta(seconds=30)
         )
     )
-    error: str | None = None
-    context: Context = NOT_GIVEN
+    error: str | None | NotGiven = NOT_GIVEN
 
     @property
     def is_pending(self) -> bool:

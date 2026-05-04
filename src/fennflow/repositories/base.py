@@ -2,20 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from typing_extensions import TypedDict
-
 if TYPE_CHECKING:
+    from fennflow.repositories.fields.base import RepoExtra
     from fennflow.uow.base import UnitOfWork
-
-
-class RepoExtra(TypedDict):
-    """Base configuration passed to every repository instance.
-
-    Attributes:
-        namespace: The storage namespace (e.g. S3 bucket name).
-    """
-
-    namespace: str
 
 
 class BaseRepository:  # noqa: B903

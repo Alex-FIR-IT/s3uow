@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from fennflow._new_types import Filepath, Namespace
     from fennflow.connectors.in_memory.config import InMemoryConnectorConfig
     from fennflow.files.types import BinaryMedia
+    from fennflow.repositories.fields.base import RepoExtra
 
 
 logger = logging.getLogger(__name__)
@@ -59,7 +60,7 @@ class InMemoryConnector(AbstractConnector):
     async def put(
         self,
         file: BinaryMedia,
-        repo_extra: dict[Any, Any],
+        repo_extra: RepoExtra,
         **extra,
     ) -> None:
         namespace = repo_extra["namespace"]
@@ -69,7 +70,7 @@ class InMemoryConnector(AbstractConnector):
     async def get(
         self,
         filepath: Filepath,
-        repo_extra: dict[Any, Any],
+        repo_extra: RepoExtra,
         **extra: dict[Any, Any],
     ) -> MediaResponse:
 
@@ -91,14 +92,14 @@ class InMemoryConnector(AbstractConnector):
     async def delete(
         self,
         filepath: Filepath,
-        repo_extra: dict[Any, Any],
+        repo_extra: RepoExtra,
         **extra: dict[Any, Any],
     ):
         self.storage[repo_extra["namespace"]].pop(filepath, None)
 
     async def copy_object(
         self,
-        repo_extra: dict[Any, Any],
+        repo_extra: RepoExtra,
         from_filepath: Filepath,
         to_filepath: Filepath,
         to_namespace: Namespace,

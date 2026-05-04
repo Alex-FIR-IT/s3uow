@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Any, Generic, Self, TypeVar
+
+from fennflow.repositories.fields.base import RepoExtra
 
 if TYPE_CHECKING:
     from fennflow._new_types import Filepath, Namespace
@@ -9,7 +11,10 @@ if TYPE_CHECKING:
     from fennflow.files.types import BinaryMedia
 
 
-class AbstractConnector(ABC):
+RepoExtraType = TypeVar("RepoExtraType", bound=RepoExtra)
+
+
+class AbstractConnector(ABC, Generic[RepoExtraType]):
     """Base class for all FennFlow storage connectors.
 
     A connector is responsible for performing actual file operations
@@ -34,7 +39,7 @@ class AbstractConnector(ABC):
     async def put(
         self,
         file: BinaryMedia,
-        repo_extra: dict[Any, Any],
+        repo_extra: RepoExtraType,
         **extra: dict[Any, Any],
     ) -> Any:
         """Upload a file to storage."""
@@ -43,7 +48,7 @@ class AbstractConnector(ABC):
     async def get(
         self,
         filepath: Filepath,
-        repo_extra: dict[Any, Any],
+        repo_extra: RepoExtraType,
         **extra: dict[Any, Any],
     ) -> MediaResponse:
         """Download a file from storage."""
@@ -52,7 +57,7 @@ class AbstractConnector(ABC):
     async def delete(
         self,
         filepath: Filepath,
-        repo_extra: dict[Any, Any],
+        repo_extra: RepoExtraType,
         **extra: dict[Any, Any],
     ):
         """Delete a file from storage."""
@@ -60,7 +65,7 @@ class AbstractConnector(ABC):
     @abstractmethod
     async def copy_object(
         self,
-        repo_extra: dict[Any, Any],
+        repo_extra: RepoExtraType,
         from_filepath: Filepath,
         to_filepath: Filepath,
         to_namespace: Namespace,

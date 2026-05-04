@@ -10,17 +10,17 @@ from fennflow.connectors.s3.client import S3Client
 from fennflow.files import ContentFactory
 from fennflow.files.responses.base import MediaResponse
 from fennflow.files.types import BinaryMedia
+from fennflow.repositories.fields.s3 import S3Extra
 
 if TYPE_CHECKING:
     from aiobotocore.session import AioSession
 
-    from ...repositories.fields.s3 import S3Extra
     from . import S3ConnectorConfig
 
 logger = logging.getLogger(__name__)
 
 
-class S3Connector(AbstractConnector):
+class S3Connector(AbstractConnector[S3Extra]):
     """Connector for AWS S3-compatible object storage via aiobotocore.
 
     Use ``S3ConnectorConfig`` to configure credentials, region, etc.
@@ -90,7 +90,7 @@ class S3Connector(AbstractConnector):
         self,
         filepath: str,
         repo_extra: S3Extra,
-        **sdk_extra: dict[Any, Any],
+        **sdk_extra: dict,
     ) -> MediaResponse:
         response = await self.s3client.client.get_object(
             Bucket=repo_extra["namespace"],

@@ -1,10 +1,23 @@
 from __future__ import annotations
 
-from typing import Generic, TypeVar
+from typing import TYPE_CHECKING, Generic, TypedDict, TypeVar
 
 from typing_extensions import overload
 
+if TYPE_CHECKING:
+    from fennflow._new_types import Namespace
+
 RepoType = TypeVar("RepoType")
+
+
+class RepoExtra(TypedDict):
+    """Base configuration passed to every repository instance.
+
+    Attributes:
+        namespace: The storage namespace (e.g. S3 bucket name).
+    """
+
+    namespace: Namespace
 
 
 class RepoField(Generic[RepoType]):

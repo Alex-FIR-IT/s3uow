@@ -53,22 +53,22 @@ class InMemoryBackend(AbstractBackend):
 
     async def exists(
         self,
-        filepath: str,
+        filepath: Filepath,
         namespace: Namespace,
     ) -> bool:
         return filepath in self.storage[namespace]
 
     async def get_from_storage(
         self,
-        filepath: str,
-        namespace: str,
+        filepath: Filepath,
+        namespace: Namespace,
     ) -> OperationRecord | None:
         return self.storage[namespace].get(filepath)
 
     async def get(
         self,
-        filepath: str,
-        namespace: str,
+        filepath: Filepath,
+        namespace: Namespace,
     ) -> OperationRecord | None:
         return self._operations.get(filepath) or self.storage[namespace].get(filepath)
 

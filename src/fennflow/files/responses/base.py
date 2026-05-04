@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator
-from typing import Self, TypeVar
+from typing import Self, TypeVar, overload
 
 from pydantic import BaseModel, Field, field_validator
-from typing_extensions import overload
 
 from fennflow.files.media import (
     AudioContent,
