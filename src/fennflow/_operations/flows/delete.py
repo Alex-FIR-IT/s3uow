@@ -20,8 +20,8 @@ class DeleteFlow(AbstractFlow):
         await connector.copy_object(
             from_filepath=operation.filepath,
             from_bucket_name=operation.namespace,
-            to_filepath=ctx["to_filepath"],
-            to_namespace=ctx["to_namespace"],
+            to_filepath=ctx.to_filepath,
+            to_namespace=ctx.to_namespace,
             repo_extra=operation.repo_extra,
             **provider_extra,
         )
@@ -40,15 +40,15 @@ class DeleteFlow(AbstractFlow):
     ):
         ctx: DeleteContext = operation.context
         await connector.copy_object(
-            from_filepath=ctx["to_filepath"],
-            from_bucket_name=ctx["to_namespace"],
+            from_filepath=ctx.to_filepath,
+            from_bucket_name=ctx.to_namespace,
             to_filepath=operation.filepath,
             to_namespace=operation.namespace,
             repo_extra=operation.repo_extra,
             **provider_extra,
         )
         await connector.delete(
-            filepath=ctx["to_filepath"],
+            filepath=ctx.to_filepath,
             repo_extra=operation.repo_extra,
         )
         operation.status = "uploaded"
@@ -62,7 +62,7 @@ class DeleteFlow(AbstractFlow):
     ):
         ctx: DeleteContext = operation.context
         await connector.delete(
-            filepath=ctx["to_filepath"],
+            filepath=ctx.to_filepath,
             repo_extra=operation.repo_extra,
             **provider_extra,
         )

@@ -14,7 +14,7 @@ class PutFlow(AbstractFlow):
     ):
         ctx: PutContext = operation.context
         return await connector.put(
-            file=ctx["file"],
+            file=ctx.file,
             repo_extra=operation.repo_extra,
             **provider_extra,
         )

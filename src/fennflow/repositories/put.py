@@ -1,16 +1,13 @@
 from __future__ import annotations
 
 import asyncio
-from typing import TYPE_CHECKING
 
+from fennflow._operations.context.put import PutContext
 from fennflow._operations.dto import OperationRecord
 from fennflow._operations.enums import OperationTypeEnum
 from fennflow.backends.abstract.exceptions import RecordAlreadyExistsException
 from fennflow.files.types import BinaryMedia
 from fennflow.repositories.at import AtRepository
-
-if TYPE_CHECKING:
-    from fennflow._operations.context.put import PutContext
 
 
 class PutRepository(AtRepository):
@@ -52,14 +49,12 @@ class PutRepository(AtRepository):
             if operation:
                 raise RecordAlreadyExistsException()
 
-            context: PutContext = {"file": file}
-
             operation = OperationRecord(
                 operation_type=OperationTypeEnum.PUT,
                 media_type=file.media_type,
                 status="pending",
                 filepath=file.filepath,
-                context=context,
+                context=PutContext(file=file),
                 session_id=self._uow._session_id,
                 repo_extra=self.repo_extra,
             )
