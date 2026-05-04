@@ -11,7 +11,22 @@ if TYPE_CHECKING:
 
 
 class DeleteRepository(AtRepository):
+    """Repository mixin for deleting files from storage.
+
+    Implements Saga-based deletion with automatic compensation on failure.
+    """
+
     async def delete(self, path: str, **provider_extra) -> bool:
+        """Delete a file from storage.
+
+        Args:
+            path: Path to the file relative to the current directory.
+            **provider_extra: Additional kwargs forwarded to the connector.
+
+        Returns:
+            True if the file was deleted, False if it did not exist.
+
+        """
         filepath = self._join_path(path)
         operation = await self._uow.backend.get(
             filepath,

@@ -1,2 +1,2 @@
 class FileException(Exception):
-    pass
+    """Base class for files exceptions."""

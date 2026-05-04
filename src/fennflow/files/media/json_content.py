@@ -16,6 +16,21 @@ class JsonContent(
     ContentPropertyAbstract,
     Generic[Value],
 ):
+    """Media content representing a JSON file.
+
+    Stores JSON data as UTF-8 encoded bytes internally.
+    Use ``from_content()`` to create from a Python object.
+
+    Attributes:
+        encoding: The text encoding. Defaults to ``"utf-8"``.
+
+    Example::
+
+        file = JsonContent.from_content({"key": "value"})
+        print(file.content) # {"key": "value"}
+        await uow.user_files.at("user1/").put(file)
+    """
+
     kind: Literal["json"] = "json"
     encoding: str = "utf-8"
 

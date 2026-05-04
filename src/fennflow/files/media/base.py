@@ -28,7 +28,7 @@ from fennflow.files.exceptions.media_type_cannot_be_guessed import (
     MediaTypeCannotBeGuessed,
 )
 from fennflow.files.protocols.has_data_and_ext_obj import (
-    FileDataExtNamingFactoryProtocol,
+    FilenameFactoryProtocol,
 )
 from fennflow.files.utils.determine_filename import get_determined_filename_by_obj
 
@@ -57,7 +57,7 @@ class BaseContent(BaseModel, ABC):
             )
         return Path.join_path(self.folder_path, self.filename)
 
-    filename_factory: ClassVar[FileDataExtNamingFactoryProtocol] = (
+    filename_factory: ClassVar[FilenameFactoryProtocol] = (
         get_determined_filename_by_obj
     )
     model_config = ConfigDict(

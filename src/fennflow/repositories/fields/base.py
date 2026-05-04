@@ -8,6 +8,20 @@ RepoType = TypeVar("RepoType")
 
 
 class RepoField(Generic[RepoType]):
+    """A descriptor that lazily initializes a repository instance on a UnitOfWork.
+
+    Args:
+        repo_cls: The repository class to instantiate.
+        namespace: The storage namespace (e.g. S3 bucket name) for this repository.
+        **repo_extra: Additional connector-specific configuration
+        passed to the repository.
+
+    Example:
+        class UOW(UnitOfWork):
+            user_files = RepoField(UserFiles, namespace="user-files")
+
+    """
+
     def __init__(
         self,
         repo_cls: type[RepoType],

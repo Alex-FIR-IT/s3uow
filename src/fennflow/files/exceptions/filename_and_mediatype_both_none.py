@@ -3,6 +3,7 @@ class FileNameAndMediaTypeBothNoneException(Exception):
 
     def __init__(
         self,
-        msg: str = "Media type or filename cannot be both None! Please, pass either media_type or filename.",
+        msg: str = "Media type or filename cannot be both None! "
+        "Please, pass either media_type or filename.",
     ) -> None:
         super().__init__(msg)

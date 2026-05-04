@@ -10,6 +10,21 @@ class TextContent(
     FromContentAbstract,
     ContentPropertyAbstract,
 ):
+    """Media content representing a plain text file.
+
+    Stores text as UTF-8 encoded bytes internally.
+    Use ``from_content()`` to create from a string.
+
+    Attributes:
+        encoding: The text encoding. Defaults to ``"utf-8"``.
+
+    Example::
+
+        file = TextContent.from_content("Hello, World!")
+        print(file.content) # "Hello, World!"
+        await uow.user_files.at("user1/").put(file)
+    """
+
     kind: Literal["txt"] = "txt"
     encoding: str = "utf-8"
 

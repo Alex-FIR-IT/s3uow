@@ -14,6 +14,24 @@ logger = logging.getLogger(__name__)
 
 
 class S3Client:
+    """Async S3 client wrapper around aiobotocore.
+
+    Manages the lifecycle of an aiobotocore client context.
+    Use ``open()`` and ``close()`` to manage the connection,
+    or use it as an async context manager.
+
+    Args:
+        session: The aiobotocore session to create the client from.
+        config: Optional S3 connector configuration. If not provided,
+            the AWS credential chain is used.
+
+    Example::
+
+        s3_client = await S3Client(session=session, config=config).open()
+        await s3_client.client.put_object(...)
+        await s3_client.close()
+    """
+
     def __init__(
         self,
         session: AioSession,

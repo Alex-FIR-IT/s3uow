@@ -1,6 +1,6 @@
 class BaseBackendException(Exception):
-    pass
+    """Base exception for all FennFlow backend errors."""
 
 
 class RecordAlreadyExistsException(BaseBackendException):
-    pass
+    """Raised when attempting to add a record that already exists in the backend."""

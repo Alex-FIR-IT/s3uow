@@ -18,6 +18,20 @@ logger = logging.getLogger(__name__)
 
 
 class InMemoryConnector(AbstractConnector):
+    """In-memory connector for file storage, primarily used for testing.
+
+    Stores files in a class-level dictionary shared across all instances,
+
+    Use ``drop_all()`` between tests to reset state.
+
+    Example::
+
+        class UOW(UnitOfWork):
+            config = ConfigDict(
+                connector=InMemoryConnectorConfig(),
+            )
+    """
+
     _storage: defaultdict[Namespace, dict[Filepath, BinaryMedia]] | None = None
 
     async def open(self) -> Self:

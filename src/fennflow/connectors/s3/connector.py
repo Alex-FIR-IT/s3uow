@@ -21,6 +21,18 @@ logger = logging.getLogger(__name__)
 
 
 class S3Connector(AbstractConnector):
+    """Connector for AWS S3-compatible object storage via aiobotocore.
+
+    Use ``S3ConnectorConfig`` to configure credentials, region, etc.
+
+    Example::
+
+        class UOW(UnitOfWork):
+            config = ConfigDict(
+                connector=S3ConnectorConfig(...),
+            )
+    """
+
     aio_session: AioSession = None
 
     async def open(
@@ -81,7 +93,7 @@ class S3Connector(AbstractConnector):
         **sdk_extra: dict[Any, Any],
     ) -> MediaResponse:
         response = await self.s3client.client.get_object(
-            Bucket=repo_extra["bucket_name"],
+            Bucket=repo_extra["namespace"],
             Key=filepath,
             **sdk_extra,
         )
@@ -120,14 +132,14 @@ class S3Connector(AbstractConnector):
         to_namespace: str,
         **sdk_extra: dict[Any, Any],
     ):
-        bucker_name = repo_extra["bucket_name"]
+        bucket_name = repo_extra["namespace"]
 
         await self.s3client.client.copy_object(
-            CopySource={"Bucket": bucker_name, "Key": from_filepath},
+            CopySource={"Bucket": bucket_name, "Key": from_filepath},
             Bucket=to_namespace,
             Key=to_filepath,
             **sdk_extra,
         )
         logger.info(
-            f"file from {bucker_name=} with {from_filepath=} copied to {to_namespace=}"
+            f"file from {bucket_name=} with {from_filepath=} copied to {to_namespace=}"
         )

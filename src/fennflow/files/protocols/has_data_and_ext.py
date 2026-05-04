@@ -6,4 +6,15 @@ class HasDataAndExtensionAttrProtocol(
     HasDataAttributeProtocol,
     HasExtensionPropertyProtocol,
 ):
-    pass
+    """Protocol for objects that expose both a data attribute and an extension property.
+
+    Used as a type constraint where both ``data`` and ``extension`` are required.
+
+    Example:
+        class MyFile:
+            data: bytes = b"hello"
+
+            @property
+            def extension(self) -> str:
+                return ".txt"
+    """
