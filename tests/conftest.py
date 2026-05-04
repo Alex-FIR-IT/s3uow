@@ -1,8 +1,4 @@
 import logging
-
-logging.basicConfig(
-    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
 import tracemalloc
 
 import pytest
@@ -19,8 +15,10 @@ from fennflow.repositories import (
 )
 from fennflow.uow import UnitOfWork
 
-# 1. Запуск системы отслеживания
-# snapshot_count — количество кадров стека, которые нужно сохранить (по умолчанию 1)
+logging.basicConfig(
+    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+
 tracemalloc.start(10)
 
 
