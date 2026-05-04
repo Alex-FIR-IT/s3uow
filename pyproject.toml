@@ -66,9 +66,7 @@ known-first-party = ["fennflow"]
 convention = "google"
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
-"typing.TypedDict".msg = "Use typing_extensions.TypedDict instead."
 "typing.assert_never".msg = "Use typing_extensions.assert_never instead."
-"typing.overload".msg = "Use typing_extensions.overload instead."
 "typing.Unpack".msg = "Use typing_extensions.Unpack instead."
 
 [tool.ruff.format]
