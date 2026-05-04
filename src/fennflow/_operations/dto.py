@@ -6,10 +6,10 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 from uuid import UUID
 
-from fennflow._new_types import Namespace
 from fennflow._sentinel import NOT_GIVEN
 
 if TYPE_CHECKING:
+    from fennflow._new_types import Filepath, Namespace
     from fennflow._operations.context.types import Context
     from fennflow._operations.enums import OperationTypeEnum
     from fennflow._sentinel import NotGiven
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 @dataclass(slots=True)
 class OperationRecord:
     session_id: uuid.UUID
-    filepath: str
+    filepath: Filepath
     media_type: str
     repo_extra: RepoExtra
     operation_type: OperationTypeEnum

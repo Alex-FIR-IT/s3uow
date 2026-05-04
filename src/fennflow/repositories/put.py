@@ -42,9 +42,7 @@ class PutRepository(AtRepository):
         for file in files:
             file.folder_path = self.pwd
 
-            operation = await self._uow.backend.get(
-                filepath=file.filepath,
-            )
+            operation = await self._uow.backend.get(filepath=file.filepath)
 
             if operation:
                 raise RecordAlreadyExistsException()
