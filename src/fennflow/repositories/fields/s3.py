@@ -1,11 +1,12 @@
 from pydantic import TypeAdapter
 from typing_extensions import TypedDict, Unpack
 
+from fennflow.repositories.base import RepoExtra
 from fennflow.repositories.fields.base import RepoField, RepoType
 
 
-class S3Extra(TypedDict):
-    bucket_name: str
+class S3Extra(RepoExtra):
+    bucket_name: str  # alias for namespace
 
 
 def S3RepoField(
