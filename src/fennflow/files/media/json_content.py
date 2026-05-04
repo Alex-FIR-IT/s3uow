@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import json
-from typing import Generic, Literal, Self, TypeVar
+from typing import Generic, Literal, TypeVar
 
 from pydantic import JsonValue
 
@@ -46,9 +48,15 @@ class JsonContent(
         encoding: str = "utf-8",
         media_type: str = "application/json",
         ensure_ascii: bool = False,
-        indent: int = 4,
-    ) -> Self:
-        dumped_data = json.dumps(data, ensure_ascii=ensure_ascii, indent=indent)
+        indent: int | str | None = None,
+        **extra_json_dumps_kwargs,
+    ) -> JsonContent[Value]:
+        dumped_data = json.dumps(
+            data,
+            ensure_ascii=ensure_ascii,
+            indent=indent,
+            **extra_json_dumps_kwargs,
+        )
         return cls(
             data=dumped_data.encode(encoding),
             media_type=media_type,
