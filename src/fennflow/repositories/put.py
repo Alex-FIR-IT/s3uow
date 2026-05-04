@@ -47,7 +47,6 @@ class PutRepository(AtRepository):
 
             operation = await self._uow.backend.get(
                 filepath=file.filepath,
-                namespace=self.repo_extra["namespace"],
             )
 
             if operation:

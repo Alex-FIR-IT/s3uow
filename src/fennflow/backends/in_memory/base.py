@@ -54,23 +54,22 @@ class InMemoryBackend(AbstractBackend):
     async def exists(
         self,
         filepath: Filepath,
-        namespace: Namespace,
     ) -> bool:
-        return filepath in self.storage[namespace]
+        return filepath in self.storage[self._config.namespace]
 
     async def get_from_storage(
         self,
         filepath: Filepath,
-        namespace: Namespace,
     ) -> OperationRecord | None:
-        return self.storage[namespace].get(filepath)
+        return self.storage[self._config.namespace].get(filepath)
 
     async def get(
         self,
         filepath: Filepath,
-        namespace: Namespace,
     ) -> OperationRecord | None:
-        return self._operations.get(filepath) or self.storage[namespace].get(filepath)
+        return self._operations.get(filepath) or self.storage[
+            self._config.namespace
+        ].get(filepath)
 
     async def list_pending(
         self,
@@ -118,7 +117,6 @@ class InMemoryBackend(AbstractBackend):
         for key, operation in self._operations.items():
             storage_operation = await self.get_from_storage(
                 filepath=operation.filepath,
-                namespace=operation.namespace,
             )
 
             if storage_operation and storage_operation.is_locked(
@@ -127,7 +125,7 @@ class InMemoryBackend(AbstractBackend):
                 raise RecordAlreadyExistsException(
                     f"{operation.filepath=} already exists"
                 )
-            self.storage[operation.namespace][key] = operation
+            self.storage[self._config.namespace][key] = operation
 
     async def rollback(
         self,

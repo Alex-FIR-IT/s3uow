@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from fennflow._new_types import Filepath, Namespace
+    from fennflow._new_types import Filepath
     from fennflow._operations.dto import OperationRecord
     from fennflow.backends.abstract.config import AbstractBackendConfig
 
@@ -26,7 +26,6 @@ class AbstractBackend(ABC):
     async def get(
         self,
         filepath: Filepath,
-        namespace: Namespace,
     ) -> OperationRecord: ...
 
     @abstractmethod
@@ -36,13 +35,11 @@ class AbstractBackend(ABC):
     async def exists(
         self,
         filepath: Filepath,
-        namespace: Namespace,
     ) -> bool: ...
 
     @abstractmethod
     async def list_pending(
         self,
-        namespace: Namespace,
     ) -> list[OperationRecord]: ...
 
     @abstractmethod

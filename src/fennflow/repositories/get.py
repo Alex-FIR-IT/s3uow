@@ -55,10 +55,7 @@ class GetRepository(AtRepository):
         tasks = []
         for path in paths:
             filepath = self._join_path(path)
-            operation = await self._uow.backend.get(
-                filepath,
-                namespace=self.repo_extra["namespace"],
-            )
+            operation = await self._uow.backend.get(filepath)
 
             if operation:
                 tasks.append(

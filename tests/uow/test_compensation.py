@@ -94,12 +94,8 @@ async def test_partial_put_failure_compensates_deletes(
     # checking statuses for files:
 
     async with uow_cls() as uow:
-        operation1 = await uow.backend.get(
-            text_files[0].filepath, namespace="user_files"
-        )
-        operation2 = await uow.backend.get(
-            text_files[1].filepath, namespace="user_files"
-        )
+        operation1 = await uow.backend.get(text_files[0].filepath)
+        operation2 = await uow.backend.get(text_files[1].filepath)
 
         assert operation1.is_failed is True
         assert operation2.is_failed is True
@@ -128,8 +124,6 @@ async def test_file_recovery_after_deleting_on_rollback(
         assert len(response) == 1, f"Expected 1 file, got {len(response)}"
         assert response[0].data == text_files[0].data
 
-        operation = await uow.backend.get(
-            text_files[0].filepath, namespace="user_files"
-        )
+        operation = await uow.backend.get(text_files[0].filepath)
 
         assert operation.is_uploaded is True

@@ -28,10 +28,7 @@ class DeleteRepository(AtRepository):
 
         """
         filepath = self._join_path(path)
-        operation = await self._uow.backend.get(
-            filepath,
-            namespace=self.repo_extra["namespace"],
-        )
+        operation = await self._uow.backend.get(filepath)
 
         if operation is None:
             return False
