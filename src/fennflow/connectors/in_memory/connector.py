@@ -35,7 +35,7 @@ class InMemoryConnector(AbstractConnector):
     @property
     def storage(
         self,
-    ) -> defaultdict[tuple[Namespace, Filepath], BinaryMedia]:
+    ) -> defaultdict[Namespace, dict[Filepath, BinaryMedia]]:
         if self.__class__._storage is None:
             raise RuntimeError(
                 "Cannot get in-memory storage. InMemoryConnector is not initialized.",
@@ -99,4 +99,4 @@ class InMemoryConnector(AbstractConnector):
 
     @classmethod
     def drop_all(cls) -> None:
-        cls.storage = defaultdict(dict)
+        cls._storage = defaultdict(dict)

@@ -1,6 +1,5 @@
 import pytest
 
-from fennflow._operations.enums import OperationTypeEnum
 from fennflow.connectors import InMemoryConnector
 
 
@@ -87,10 +86,10 @@ async def test_partial_put_failure_compensates_deletes(
 
     assert compensate_count == 2
     # verify file1 is gone from connector storage directly
-    assert ("user_files", text_files[0].filepath) not in InMemoryConnector.storage
+    assert ("user_files", text_files[0].filepath) not in InMemoryConnector._storage
 
     # verify file2 was never in connector storage
-    assert ("user_files", text_files[1].filepath) not in InMemoryConnector.storage
+    assert ("user_files", text_files[1].filepath) not in InMemoryConnector._storage
 
     # checking statuses for files:
 
