@@ -7,70 +7,95 @@
 
 ## Why use FennFlow?
 
-Working with aiobotocore often feels like handling raw bytes and dicts. `FennFlow` wraps S3 operations into a high-level Unit of Work pattern, providing:
-- **Atomic-like multi-step operations** — if something fails, previous actions are automatically compensated (Saga Pattern).
+Working with aiobotocore often feels like handling raw bytes and dicts. `FennFlow` wraps S3 operations into a high-level
+Unit of Work pattern, providing:
+
+- **Atomic-like multi-step operations** — if something fails, previous actions are automatically compensated (Saga
+  Pattern).
 - **Clean Architecture** — treat S3 as proper repositories using mixins (`PutRepository`, `GetRepository`, etc.).
 - **Pydantic-powered models** — work with `TextContent`, `JsonContent`, `ImageContent` and others instead of raw bytes.
 
+## Supported Connectors
 
-### Backend Comparison
+| Connector | Config Class              | Documentation                               |
+|-----------|---------------------------|---------------------------------------------|
+| AWS S3    | `S3ConnectorConfig`       | [Quick start](docs/connectors/s3.md)        |
+| In-Memory | `InMemoryConnectorConfig` | [Quick start](docs/connectors/in-memory.md) |
+
+## Supported Backends
 
 FennFlow supports multiple backends for saga metadata and locking, just like Celery.
 
-- **In-Memory** — default, great for and tests and development
-- **Redis** — balanced choice for most production workloads  
-- **SQLAlchemy** — maximum durability using your existing database (via SQLAlchemy). Just pass your DB URL — FennFlow handles the rest.
+| Backend             | Config Class            | Description                                         | Documenration                             |
+|---------------------|-------------------------|-----------------------------------------------------|-------------------------------------------|
+| In-Memory (default) | `InMemoryBackendConfig` | great for and tests, development and small projects | [Quick start](docs/backends/in-memory.md) |
 
+### Backend Comparison
 
-| Parameter       | Raw aiobotocore                                      | In-Memory (default)                                      | Redis                                                    | SQLAlchemy                                  |
-|-----------------|------------------------------------------------------|----------------------------------------------------------|----------------------------------------------------------|----------------------------------------------------------|
-| **Consistency** | 🟡 Eventual at best<br>No link between file and metadata | ✅ **Always consistent**<br>While the process is alive   | ✅ **Always consistent**<br>Survives worker crashes      | ✅ **Highest**<br>Strong ACID guarantees                 |
-| **Reliability** | 🟡 Medium<br>Errors often leave orphaned files       | 🟡 Medium<br>Data is lost on process restart             | ✅ **High**<br>Survives restarts, protects against duplicates | ✅ **Highest**<br>Survives crashes, power loss, and network issues |
-| **Latency**     | ✅ Lowest<br>Pure S3 network overhead                | ✅ **Lowest**<br>Minimal in-process overhead             | 🟡 Medium<br>Network round-trip per saga step            | 🟡 High<br>Additional SQL transaction + disk overhead    |
-| **Complexity**  | ❌ None (raw code as you like)                       | ✅ **Lowest**<br>No extra infrastructure required        | 🟡 Medium<br>Just provide Redis connection URL           | 🟡 Medium<br>Provide your DB connection string (library handles tables) |
+|                    | Raw aiobotocore                                   | In-Memory                                                                                     |
+|--------------------|---------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| **Consistency**    | 🔴 None<br>No link between files and metadata     | 🟡 Medium<br>Consistent within process lifetime, lost on crash                                | 
+| **Compensation**   | 🔴 None<br>Orphaned files on failure              | 🟡 Medium<br>Automatic within process, orphaned files possible on crash                       | 
+| **Reliability**    | 🔴 Low<br>Failures leave storage in unknown state | 🟡 Medium<br>Syncs with storage on restart, files uploaded during crash cannot be compensated | 
+| **Latency**        | ✅ Lowest<br>Pure S3 network overhead only         | ✅ Lowest<br>Minimal in-process overhead                                                       | 
+| **Infrastructure** | ✅ None                                            | ✅ None                                                                                        |
+| **Memory usage**   | ✅ None                                            | 🟡 Stores file metadata in-process                                                            |
+
 ## Quick Start
 
 Here's a minimal example of FennFlow:
+
 ```python3
 import asyncio
-from fennflow import UnitOfWork, ConfigDict
-from fennflow.repositories import (
-    PutRepository, DeletedRepository, GetRepository,
-    GeneratePresignedURLRepository
-)
-from fennflow.files import TextContent
 
-# 1. Define your scoped repository with Mixins
+from fennflow import ConfigDict, UnitOfWork
+from fennflow.backends import InMemoryBackendConfig
+from fennflow.connectors import S3ConnectorConfig
+from fennflow.files import TextContent
+from fennflow.repositories import DeleteRepository, GetRepository, PutRepository
+from fennflow.repositories import S3RepoField
+
+
+# 1. Define your repository with mixins
 class UserFiles(
     PutRepository,
-    DeletedRepository,
+    DeleteRepository,
     GetRepository,
-    GeneratePresignedURLRepository,
-):
-    BUCKET_NAME = "user-files"
+    ):
+    pass
 
-# 2. Setup your Unit of Work
+
+# 2. Set up your Unit of Work
 class UOW(UnitOfWork):
-    user_files = UserFiles
-    config = ConfigDict(storage='in-memory')
+    user_files = S3RepoField(UserFiles, bucket_name="user-files")
+    config = ConfigDict(
+        backend=InMemoryBackendConfig(),
+        connector=S3ConnectorConfig(),
+        )
+
 
 async def main():
+    # Auto-commit on success, auto-rollback with compensation on failure
     async with UOW() as uow:
         file1 = TextContent.from_content("Hello, World!")
         file2 = TextContent.from_content("Hello, World2!")
 
-        # Put files with path scoping
+        # Upload files scoped to a path
         await uow.user_files.at("user1/").put(file1, file2)
 
-        storage = uow.user_files.at("user1/")
+        # Get a file
+        response = await uow.user_files.at("user1/").get(file2.filename)
+        print(response.media[0].content)  # "Hello, World2!"
 
-        response1 = await storage.generate_presigned_url(file1.filename)
-        response2 = await storage.get(file2.filename)
-        print(response2.content)  # "Hello, World2!"
+        # Delete a file
+        await uow.user_files.at("user1/").delete(file1.filename)
 
-        await storage.delete(file1.filename)
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+## Next Steps
+
+Read the [docs](docs/README.md) to learn more about working with FennFlow.
 
