@@ -2,4 +2,4 @@ __all__ = [
     "ConfigDict",
 ]
 
-from .configs.base import *
+from .configs.base import ConfigDict
