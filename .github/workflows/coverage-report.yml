@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - "build/**"
+      - "feat/**"
   pull_request:
     branches:
       - master
