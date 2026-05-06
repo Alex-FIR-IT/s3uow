@@ -1,5 +1,5 @@
 site_name: FennFlow
-site_description: GenAI Agent Framework, the Pydantic way
+site_description: Atomic-like S3 Framework, the Pydantic way
 strict: true
 theme:
   name: material
