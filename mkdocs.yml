@@ -1,0 +1,16 @@
+site_name: FennFlow
+site_description: Atomic-like S3 Framework, the Pydantic way
+strict: true
+theme:
+  name: material
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [ src ]
+
+nav:
+  - Home: index.md
+  - API: api.md
