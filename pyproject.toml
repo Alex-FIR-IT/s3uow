@@ -18,3 +18,10 @@ packages = ["src/fennflow"]
 
 [tool.hatch.version]
 path = "src/fennflow/__init__.py"
+
+[dependency-groups]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.6",
+    "mkdocstrings-python>=2.0.3",
+]
