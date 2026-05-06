@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
+from fennflow._operations.enums import OperationStatusEnum
 from fennflow.backends.abstract.base import AbstractBackend
 from fennflow.backends.abstract.exceptions import RecordAlreadyExistsException
 
@@ -82,14 +83,14 @@ class InMemoryBackend(AbstractBackend):
         self,
         operation: OperationRecord,
     ) -> None:
-        operation.status = "uploaded"
+        operation.status = OperationStatusEnum.UPLOADED
 
     async def mark_failed(
         self,
         operation: OperationRecord,
         error: str | None = None,
     ) -> None:
-        operation.status = "failed"
+        operation.status = OperationStatusEnum.FAILED
         operation.error = error
 
     async def mark_compensation_failed(
@@ -97,14 +98,14 @@ class InMemoryBackend(AbstractBackend):
         operation: OperationRecord,
         error: str | None = None,
     ):
-        operation.status = "compensation_failed"
+        operation.status = OperationStatusEnum.COMPENSATION_FAILED
         operation.error = error
 
     async def mark_pending(
         self,
         operation: OperationRecord,
     ) -> None:
-        operation.status = "pending"
+        operation.status = OperationStatusEnum.PENDING
 
     async def clear_session(
         self,
