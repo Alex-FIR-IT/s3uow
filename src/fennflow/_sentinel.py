@@ -1,4 +1,6 @@
-from typing import Literal
+from typing import Literal, TypeVar, Union
+
+_T = TypeVar("_T")
 
 
 # Sentinel class used until PEP 0661 is accepted
@@ -28,3 +30,29 @@ class NotGiven:
 
 
 NOT_GIVEN = NotGiven()
+
+
+class Omit:
+    """To explicitly omit something from being sent in a request, use `omit`.
+
+    ```py
+    # as the default `Content-Type` header is `application/json` that will be sent
+    client.post("/upload/files", files={"file": b"my raw file content"})
+
+    # you can't explicitly override the header as it has to be dynamically generated
+    # to look something like:
+    'multipart/form-data; boundary=0d8382fcf5f8c3be01ca2e11002d2983'
+    client.post(..., headers={"Content-Type": "multipart/form-data"})
+
+    # instead you can remove the default `application/json` header by passing omit
+    client.post(..., headers={"Content-Type": omit})
+    ```
+    """
+
+    def __bool__(self) -> Literal[False]:
+        return False
+
+
+OMIT = Omit()
+
+Omittable = Union[_T, Omit]  # noqa: UP007
