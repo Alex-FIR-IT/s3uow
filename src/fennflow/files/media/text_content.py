@@ -41,9 +41,11 @@ class TextContent(
         data: str,
         encoding: str = "utf-8",
         media_type: str = "text/plain",
+        filename: str | None = None,
     ) -> Self:
         return cls(
             data=data.encode(encoding),
             media_type=media_type,
             encoding=encoding,
+            filename=filename,
         )
