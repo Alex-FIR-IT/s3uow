@@ -6,13 +6,12 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from fennflow._operations.enums import OperationStatusEnum
+from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow._sentinel import NOT_GIVEN
 
 if TYPE_CHECKING:
     from fennflow._new_types import Filepath, Namespace
     from fennflow._operations.context.types import Context
-    from fennflow._operations.enums import OperationTypeEnum
     from fennflow._sentinel import NotGiven
     from fennflow.repositories.fields.base import RepoExtra
 
@@ -52,6 +51,10 @@ class OperationRecord:
     @property
     def is_failed(self) -> bool:
         return self.status == OperationStatusEnum.FAILED
+
+    @property
+    def is_deleted(self) -> bool:
+        return self.status == OperationStatusEnum.DELETED
 
     @property
     def namespace(self) -> Namespace:
