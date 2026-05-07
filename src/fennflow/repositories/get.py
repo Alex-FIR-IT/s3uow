@@ -57,7 +57,7 @@ class GetRepository(AtRepository):
             filepath = self._join_path(path)
             operation = await self._uow.backend.get(filepath)
 
-            if operation:
+            if operation and operation.is_visible(self._uow._session_id):
                 tasks.append(
                     self._uow.connector.get(
                         filepath=filepath,

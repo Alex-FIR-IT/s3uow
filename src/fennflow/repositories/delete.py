@@ -27,7 +27,7 @@ class DeleteRepository(AtRepository):
         filepath = self._join_path(path)
         operation = await self._uow.backend.get(filepath)
 
-        if operation is None:
+        if operation is None or not operation.is_visible(self._uow._session_id):
             return False
 
         context = DeleteContext(
