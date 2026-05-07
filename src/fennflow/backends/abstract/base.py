@@ -2,11 +2,13 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
+from uuid import UUID
 
 if TYPE_CHECKING:
     from fennflow._new_types import Filepath
     from fennflow._operations.dto import OperationRecord
     from fennflow.backends.abstract.config import AbstractBackendConfig
+    from fennflow.backends.responses import OperationPage
 
 
 class AbstractBackend(ABC):
@@ -67,3 +69,12 @@ class AbstractBackend(ABC):
 
     @abstractmethod
     async def rollback(self): ...
+
+    @abstractmethod
+    async def get_visible(
+        self,
+        prefix: str,
+        continuation_token: str,
+        limit: int,
+        session_id: UUID,
+    ) -> OperationPage: ...
