@@ -1,5 +1,6 @@
 from fennflow._operations.context.put import PutContext
 from fennflow._operations.dto import OperationRecord
+from fennflow._operations.enums import OperationStatusEnum
 from fennflow._operations.flows.abstract import AbstractFlow
 from fennflow.connectors.abstract import AbstractConnector
 
@@ -32,7 +33,7 @@ class PutFlow(AbstractFlow):
             repo_extra=operation.repo_extra,
             **provider_extra,
         )
-        operation.status = "failed"
+        operation.status = OperationStatusEnum.FAILED
         return result
 
     @staticmethod

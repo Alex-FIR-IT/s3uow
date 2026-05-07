@@ -1,5 +1,7 @@
 import pytest
 
+from fennflow._operations.enums import OperationStatusEnum
+
 
 @pytest.mark.asyncio
 async def test_manual_rollback(uow_cls, text_files):
@@ -41,4 +43,4 @@ async def test_backend_marks_failed_after_rollback(uow_cls, text_files):
 
     for file in text_files:
         record = await uow.backend.get(filepath=f"user/{file.filename}")
-        assert record.status == "failed"
+        assert record.status == OperationStatusEnum.FAILED

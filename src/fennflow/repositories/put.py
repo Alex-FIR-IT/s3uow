@@ -4,7 +4,7 @@ import asyncio
 
 from fennflow._operations.context.put import PutContext
 from fennflow._operations.dto import OperationRecord
-from fennflow._operations.enums import OperationTypeEnum
+from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow.backends.abstract.exceptions import RecordAlreadyExistsException
 from fennflow.files.types import BinaryMedia
 from fennflow.repositories.at import AtRepository
@@ -50,7 +50,7 @@ class PutRepository(AtRepository):
             operation = OperationRecord(
                 operation_type=OperationTypeEnum.PUT,
                 media_type=file.media_type,
-                status="pending",
+                status=OperationStatusEnum.PENDING,
                 filepath=file.filepath,
                 context=PutContext(file=file),
                 session_id=self._uow._session_id,

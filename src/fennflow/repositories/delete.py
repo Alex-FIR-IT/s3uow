@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from fennflow._operations.context.delete import DeleteContext
 from fennflow._operations.dto import OperationRecord
-from fennflow._operations.enums import OperationTypeEnum
+from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 
 from .at import AtRepository
 
@@ -44,7 +44,7 @@ class DeleteRepository(AtRepository):
         operation = OperationRecord(
             operation_type=OperationTypeEnum.DELETE,
             media_type=operation.media_type,
-            status="pending",
+            status=OperationStatusEnum.PENDING,
             filepath=operation.filepath,
             context=context,
             session_id=self._uow._session_id,

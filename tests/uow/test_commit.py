@@ -1,5 +1,7 @@
 import pytest
 
+from fennflow._operations.enums import OperationStatusEnum
+
 
 @pytest.mark.asyncio
 async def test_auto_commit(uow_cls, text_files):
@@ -57,4 +59,4 @@ async def test_backend_marks_done_after_commit(uow_cls, text_files):
         record = await uow.backend.get(
             filepath=f"user/{file.filename}",
         )
-        assert record.status == "uploaded"
+        assert record.status == OperationStatusEnum.UPLOADED

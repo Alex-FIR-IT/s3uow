@@ -3,9 +3,10 @@ from __future__ import annotations
 import datetime
 import uuid
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 from uuid import UUID
 
+from fennflow._operations.enums import OperationStatusEnum
 from fennflow._sentinel import NOT_GIVEN
 
 if TYPE_CHECKING:
@@ -24,7 +25,7 @@ class OperationRecord:
     repo_extra: RepoExtra
     operation_type: OperationTypeEnum
     context: Context
-    status: Literal["pending", "uploaded", "failed", "compensation_failed", "deleted"]
+    status: OperationStatusEnum
     operation_id: uuid.UUID = field(default_factory=uuid.uuid4)
 
     created_at: datetime.datetime = field(
@@ -42,15 +43,15 @@ class OperationRecord:
 
     @property
     def is_pending(self) -> bool:
-        return self.status == "pending"
+        return self.status == OperationStatusEnum.PENDING
 
     @property
     def is_uploaded(self) -> bool:
-        return self.status == "uploaded"
+        return self.status == OperationStatusEnum.UPLOADED
 
     @property
     def is_failed(self) -> bool:
-        return self.status == "failed"
+        return self.status == OperationStatusEnum.FAILED
 
     @property
     def namespace(self) -> Namespace:
