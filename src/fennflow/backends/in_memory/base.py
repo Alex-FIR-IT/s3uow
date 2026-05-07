@@ -83,7 +83,14 @@ class InMemoryBackend(AbstractBackend):
         self,
         operation: OperationRecord,
     ) -> None:
-        operation.status = OperationStatusEnum.UPLOADED
+        if operation.operation_type == OperationTypeEnum.PUT:
+            operation.status = OperationStatusEnum.UPLOADED
+        elif operation.operation_type == OperationTypeEnum.DELETE:
+            operation.status = OperationStatusEnum.DELETED
+        else:
+            raise NotImplementedError(
+                f"mark_done is not supported for {operation.operation_type=}"
+            )
 
     async def mark_failed(
         self,
