@@ -13,6 +13,7 @@ from fennflow.repositories import (
     PutRepository,
     RepoField,
 )
+from fennflow.repositories.list import ListRepository
 from fennflow.uow import UnitOfWork
 
 logging.basicConfig(
@@ -26,6 +27,7 @@ class UserFiles(
     PutRepository,
     DeleteRepository,
     GetRepository,
+    ListRepository,
 ):
     pass
 
