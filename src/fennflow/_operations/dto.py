@@ -74,3 +74,10 @@ class OperationRecord:
             and self.is_pending
             and not self.is_expired
         )
+
+    def is_visible(self, requested_from_session_id: UUID) -> bool:
+        return self.is_uploaded or (
+            self.is_pending
+            and self.session_id == requested_from_session_id
+            and self.operation_type == OperationTypeEnum.PUT
+        )
