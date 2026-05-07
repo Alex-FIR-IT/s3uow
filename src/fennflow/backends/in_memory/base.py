@@ -141,3 +141,27 @@ class InMemoryBackend(AbstractBackend):
     @classmethod
     def drop_all(cls) -> None:
         cls._storage = defaultdict(dict)
+
+    async def select(
+        self,
+        **kwargs: Unpack[SelectParams],
+    ) -> OperationPage:
+        select = SelectOperation(**kwargs)
+
+        return select.select(
+            record=(record for record in self.namespaced_storage.values())
+        )
+
+    async def get_visible(
+        self,
+        prefix: str,
+        continuation_token: str,
+        limit: int,
+        session_id: UUID,
+    ) -> OperationPage:
+        return await self.select(
+            prefix=prefix,
+            continuation_token=continuation_token,
+            limit=limit,
+            visible_for_session_id=session_id,
+        )
