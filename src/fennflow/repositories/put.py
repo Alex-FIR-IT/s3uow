@@ -52,7 +52,6 @@ class PutRepository(AtRepository):
 
             operation = OperationRecord(
                 operation_type=OperationTypeEnum.PUT,
-                media_type=file.media_type,
                 status=OperationStatusEnum.PENDING,
                 filepath=file.filepath,
                 context=PutContext(file=file),

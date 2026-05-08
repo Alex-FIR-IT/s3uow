@@ -52,7 +52,6 @@ def make_record(**kwargs) -> OperationRecord:
     defaults = {
         "session_id": uuid.uuid4(),
         "filepath": "folder1/file.txt",
-        "media_type": "text/plain",
         "repo_extra": {},
         "operation_type": OperationTypeEnum.PUT,
         "context": {},

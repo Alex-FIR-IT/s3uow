@@ -43,7 +43,6 @@ class DeleteRepository(AtRepository):
 
         operation = OperationRecord(
             operation_type=OperationTypeEnum.DELETE,
-            media_type=operation.media_type,
             status=OperationStatusEnum.PENDING,
             filepath=operation.filepath,
             context=context,

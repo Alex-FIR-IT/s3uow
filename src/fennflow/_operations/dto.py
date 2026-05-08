@@ -20,7 +20,6 @@ if TYPE_CHECKING:
 class OperationRecord:
     session_id: uuid.UUID
     filepath: Filepath
-    media_type: str
     repo_extra: RepoExtra
     operation_type: OperationTypeEnum
     context: Context
