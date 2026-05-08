@@ -10,6 +10,7 @@ from typing import Any, Self
 from pydantic import (
     BaseModel,
     ConfigDict,
+    Field,
     model_validator,
 )
 
@@ -40,6 +41,7 @@ class BaseContent(BaseModel, ABC):
     media_type: str
     kind: str = "base"
     folder_path: str | None = None
+    extra_metadata: dict[str, str] = Field(default_factory=dict)
 
     @property
     def filepath(self) -> str:
@@ -57,6 +59,21 @@ class BaseContent(BaseModel, ABC):
     model_config = ConfigDict(
         validate_assignment=True,
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def collect_extra_to_metadata(cls, data: dict) -> dict:
+        allowed_fields = cls.model_fields.keys()
+
+        extra = {}
+
+        for key, value in data.items():
+            if key not in allowed_fields:
+                extra[key] = str(value)
+
+        data["extra_metadata"] = {**data.get("extra_metadata", {}), **extra}
+
+        return data
 
     @model_validator(mode="before")
     @classmethod
@@ -120,7 +137,7 @@ class BaseContent(BaseModel, ABC):
 
     def get_metadata(self, exclude: set | None = None) -> dict:
         excluded_set = exclude or set()
-        excluded_set.update({"data", "media_type"})
+        excluded_set.update({"data", "media_type", "extra_metadata"})
 
         metadata = self.model_dump(
             exclude_unset=True,
@@ -128,4 +145,4 @@ class BaseContent(BaseModel, ABC):
         )
         logger.debug(f"Generated metadata for {self=}: {metadata=}")
 
-        return metadata
+        return {**self.extra_metadata, **metadata}
