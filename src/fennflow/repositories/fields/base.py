@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Generic, TypedDict, TypeVar
-
-from typing_extensions import overload
+from typing import TYPE_CHECKING, Generic, TypedDict, TypeVar, overload
 
 if TYPE_CHECKING:
     from fennflow._new_types import Namespace
