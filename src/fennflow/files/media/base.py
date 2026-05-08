@@ -4,7 +4,8 @@ import logging
 import mimetypes
 import os
 from abc import ABC
-from typing import Any, ClassVar, Self
+from hashlib import sha256
+from typing import Any, Self
 
 from pydantic import (
     BaseModel,
@@ -27,10 +28,6 @@ from fennflow.files.exceptions.folder_path_is_none import FolderPathIsNoneExcept
 from fennflow.files.exceptions.media_type_cannot_be_guessed import (
     MediaTypeCannotBeGuessed,
 )
-from fennflow.files.protocols.has_data_and_ext_obj import (
-    FilenameFactoryProtocol,
-)
-from fennflow.files.utils.determine_filename import get_determined_filename_by_obj
 
 logger = logging.getLogger(__name__)
 
@@ -39,8 +36,8 @@ class BaseContent(BaseModel, ABC):
     """Base class for all content types."""
 
     data: Any
-    media_type: str | None = None
-    filename: str | None = None
+    filename: str
+    media_type: str
     kind: str = "base"
     folder_path: str | None = None
 
@@ -57,55 +54,36 @@ class BaseContent(BaseModel, ABC):
             )
         return Path.join_path(self.folder_path, self.filename)
 
-    filename_factory: ClassVar[FilenameFactoryProtocol] = (
-        get_determined_filename_by_obj
-    )
     model_config = ConfigDict(
         validate_assignment=True,
     )
 
-    @model_validator(mode="after")
-    def validate_filename_and_media_type(self) -> Self:
-        if self.media_type and self.filename:
-            valid_extensions = mimetypes.guess_all_extensions(
-                self.media_type, strict=False
-            )
+    @model_validator(mode="before")
+    @classmethod
+    def validate_filename_and_media_type(cls, data):
+        filename = data.get("filename")
+        media_type = data.get("media_type")
 
-            if valid_extensions and self.extension not in valid_extensions:
-                logger.warning(
-                    f"Mismatch: {self.filename} has {self.extension=}, "
-                    f"but {self.media_type=} expects one of {valid_extensions}"
-                )
-        elif self.media_type:
-            # noinspection PyArgumentList
-            self.__dict__["filename"] = self.filename_factory()
-        elif self.filename:
-            guessed_media_type = mimetypes.guess_file_type(
-                path=self.filename,
-                strict=False,
-            )[0]
-
+        if media_type and filename:
+            pass
+        elif media_type:
+            data["filename"] = sha256(data["data"]).hexdigest()
+        elif filename:
+            guessed_media_type = mimetypes.guess_type(filename, strict=False)[0]
             if guessed_media_type is None:
-                raise MediaTypeCannotBeGuessed(filename=self.filename)
-            self.__dict__["media_type"] = guessed_media_type
+                raise MediaTypeCannotBeGuessed(filename=filename)
+            data["media_type"] = guessed_media_type
+
         else:
             raise FileNameAndMediaTypeBothNoneException()
 
-        return self
+        return data
 
-    @property
-    def extension(self) -> str:
-        if self.filename:
-            extension = os.path.splitext(self.filename)[-1].lower()
+    @model_validator(mode="after")
+    def ensure_filename_has_ext(self) -> Self:
+        ext = os.path.splitext(self.filename)[-1]
 
-            if not extension:
-                raise CannotParseExtensionException(filename=self.filename)
-
-        elif self.media_type:
-            logger.debug(
-                f"Filename is not specified. "
-                f"Trying to determine extension from {self.media_type=}"
-            )
+        if not ext:
             guessed_extension = mimetypes.guess_extension(
                 self.media_type,
                 strict=False,
@@ -116,12 +94,28 @@ class BaseContent(BaseModel, ABC):
                     f"Cannot guess extension for {self.media_type=}. "
                     f"Please, specify filename explicitly."
                 )
-            extension = guessed_extension
-            logger.debug(f"Determining has ended successfully. Got {extension=}")
 
-        else:
-            raise FileNameAndMediaTypeBothNoneException()
+            self.__dict__["filename"] = f"{self.filename}{guessed_extension}"
+        return self
 
+    @model_validator(mode="after")
+    def warn_about_media_type_and_ext_mismatch(self) -> Self:
+        valid_extensions = mimetypes.guess_all_extensions(self.media_type, strict=False)
+
+        if valid_extensions and self.extension not in valid_extensions:
+            logger.warning(
+                f"Mismatch: {self.filename} has {self.extension=}, "
+                f"but {self.media_type=} expects one of {valid_extensions}"
+            )
+
+        return self
+
+    @property
+    def extension(self) -> str:
+        extension = os.path.splitext(self.filename)[-1].lower()
+
+        if not extension:
+            raise CannotParseExtensionException(filename=self.filename)
         return extension.strip()
 
     def get_metadata(self, exclude: set | None = None) -> dict:
