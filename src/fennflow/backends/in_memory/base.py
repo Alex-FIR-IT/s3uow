@@ -3,14 +3,21 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
-from fennflow._operations.enums import OperationStatusEnum
+from typing_extensions import Unpack
+
+from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow.backends.abstract.base import AbstractBackend
 from fennflow.backends.abstract.exceptions import RecordAlreadyExistsException
+from fennflow.backends.in_memory._select import SelectOperation
 
 if TYPE_CHECKING:
+    from uuid import UUID
+
     from fennflow._new_types import Filepath, Namespace
     from fennflow._operations.dto import OperationRecord
+    from fennflow.backends.abstract.annotations import SelectParams
     from fennflow.backends.in_memory import InMemoryBackendConfig
+    from fennflow.backends.responses import OperationPage
 
 
 class InMemoryBackend(AbstractBackend):
