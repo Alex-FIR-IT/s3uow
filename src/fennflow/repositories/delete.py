@@ -52,6 +52,9 @@ class DeleteRepository(AtRepository):
         )
         await self._uow.backend.add(operation)
 
-        await self._uow.operation_executor.execute(operation)
+        await self._uow.operation_executor.execute(
+            operation,
+            **provider_extra,
+        )
         await self._uow.backend.flush()
         return True
