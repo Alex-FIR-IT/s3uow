@@ -1,9 +1,7 @@
 import base64
-from typing import Any
 
 from pydantic import (
     Field,
-    computed_field,
     field_serializer,
     field_validator,
 )
@@ -17,16 +15,6 @@ class BinaryContent(BaseContent):
     data: bytes = Field(repr=False)
     kind: str = "binary"
 
-    @field_serializer("*", mode="wrap")
-    def serialize_numbers(self, value: Any, handler: Any) -> Any:
-        result = handler(value)
-        if isinstance(result, (int, float)) and not isinstance(result, bool):
-            return str(result)
-        if result is None:
-            return "None"
-        return result
-
-    @computed_field
     @property
     def data_size_mb(self) -> float:
         size_bytes = len(self.data)
