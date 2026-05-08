@@ -1,6 +1,3 @@
-import logging
-import tracemalloc
-
 import pytest
 
 from fennflow import ConfigDict
@@ -15,12 +12,6 @@ from fennflow.repositories import (
 )
 from fennflow.repositories.list import ListRepository
 from fennflow.uow import UnitOfWork
-
-logging.basicConfig(
-    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-
-tracemalloc.start(10)
 
 
 class UserFiles(
