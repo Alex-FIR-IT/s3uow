@@ -48,6 +48,7 @@ extend-select = [
     "E",
     "F",
     "B",
+    "ARG"
 ]
 
 flake8-quotes = { inline-quotes = "double", multiline-quotes = "double" }
