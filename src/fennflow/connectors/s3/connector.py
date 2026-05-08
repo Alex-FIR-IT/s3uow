@@ -9,7 +9,6 @@ from fennflow.connectors.abstract import AbstractConnector
 from fennflow.connectors.s3.client import S3Client
 from fennflow.files import ContentFactory
 from fennflow.files.responses.base import MediaResponse
-from fennflow.files.types import BinaryMedia
 from fennflow.repositories.fields.s3 import S3Extra
 
 if TYPE_CHECKING:
@@ -17,6 +16,7 @@ if TYPE_CHECKING:
 
     from fennflow._new_types import Filepath, Namespace
     from fennflow.connectors.s3 import S3ConnectorConfig
+    from fennflow.files.types import BinaryMedia
 
 logger = logging.getLogger(__name__)
 

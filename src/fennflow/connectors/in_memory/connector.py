@@ -61,7 +61,7 @@ class InMemoryConnector(AbstractConnector):
         self,
         file: BinaryMedia,
         repo_extra: RepoExtra,
-        **extra,
+        **extra,  # noqa: ARG002
     ) -> None:
         namespace = repo_extra["namespace"]
         self.storage[namespace][file.filepath] = file
@@ -71,7 +71,7 @@ class InMemoryConnector(AbstractConnector):
         self,
         filepath: Filepath,
         repo_extra: RepoExtra,
-        **extra: dict[Any, Any],
+        **extra: dict[Any, Any],  # noqa: ARG002
     ) -> MediaResponse:
 
         if filepath not in self.storage[repo_extra["namespace"]]:
@@ -93,7 +93,7 @@ class InMemoryConnector(AbstractConnector):
         self,
         filepath: Filepath,
         repo_extra: RepoExtra,
-        **extra: dict[Any, Any],
+        **extra: dict[Any, Any],  # noqa: ARG002
     ):
         self.storage[repo_extra["namespace"]].pop(filepath, None)
 
@@ -103,7 +103,7 @@ class InMemoryConnector(AbstractConnector):
         from_filepath: Filepath,
         to_filepath: Filepath,
         to_namespace: Namespace,
-        **extra: dict[Any, Any],
+        **extra: dict[Any, Any],  # noqa: ARG002
     ):
         file = self.storage[repo_extra["namespace"]].get(from_filepath)
         if file:

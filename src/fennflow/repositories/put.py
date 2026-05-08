@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import asyncio
+from typing import TYPE_CHECKING
 
 from fennflow._operations.context.put import PutContext
 from fennflow._operations.dto import OperationRecord
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow.backends.abstract.exceptions import RecordAlreadyExistsException
-from fennflow.files.types import BinaryMedia
 from fennflow.repositories.at import AtRepository
+
+if TYPE_CHECKING:
+    from fennflow.files.types import BinaryMedia
 
 
 class PutRepository(AtRepository):

@@ -5,7 +5,7 @@ import mimetypes
 import os
 from abc import ABC
 from hashlib import sha256
-from typing import Any, Self
+from typing import TYPE_CHECKING, Any, Self
 
 from pydantic import (
     BaseModel,
@@ -30,6 +30,9 @@ from fennflow.files.exceptions.media_type_cannot_be_guessed import (
     MediaTypeCannotBeGuessed,
 )
 
+if TYPE_CHECKING:
+    from fennflow._new_types import Filepath
+
 logger = logging.getLogger(__name__)
 
 
@@ -44,7 +47,7 @@ class BaseContent(BaseModel, ABC):
     extra_metadata: dict[str, str] = Field(default_factory=dict)
 
     @property
-    def filepath(self) -> str:
+    def filepath(self) -> Filepath:
         if self.folder_path is None:
             raise FolderPathIsNoneException(
                 f"Cannot determine filepath for {self.filename=}. Folder path is None."

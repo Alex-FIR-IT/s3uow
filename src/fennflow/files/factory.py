@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 from functools import cache
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from pydantic import ValidationError
 
 from fennflow.files.media.binary_content import BinaryContent
 from fennflow.files.media.url_content import UrlContent
 from fennflow.files.registry import content_registry
-from fennflow.files.types import BinaryMedia
+
+if TYPE_CHECKING:
+    from fennflow.files.types import BinaryMedia
 
 
 class ContentFactory:

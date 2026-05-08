@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field
-from typing import Self, TypeVar, overload
+from typing import TYPE_CHECKING, Self, TypeVar, overload
 
 from fennflow.files.media import (
     AudioContent,
@@ -12,6 +11,9 @@ from fennflow.files.media import (
     VideoContent,
 )
 from fennflow.files.types import Media
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
 
 T = TypeVar("T", bound=Media)
 

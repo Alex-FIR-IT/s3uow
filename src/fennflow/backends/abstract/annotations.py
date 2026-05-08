@@ -10,6 +10,11 @@ if TYPE_CHECKING:
 
 
 class SelectParams(TypedDict):
+    """TypedDict describes arguments for select operation.
+
+    For now, it exists only in InMemoryBackend.
+    """
+
     path: NotRequired[Filepath]
     prefix: NotRequired[str]
     status: NotRequired[OperationStatusEnum]

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import itertools
-from collections.abc import Generator, Iterable
 from typing import TYPE_CHECKING
 from uuid import UUID
 
@@ -14,6 +13,8 @@ from fennflow.backends.abstract.annotations import SelectParams
 from fennflow.backends.responses import OperationPage
 
 if TYPE_CHECKING:
+    from collections.abc import Generator, Iterable
+
     from fennflow._operations.dto import OperationRecord
 
 

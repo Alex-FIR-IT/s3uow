@@ -1,6 +1,12 @@
-from .abstract import AbstractConnector
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from .registry import connector_registry
-from .types.config import ConnectorConfig
+
+if TYPE_CHECKING:
+    from .abstract import AbstractConnector
+    from .types.config import ConnectorConfig
 
 
 class ConnectorFactory:
@@ -15,7 +21,7 @@ class ConnectorFactory:
     """
 
     @staticmethod
-    def from_config(config: ConnectorConfig) -> "AbstractConnector":
+    def from_config(config: ConnectorConfig) -> AbstractConnector:
         """Create a connector instance from a config object.
 
         Args:

@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 import logging
 import uuid
-from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 from fennflow._operations.executor import OperationExecutor
@@ -12,6 +11,8 @@ from fennflow.backends import BackendFactory
 from fennflow.connectors import ConnectorFactory
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from fennflow import ConfigDict
     from fennflow._operations.dto import OperationRecord
     from fennflow.backends.abstract.base import AbstractBackend
@@ -74,7 +75,7 @@ class UnitOfWork:
             and then rolls back backend state
     """
 
-    config: ConfigDict = None
+    config: ConfigDict
 
     def __init__(
         self,
