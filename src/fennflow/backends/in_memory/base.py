@@ -36,6 +36,10 @@ class InMemoryBackend(AbstractBackend):
             )
         return self.__class__._storage
 
+    @property
+    def namespaced_storage(self) -> dict[Filepath, OperationRecord]:
+        return self.storage[self._config.namespace]
+
     async def open(
         self,
     ) -> None:
