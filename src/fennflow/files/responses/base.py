@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator
+from dataclasses import dataclass, field
 from typing import Self, TypeVar, overload
-
-from pydantic import BaseModel, Field, field_validator
 
 from fennflow.files.media import (
     AudioContent,
@@ -17,7 +16,8 @@ from fennflow.files.types import Media
 T = TypeVar("T", bound=Media)
 
 
-class MediaResponse(BaseModel):
+@dataclass(slots=True)
+class MediaResponse:
     """Response object containing a collection of media items.
 
     Returned by repository read operations such as ``GetRepository.get()``.
@@ -31,18 +31,12 @@ class MediaResponse(BaseModel):
             print(item.data)
     """
 
-    media: tuple[Media, ...] = Field(default_factory=tuple)
+    media: tuple[Media, ...] = field(default_factory=tuple)
 
-    @field_validator("media", mode="before")
-    @classmethod
-    def convert_strs_to_files(cls, media: Iterable[Media | str]) -> tuple[Media, ...]:
-        return tuple(
-            (
-                TextContent.from_content(file_or_str)
-                if isinstance(file_or_str, str)
-                else file_or_str
-            )
-            for file_or_str in media
+    def __post_init__(self):
+        self.media = tuple(
+            TextContent.from_content(item) if isinstance(item, str) else item
+            for item in self.media
         )
 
     @classmethod
