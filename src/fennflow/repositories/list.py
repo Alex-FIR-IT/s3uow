@@ -12,7 +12,6 @@ class ListRepository(AtRepository):
         prefix: str = "",
         continuation_token: Omittable[str] = OMIT,
         limit: int = 1000,
-        **provider_extra,
     ):
         folder_path = self._join_path(prefix)
 
