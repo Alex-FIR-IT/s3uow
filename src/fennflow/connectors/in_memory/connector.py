@@ -105,12 +105,9 @@ class InMemoryConnector(AbstractConnector):
         to_namespace: Namespace,
         **extra: dict[Any, Any],
     ):
-        response = await self.get(
-            filepath=from_filepath,
-            repo_extra=repo_extra,
-        )
-        if response:
-            self.storage[to_namespace][to_filepath] = response[0]
+        file = self.storage[repo_extra["namespace"]].get(from_filepath)
+        if file:
+            self.storage[to_namespace][to_filepath] = file
 
     @classmethod
     def drop_all(cls) -> None:
