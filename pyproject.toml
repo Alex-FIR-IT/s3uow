@@ -75,6 +75,7 @@ convention = "google"
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "typing.assert_never".msg = "Use typing_extensions.assert_never instead."
 "typing.Unpack".msg = "Use typing_extensions.Unpack instead."
+"typing.TypeAliasType".msg = "Use typing_extensions.TypeAliasType instead."
 
 [tool.ruff.format]
 # don't format python in docstrings, pytest-examples takes care of it
