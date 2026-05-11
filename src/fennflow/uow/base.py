@@ -83,10 +83,12 @@ class UnitOfWork:
     ):
         self._auto_commit = auto_commit
         self._session_id = uuid.uuid4()
-        resolved = resolve_config(self.config)
+        self._resolved_config = ConfigResolver.resolve_config(self.config)
 
-        self._backend = BackendFactory.from_config(config=resolved.backend)
-        self._connector = ConnectorFactory.from_config(config=resolved.connector)
+        self._backend = BackendFactory.from_config(config=self._resolved_config.backend)
+        self._connector = ConnectorFactory.from_config(
+            config=self._resolved_config.connector
+        )
         self.operation_executor = OperationExecutor(
             connector=self.connector,
         )
