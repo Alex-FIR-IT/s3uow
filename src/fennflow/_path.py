@@ -15,6 +15,17 @@ class Path:
 
     @classmethod
     def join_path(cls, *paths: str) -> Filepath:
-        path = "/".join(path.strip("/") for path in paths)
+        path = "/".join(path for path in paths)
 
         return cls.normalize_path(path)
+
+    @classmethod
+    def normalize_folder(cls, path: str) -> str:
+        """Used for display of folder path.
+
+        Adds trailing slash to distinguish folders from file keys.
+        _path itself has no trailing slash as it's used directly in join operations.
+
+        """
+        normalized = cls.normalize_path(path)
+        return normalized + "/" if normalized else ""
