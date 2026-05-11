@@ -49,7 +49,7 @@ class AtRepository(BaseRepository):
         return self.__class__(self._uow, new_path, repo_extra=self.repo_extra)
 
     @property
-    def pwd(self) -> str:
+    def cwd(self) -> str:
         """Return the current working path.
 
         Returns:
