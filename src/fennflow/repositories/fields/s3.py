@@ -7,18 +7,21 @@ from fennflow.repositories.fields.base import RepoField, RepoType
 from .base import RepoExtra
 
 if TYPE_CHECKING:
-    from fennflow._new_types import Namespace
+    from fennflow._new_types import BucketName
 
 
 class S3Extra(RepoExtra):
-    """Configuration parameters for S3-backed repository fields."""
+    """Configuration parameters for S3-backed repository fields.
 
-    bucket_name: Namespace  # alias for namespace
+    bucket_name is an alias for Namespace from fennflow._new_types.
+    """
+
+    bucket_name: BucketName
 
 
 def S3RepoField(
     repo_cls: type[RepoType],
-    bucket_name: Namespace,
+    bucket_name: BucketName,
 ) -> RepoField[RepoType]:
     """Create a RepoField configured for S3 storage.
 
