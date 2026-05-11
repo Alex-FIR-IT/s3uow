@@ -3,6 +3,7 @@ from __future__ import annotations
 import bisect
 import logging
 from collections import defaultdict
+from itertools import islice
 from typing import TYPE_CHECKING, Any, Self
 
 from fennflow._sentinel import OMIT, Omittable
@@ -125,26 +126,26 @@ class InMemoryConnector(AbstractConnector):
         continuation_token: Omittable[str] | None = OMIT,
         **extra: dict[Any, Any],  # noqa: ARG002
     ) -> ListResponse:
-        files = []
-        filepaths = sorted(self.storage[repo_extra["namespace"]])
+        filtered_filepaths = []
+        all_filepaths = sorted(self.storage[repo_extra["namespace"]])
 
         if continuation_token:
-            index = bisect.bisect_right(filepaths, continuation_token)
+            index = bisect.bisect_right(all_filepaths, continuation_token)
         else:
             index = 0
 
-        for filepath in filepaths[index:]:
+        for filepath in islice(all_filepaths, index, None):
             if 0 >= limit:
                 continuation_token = filepath
                 break
 
             if filepath.startswith(prefix):
-                files.append(self.storage[repo_extra["namespace"]][filepath])
+                filtered_filepaths.append(filepath)
                 limit -= 1
         else:
             continuation_token = None
 
         return ListResponse(
-            filepaths=filepaths,
+            filepaths=filtered_filepaths,
             continuation_token=continuation_token,
         )
