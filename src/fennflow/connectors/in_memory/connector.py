@@ -70,7 +70,7 @@ class InMemoryConnector(AbstractConnector):
     ) -> None:
         namespace = repo_extra["namespace"]
         self.storage[namespace][file.storage_path] = file
-        logger.info(f"{file=} uploaded to {namespace=}")
+        logger.debug(f"{file=} uploaded to {namespace=}")
 
     async def get(
         self,

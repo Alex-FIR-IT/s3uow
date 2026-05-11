@@ -95,7 +95,7 @@ class S3Connector(AbstractConnector[S3Extra]):
             Metadata=file.get_metadata(),
             **sdk_extra,
         )
-        logger.info(f"{file=} uploaded to {bucket_name=}")
+        logger.debug(f"{file=} uploaded to {bucket_name=}")
 
     async def get(
         self,
@@ -133,7 +133,7 @@ class S3Connector(AbstractConnector[S3Extra]):
             Key=storage_path,
             **sdk_extra,
         )
-        logger.info(f"file with {storage_path=} deleted from {bucket_name=}")
+        logger.debug(f"file with {storage_path=} deleted from {bucket_name=}")
 
     async def copy_object(
         self,
@@ -151,7 +151,7 @@ class S3Connector(AbstractConnector[S3Extra]):
             Key=to_storage_path,
             **sdk_extra,
         )
-        logger.info(
+        logger.debug(
             f"file from {bucket_name=} with {from_storage_path=} "
             f"copied to {to_namespace=}"
         )
