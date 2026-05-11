@@ -25,7 +25,7 @@ class SelectOperation:
         self.current_datetime = now()
 
         for key in SelectParams.__annotations__:
-            self.kwargs.setdefault(key, OMIT)
+            self.kwargs.setdefault(key, OMIT)  # type: ignore[misc]
 
     @property
     def predicates(self):
@@ -69,12 +69,13 @@ class SelectOperation:
         )
 
     def sort_and_filter(
-        self, all_records: OperationRecord
-    ) -> list[OperationRecord] | Generator[OperationRecord, None, None]:
+        self,
+        all_records: Iterable[OperationRecord],
+    ) -> Generator[OperationRecord, None, None]:
 
         continuation_token = self.kwargs["continuation_token"]
 
-        if continuation_token is not OMIT:
+        if continuation_token:
             all_sorted = sorted(all_records, key=lambda r: r.created_at)
             cursor = UUID(continuation_token)
             after_cursor = itertools.dropwhile(
@@ -87,7 +88,7 @@ class SelectOperation:
                 if all(p(record) for p in self.predicates)
             )
         else:
-            filtered_results = sorted(
+            sorted_records = sorted(
                 (
                     record
                     for record in all_records
@@ -95,18 +96,18 @@ class SelectOperation:
                 ),
                 key=lambda r: r.created_at,
             )
-            filtered_results = (record for record in filtered_results)
+            filtered_results = (record for record in sorted_records)
 
         return filtered_results
 
     def apply_limit(
         self, filtered_results: Iterable[OperationRecord]
-    ) -> tuple[OperationRecord]:
+    ) -> tuple[OperationRecord, ...]:
         return tuple(itertools.islice(filtered_results, self.kwargs["limit"]))
 
     def get_continuation_token(
         self, filtered_results: Generator[OperationRecord, None, None]
-    ) -> UUID | None:
+    ) -> str | None:
         next_item = next(filtered_results, None)
         next_token = str(next_item.operation_id) if next_item else None
         return next_token
