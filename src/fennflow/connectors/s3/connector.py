@@ -16,7 +16,7 @@ from fennflow.repositories.fields.s3 import S3Extra
 if TYPE_CHECKING:
     from aiobotocore.session import AioSession
 
-    from fennflow._new_types import Filepath, Namespace
+    from fennflow._new_types import Namespace, StoragePath
     from fennflow.connectors.abstract.base import RepoExtraType
     from fennflow.connectors.s3 import S3ConnectorConfig
     from fennflow.files.types import BinaryMedia
@@ -99,7 +99,7 @@ class S3Connector(AbstractConnector[S3Extra]):
 
     async def get(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
         repo_extra: S3Extra,
         **sdk_extra: Any,
     ) -> MediaResponse:
@@ -123,7 +123,7 @@ class S3Connector(AbstractConnector[S3Extra]):
 
     async def delete(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
         repo_extra: S3Extra,
         **sdk_extra: Any,
     ):
@@ -138,8 +138,8 @@ class S3Connector(AbstractConnector[S3Extra]):
     async def copy_object(
         self,
         repo_extra: S3Extra,
-        from_storage_path: Filepath,
-        to_storage_path: Filepath,
+        from_storage_path: StoragePath,
+        to_storage_path: StoragePath,
         to_namespace: Namespace,
         **sdk_extra: Any,
     ):
@@ -152,7 +152,8 @@ class S3Connector(AbstractConnector[S3Extra]):
             **sdk_extra,
         )
         logger.info(
-            f"file from {bucket_name=} with {from_storage_path=} copied to {to_namespace=}"
+            f"file from {bucket_name=} with {from_storage_path=} "
+            f"copied to {to_namespace=}"
         )
 
     async def list_objects(

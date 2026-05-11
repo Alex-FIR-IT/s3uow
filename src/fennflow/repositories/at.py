@@ -7,7 +7,7 @@ from fennflow._path import Path
 from .base import BaseRepository
 
 if TYPE_CHECKING:
-    from fennflow._new_types import Filepath
+    from fennflow._new_types import StoragePath
 
 
 class AtRepository(BaseRepository):
@@ -20,7 +20,7 @@ class AtRepository(BaseRepository):
         await uow.user_files.at("user1/").put(file)
     """
 
-    def _join_path(self, *paths: str) -> Filepath:
+    def _join_path(self, *paths: str) -> StoragePath:
         """Join the current path with one or more path segments.
 
         Args:

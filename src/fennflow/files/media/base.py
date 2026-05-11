@@ -34,7 +34,7 @@ from fennflow.files.exceptions.storage_prefix_is_none import (
 )
 
 if TYPE_CHECKING:
-    from fennflow._new_types import Filepath
+    from fennflow._new_types import StoragePath
 
 logger = logging.getLogger(__name__)
 
@@ -51,10 +51,11 @@ class BaseContent(BaseModel, ABC):
     extra_metadata: dict[str, str] = Field(default_factory=dict)
 
     @property
-    def storage_path(self) -> Filepath:
+    def storage_path(self) -> StoragePath:
         if self._storage_prefix is None:
             raise StoragePrefixIsNoneException(
-                f"Cannot determine storage_path for {self.filename=}. Storage prefix is None."
+                f"Cannot determine storage_path for {self.filename=}. "
+                f"Storage prefix is None."
             )
         elif self.filename is None:
             raise FilenameIsNoneException(

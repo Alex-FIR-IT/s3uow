@@ -7,7 +7,7 @@ from fennflow._sentinel import OMIT, Omittable
 from fennflow.repositories.fields.base import RepoExtra
 
 if TYPE_CHECKING:
-    from fennflow._new_types import Filepath, Namespace
+    from fennflow._new_types import Namespace, StoragePath
     from fennflow.files.responses.base import MediaResponse
     from fennflow.files.responses.list import ListResponse
     from fennflow.files.types import BinaryMedia
@@ -49,7 +49,7 @@ class AbstractConnector(ABC, Generic[RepoExtraType]):
     @abstractmethod
     async def get(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
         repo_extra: RepoExtraType,
         **extra: dict[Any, Any],
     ) -> MediaResponse:
@@ -58,7 +58,7 @@ class AbstractConnector(ABC, Generic[RepoExtraType]):
     @abstractmethod
     async def delete(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
         repo_extra: RepoExtraType,
         **extra: dict[Any, Any],
     ):
@@ -68,8 +68,8 @@ class AbstractConnector(ABC, Generic[RepoExtraType]):
     async def copy_object(
         self,
         repo_extra: RepoExtraType,
-        from_storage_path: Filepath,
-        to_storage_path: Filepath,
+        from_storage_path: StoragePath,
+        to_storage_path: StoragePath,
         to_namespace: Namespace,
         **extra: dict[Any, Any],
     ):

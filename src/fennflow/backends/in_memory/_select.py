@@ -31,7 +31,8 @@ class SelectOperation:
     def predicates(self):
         return (
             lambda record: (
-                self.kwargs["path"] is OMIT or record.storage_path == self.kwargs["path"]
+                self.kwargs["path"] is OMIT
+                or record.storage_path == self.kwargs["path"]
             ),
             lambda record: (
                 self.kwargs["prefix"] is OMIT

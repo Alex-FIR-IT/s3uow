@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-    from fennflow._new_types import Filepath
+    from fennflow._new_types import StoragePath
 
 
 @dataclass(slots=True)
@@ -30,13 +30,15 @@ class ListResponse:
             )
     """
 
-    storage_paths: list[Filepath] | tuple[Filepath, ...] = field(default_factory=tuple)
+    storage_paths: list[StoragePath] | tuple[StoragePath, ...] = field(
+        default_factory=tuple
+    )
     continuation_token: str | None = None
 
-    def __iter__(self) -> Iterator[Filepath]:
+    def __iter__(self) -> Iterator[StoragePath]:
         return iter(self.storage_paths)
 
-    def __getitem__(self, item) -> Filepath:
+    def __getitem__(self, item) -> StoragePath:
         return self.storage_paths[item]
 
     def __len__(self) -> int:

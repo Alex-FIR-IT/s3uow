@@ -13,7 +13,7 @@ from fennflow.files.responses.base import MediaResponse
 from fennflow.files.responses.list import ListResponse
 
 if TYPE_CHECKING:
-    from fennflow._new_types import Filepath, Namespace
+    from fennflow._new_types import Namespace, StoragePath
     from fennflow.connectors.abstract.base import RepoExtraType
     from fennflow.connectors.in_memory.config import InMemoryConnectorConfig
     from fennflow.files.types import BinaryMedia
@@ -38,7 +38,7 @@ class InMemoryConnector(AbstractConnector):
             )
     """
 
-    _storage: defaultdict[Namespace, dict[Filepath, BinaryMedia]] | None = None
+    _storage: defaultdict[Namespace, dict[StoragePath, BinaryMedia]] | None = None
 
     async def open(self) -> Self:
         return self
@@ -55,7 +55,7 @@ class InMemoryConnector(AbstractConnector):
     @property
     def storage(
         self,
-    ) -> defaultdict[Namespace, dict[Filepath, BinaryMedia]]:
+    ) -> defaultdict[Namespace, dict[StoragePath, BinaryMedia]]:
         if self.__class__._storage is None:
             raise RuntimeError(
                 "Cannot get in-memory storage. InMemoryConnector is not initialized.",
@@ -74,7 +74,7 @@ class InMemoryConnector(AbstractConnector):
 
     async def get(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
         repo_extra: RepoExtra,
         **extra: dict[Any, Any],  # noqa: ARG002
     ) -> MediaResponse:
@@ -96,7 +96,7 @@ class InMemoryConnector(AbstractConnector):
 
     async def delete(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
         repo_extra: RepoExtra,
         **extra: dict[Any, Any],  # noqa: ARG002
     ):
@@ -105,8 +105,8 @@ class InMemoryConnector(AbstractConnector):
     async def copy_object(
         self,
         repo_extra: RepoExtra,
-        from_storage_path: Filepath,
-        to_storage_path: Filepath,
+        from_storage_path: StoragePath,
+        to_storage_path: StoragePath,
         to_namespace: Namespace,
         **extra: dict[Any, Any],  # noqa: ARG002
     ):

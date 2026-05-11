@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, NotRequired, TypedDict
 if TYPE_CHECKING:
     from uuid import UUID
 
-    from fennflow._new_types import Filepath
+    from fennflow._new_types import StoragePath
     from fennflow._operations.enums import OperationStatusEnum
 
 
@@ -15,7 +15,7 @@ class SelectParams(TypedDict):
     For now, it exists only in InMemoryBackend.
     """
 
-    path: NotRequired[Filepath]
+    path: NotRequired[StoragePath]
     prefix: NotRequired[str]
     status: NotRequired[OperationStatusEnum]
     media_type: NotRequired[str]

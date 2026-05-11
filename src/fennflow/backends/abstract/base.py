@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
     from uuid import UUID
 
-    from fennflow._new_types import Filepath
+    from fennflow._new_types import StoragePath
     from fennflow._operations.dto import OperationRecord
     from fennflow.backends.abstract.config import AbstractBackendConfig
     from fennflow.backends.enums import OnConflictDoEnum
@@ -19,7 +19,7 @@ class AbstractBackend(ABC):
 
     def __init__(self, config: AbstractBackendConfig) -> None:
         self._config = config
-        self._operations: dict[Filepath, OperationRecord] = {}
+        self._operations: dict[StoragePath, OperationRecord] = {}
 
     @abstractmethod
     async def open(self) -> None: ...
@@ -30,7 +30,7 @@ class AbstractBackend(ABC):
     @abstractmethod
     async def get(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
     ) -> OperationRecord | None: ...
 
     @abstractmethod
@@ -39,7 +39,7 @@ class AbstractBackend(ABC):
     @abstractmethod
     async def exists(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
     ) -> bool: ...
 
     @abstractmethod

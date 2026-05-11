@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
     from uuid import UUID
 
-    from fennflow._new_types import Filepath, Namespace
+    from fennflow._new_types import Namespace, StoragePath
     from fennflow._operations.dto import OperationRecord
     from fennflow.backends.abstract.annotations import SelectParams
     from fennflow.backends.in_memory import InMemoryBackendConfig
@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 class InMemoryBackend(AbstractBackend):
     """In-memory backend for managing file operations within a Unit of Work."""
 
-    _storage: defaultdict[Namespace, dict[Filepath, OperationRecord]] | None = None
+    _storage: defaultdict[Namespace, dict[StoragePath, OperationRecord]] | None = None
 
     def __init__(
         self,
@@ -38,7 +38,7 @@ class InMemoryBackend(AbstractBackend):
     @property
     def storage(
         self,
-    ) -> defaultdict[Namespace, dict[Filepath, OperationRecord]]:
+    ) -> defaultdict[Namespace, dict[StoragePath, OperationRecord]]:
         if self.__class__._storage is None:
             raise RuntimeError(
                 "Cannot get in-memory storage. InMemoryBackend is not initialized.",
@@ -46,7 +46,7 @@ class InMemoryBackend(AbstractBackend):
         return self.__class__._storage
 
     @property
-    def namespaced_storage(self) -> dict[Filepath, OperationRecord]:
+    def namespaced_storage(self) -> dict[StoragePath, OperationRecord]:
         return self.storage[self._config.namespace]
 
     async def open(
@@ -67,19 +67,19 @@ class InMemoryBackend(AbstractBackend):
 
     async def exists(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
     ) -> bool:
         return storage_path in self.storage[self._config.namespace]
 
     async def get_from_storage(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
     ) -> OperationRecord | None:
         return self.storage[self._config.namespace].get(storage_path)
 
     async def get(
         self,
-        storage_path: Filepath,
+        storage_path: StoragePath,
     ) -> OperationRecord | None:
         return self._operations.get(storage_path) or self.storage[
             self._config.namespace

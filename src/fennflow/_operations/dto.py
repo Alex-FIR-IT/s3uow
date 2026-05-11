@@ -11,7 +11,7 @@ from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow._sentinel import NOT_GIVEN
 
 if TYPE_CHECKING:
-    from fennflow._new_types import Filepath, Namespace
+    from fennflow._new_types import Namespace, StoragePath
     from fennflow._operations.context.types import Context
     from fennflow._sentinel import NotGiven
     from fennflow.repositories.fields.base import RepoExtra
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 @dataclass(slots=True)
 class OperationRecord:
     session_id: uuid.UUID
-    storage_path: Filepath
+    storage_path: StoragePath
     repo_extra: RepoExtra
     operation_type: OperationTypeEnum
     status: OperationStatusEnum
