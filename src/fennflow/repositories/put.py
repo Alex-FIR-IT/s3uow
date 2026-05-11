@@ -43,7 +43,7 @@ class PutRepository(AtRepository):
     async def put(self, *files: BinaryMedia, **provider_extra):
         tasks = []
         for file in files:
-            file.folder_path = self.cwd
+            file._storage_prefix = self.cwd
 
             operation = await self._uow.backend.get(filepath=file.filepath)
 

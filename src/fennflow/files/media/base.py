@@ -26,9 +26,11 @@ from fennflow.files.exceptions.filename_and_mediatype_both_none import (
     FileNameAndMediaTypeBothNoneException,
 )
 from fennflow.files.exceptions.filename_is_none import FilenameIsNoneException
-from fennflow.files.exceptions.folder_path_is_none import FolderPathIsNoneException
 from fennflow.files.exceptions.media_type_cannot_be_guessed import (
     MediaTypeCannotBeGuessed,
+)
+from fennflow.files.exceptions.storage_prefix_is_none import (
+    StoragePrefixIsNoneException,
 )
 
 if TYPE_CHECKING:
@@ -45,21 +47,21 @@ class BaseContent(BaseModel, ABC):
     filename: str
     media_type: str
     kind: str = "base"
-    folder_path: str | None = None
+    _storage_prefix: str | None = None
     extra_metadata: dict[str, str] = Field(default_factory=dict)
 
     @property
     def filepath(self) -> Filepath:
-        if self.folder_path is None:
-            raise FolderPathIsNoneException(
+        if self._storage_prefix is None:
+            raise StoragePrefixIsNoneException(
                 f"Cannot determine filepath for {self.filename=}. Folder path is None."
             )
         elif self.filename is None:
             raise FilenameIsNoneException(
-                f"Cannot determine filepath for file in {self.folder_path=}. "
+                f"Cannot determine filepath for file in {self._storage_prefix=}. "
                 f"Filename is None."
             )
-        return Path.join_path(self.folder_path, self.filename)
+        return Path.join_path(self._storage_prefix, self.filename)
 
     model_config = ConfigDict(
         validate_assignment=True,

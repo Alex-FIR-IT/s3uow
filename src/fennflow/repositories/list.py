@@ -42,10 +42,10 @@ class ListRepository(AtRepository):
                      continuation_token=page.continuation_token,
                  )
         """
-        folder_path = self._join_path(prefix)
+        storage_prefix = self._join_path(prefix)
 
         operation_page = await self._uow.backend.get_visible(
-            prefix=folder_path,
+            prefix=storage_prefix,
             continuation_token=continuation_token,
             limit=limit,
             session_id=self._uow._session_id,
