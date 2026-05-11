@@ -26,7 +26,7 @@ async def test_partial_put_failure_compensates_succeeded(
         nonlocal put_count
         put_count += 1
         if put_count >= 2:
-            raise RuntimeError(f"Simulated failure on: {file.filepath}")
+            raise RuntimeError(f"Simulated failure on: {file.storage_path}")
         await original_put(self, file, repo_extra, **extra)
 
     monkeypatch.setattr(InMemoryConnector, "put", failing_put)
@@ -66,13 +66,13 @@ async def test_partial_put_failure_compensates_deletes(
         nonlocal put_count
         put_count += 1
         if put_count >= 2:
-            raise RuntimeError(f"Simulated failure on: {file.filepath}")
+            raise RuntimeError(f"Simulated failure on: {file.storage_path}")
         await original_put(self, file, repo_extra, **extra)
 
-    async def tracking_delete(self, filepath, repo_extra, **extra):
+    async def tracking_delete(self, storage_path, repo_extra, **extra):
         nonlocal compensate_count
         compensate_count += 1
-        await original_delete(self, filepath, repo_extra, **extra)
+        await original_delete(self, storage_path, repo_extra, **extra)
 
     monkeypatch.setattr(InMemoryConnector, "put", failing_put)
     monkeypatch.setattr(InMemoryConnector, "delete", tracking_delete)
@@ -86,16 +86,16 @@ async def test_partial_put_failure_compensates_deletes(
 
     assert compensate_count == 2
     # verify file1 is gone from connector storage directly
-    assert ("user_files", text_files[0].filepath) not in InMemoryConnector._storage
+    assert ("user_files", text_files[0].storage_path) not in InMemoryConnector._storage
 
     # verify file2 was never in connector storage
-    assert ("user_files", text_files[1].filepath) not in InMemoryConnector._storage
+    assert ("user_files", text_files[1].storage_path) not in InMemoryConnector._storage
 
     # checking statuses for files:
 
     async with uow_cls() as uow:
-        operation1 = await uow.backend.get(text_files[0].filepath)
-        operation2 = await uow.backend.get(text_files[1].filepath)
+        operation1 = await uow.backend.get(text_files[0].storage_path)
+        operation2 = await uow.backend.get(text_files[1].storage_path)
 
         assert operation1.is_failed is True
         assert operation2.is_failed is True
@@ -124,6 +124,6 @@ async def test_file_recovery_after_deleting_on_rollback(
         assert len(response) == 1, f"Expected 1 file, got {len(response)}"
         assert response[0].data == text_files[0].data
 
-        operation = await uow.backend.get(text_files[0].filepath)
+        operation = await uow.backend.get(text_files[0].storage_path)
 
         assert operation.is_uploaded is True

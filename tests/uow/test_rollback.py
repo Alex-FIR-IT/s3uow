@@ -42,5 +42,5 @@ async def test_backend_marks_failed_after_rollback(uow_cls, text_files):
         pass
 
     for file in text_files:
-        record = await uow.backend.get(filepath=f"user/{file.filename}")
+        record = await uow.backend.get(storage_path=f"user/{file.filename}")
         assert record.status == OperationStatusEnum.FAILED

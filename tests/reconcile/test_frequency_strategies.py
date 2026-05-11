@@ -192,7 +192,7 @@ async def test_reconcile_on_non_empty_connector(
         InMemoryBackend._storage[backend_namespace][text_files[0].filename] = (
             OperationRecord(
                 session_id=uuid4(),
-                filepath=text_files[0].filename,
+                storage_path=text_files[0].filename,
                 status=OperationStatusEnum.UPLOADED,
                 operation_type=OperationTypeEnum.PUT,
                 repo_extra=TestUOW.user_files.repo_extra,
@@ -211,8 +211,8 @@ async def test_reconcile_on_non_empty_connector(
             assert len(response) == response_len
 
             files = []
-            for filepath in response:
-                response = await uow.user_files.get(filepath)
+            for storage_path in response:
+                response = await uow.user_files.get(storage_path)
                 files.extend(response)
 
             files_equal = sorted(files) == sorted(text_files)

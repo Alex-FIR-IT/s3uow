@@ -51,7 +51,7 @@ def make_files(*names):
 def make_record(**kwargs) -> OperationRecord:
     defaults = {
         "session_id": uuid.uuid4(),
-        "filepath": "folder1/file.txt",
+        "storage_path": "folder1/file.txt",
         "repo_extra": {},
         "operation_type": OperationTypeEnum.PUT,
         "context": {},
@@ -61,8 +61,8 @@ def make_record(**kwargs) -> OperationRecord:
     return OperationRecord(**defaults)
 
 
-def inject(uow, filepath: str, record: OperationRecord) -> None:
-    uow.backend._storage[uow.backend._config.namespace][filepath] = record
+def inject(uow, storage_path: str, record: OperationRecord) -> None:
+    uow.backend._storage[uow.backend._config.namespace][storage_path] = record
 
 
 # --- status ---
@@ -100,7 +100,7 @@ async def test_prefix_filter(uow_cls):
 
         page = await uow.backend.select(prefix="folder1/")
         assert len(page.operations) == 1
-        assert page.operations[0].filepath.startswith("folder1/")
+        assert page.operations[0].storage_path.startswith("folder1/")
 
 
 # --- combined filters ---
@@ -118,7 +118,7 @@ async def test_prefix_and_status_combined(uow_cls):
             prefix="folder1/", status=OperationStatusEnum.PENDING
         )
         assert len(page.operations) == 1
-        assert page.operations[0].filepath.startswith("folder1/")
+        assert page.operations[0].storage_path.startswith("folder1/")
         assert page.operations[0].status == OperationStatusEnum.PENDING
 
 
@@ -133,12 +133,12 @@ async def test_session_id_filter(uow_cls):
         inject(
             uow,
             "folder1/a.txt",
-            make_record(filepath="folder1/a.txt", session_id=session_a),
+            make_record(storage_path="folder1/a.txt", session_id=session_a),
         )
         inject(
             uow,
             "folder1/b.txt",
-            make_record(filepath="folder1/b.txt", session_id=session_b),
+            make_record(storage_path="folder1/b.txt", session_id=session_b),
         )
 
         page = await uow.backend.select(session_id=session_a)
@@ -153,12 +153,12 @@ async def test_session_id_filter(uow_cls):
 async def test_is_expired(uow_cls):
     async with uow_cls() as uow:
         expired = make_record(
-            filepath="folder1/expired.txt",
+            storage_path="folder1/expired.txt",
             expired_at=datetime.datetime.now(tz=datetime.UTC)
             - datetime.timedelta(seconds=1),
         )
         active = make_record(
-            filepath="folder1/active.txt",
+            storage_path="folder1/active.txt",
             expired_at=datetime.datetime.now(tz=datetime.UTC)
             + datetime.timedelta(seconds=60),
         )
@@ -166,9 +166,9 @@ async def test_is_expired(uow_cls):
         inject(uow, "folder1/active.txt", active)
 
         page = await uow.backend.select(is_expired=True)
-        assert all(r.filepath == "folder1/expired.txt" for r in page.operations)
+        assert all(r.storage_path == "folder1/expired.txt" for r in page.operations)
         page2 = await uow.backend.select(is_expired=False)
-        assert all(r.filepath == "folder1/active.txt" for r in page2.operations)
+        assert all(r.storage_path == "folder1/active.txt" for r in page2.operations)
 
 
 # --- ordering ---

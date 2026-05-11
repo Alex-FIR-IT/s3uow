@@ -57,6 +57,6 @@ async def test_backend_marks_done_after_commit(uow_cls, text_files):
     # inspect backend directly
     for file in text_files:
         record = await uow.backend.get(
-            filepath=f"user/{file.filename}",
+            storage_path=f"user/{file.filename}",
         )
         assert record.status == OperationStatusEnum.UPLOADED

@@ -51,14 +51,14 @@ class BaseContent(BaseModel, ABC):
     extra_metadata: dict[str, str] = Field(default_factory=dict)
 
     @property
-    def filepath(self) -> Filepath:
+    def storage_path(self) -> Filepath:
         if self._storage_prefix is None:
             raise StoragePrefixIsNoneException(
-                f"Cannot determine filepath for {self.filename=}. Folder path is None."
+                f"Cannot determine storage_path for {self.filename=}. Storage prefix is None."
             )
         elif self.filename is None:
             raise FilenameIsNoneException(
-                f"Cannot determine filepath for file in {self._storage_prefix=}. "
+                f"Cannot determine storage_path for file in {self._storage_prefix=}. "
                 f"Filename is None."
             )
         return Path.join_path(self._storage_prefix, self.filename)

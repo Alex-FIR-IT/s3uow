@@ -36,15 +36,15 @@ async def put(
 
 ## Raises
 
-| Exception                      | When                                                                              |
-|--------------------------------|-----------------------------------------------------------------------------------|
-| `RecordAlreadyExistsException` | A file with status="uploaded" and the same filepath already exists in the backend |
+| Exception                      | When                                                                                  |
+|--------------------------------|---------------------------------------------------------------------------------------|
+| `RecordAlreadyExistsException` | A file with status="uploaded" and the same storage_path already exists in the backend |
 
 ## Notes
 
 - Files are uploaded concurrently via `asyncio.gather`
 - If any upload fails, all operations in the session are compensated on `__aexit__`
-- `filepath` is determined by `file.filename` joined with the current path set via `at()`
+- `storage_path` is determined by `file.filename` joined with the current storage_prefix set via `at()`
 
 ## Example
 

@@ -40,7 +40,7 @@ async def test_get_several_files_at_once(uow_cls, text_files):
         assert result[0].data == text_files[0].data
         assert result[1].data == text_files[1].data
 
-        # changing order of the filepaths in get method
+        # changing order of the storage_paths in get method
         result = await uow.user_files.get(
             text_files[1].filename,
             text_files[0].filename,
@@ -51,7 +51,7 @@ async def test_get_several_files_at_once(uow_cls, text_files):
 
 
 @pytest.mark.asyncio
-async def test_get_without_filepaths(uow_cls, text_files):
+async def test_get_without_storage_paths(uow_cls, text_files):
     async with uow_cls() as uow:
         await uow.user_files.put(*text_files)
 
@@ -110,7 +110,7 @@ async def test_not_calling_connector_for_not_uploaded(
         assert len(response) == 1
         assert get_count == 3
 
-        response = await uow.user_files.get(text_files[1].filepath)
+        response = await uow.user_files.get(text_files[1].storage_path)
 
         assert len(response) == 1
         assert get_count == 4

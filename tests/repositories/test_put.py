@@ -29,7 +29,7 @@ async def test_put_same_file_twice_in_different_sessions_raises(uow_cls, text_fi
 
 @pytest.mark.asyncio
 async def test_concurrent_put_same_file_raises(uow_cls, text_files):
-    # two UoWs trying to put the same filepath simultaneously
+    # two UoWs trying to put the same storage_path simultaneously
     # one should win, one should raise
     async with uow_cls() as uow1, uow_cls() as uow2:
         results = await asyncio.gather(

@@ -94,7 +94,7 @@ async def test_list_pagination_no_overlap(uow_cls, text_files):
             continuation_token=page1.continuation_token,
         )
 
-        assert set(page1.filepaths).isdisjoint(set(page2.filepaths))
+        assert set(page1.storage_paths).isdisjoint(set(page2.storage_paths))
 
 
 @pytest.mark.asyncio
@@ -103,18 +103,18 @@ async def test_list_pagination_covers_all(uow_cls, text_files):
         await uow.user_files.at("folder1/").put(*text_files)
         await uow.commit()
 
-        all_filepaths = set()
+        all_storage_paths = set()
         token = OMIT
         while True:
             page = await uow.user_files.at("").list(
                 "folder1/", limit=2, continuation_token=token
             )
-            all_filepaths.update(page.filepaths)
+            all_storage_paths.update(page.storage_paths)
             if page.continuation_token is None:
                 break
             token = page.continuation_token
 
-        assert len(all_filepaths) == len(text_files)
+        assert len(all_storage_paths) == len(text_files)
 
 
 @pytest.mark.asyncio

@@ -45,7 +45,7 @@ class PutRepository(AtRepository):
         for file in files:
             file._storage_prefix = self.cwd
 
-            operation = await self._uow.backend.get(filepath=file.filepath)
+            operation = await self._uow.backend.get(storage_path=file.storage_path)
 
             if operation:
                 raise RecordAlreadyExistsException()
@@ -53,7 +53,7 @@ class PutRepository(AtRepository):
             operation = OperationRecord(
                 operation_type=OperationTypeEnum.PUT,
                 status=OperationStatusEnum.PENDING,
-                filepath=file.filepath,
+                storage_path=file.storage_path,
                 context=PutContext(file=file),
                 session_id=self._uow._session_id,
                 repo_extra=self.repo_extra,

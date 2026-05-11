@@ -89,7 +89,7 @@ class S3Connector(AbstractConnector[S3Extra]):
         bucket_name = repo_extra["namespace"]
         await self.s3client.client.put_object(
             Bucket=bucket_name,
-            Key=file.filepath,
+            Key=file.storage_path,
             Body=file.data,
             ContentType=file.media_type,
             Metadata=file.get_metadata(),
@@ -99,13 +99,13 @@ class S3Connector(AbstractConnector[S3Extra]):
 
     async def get(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
         repo_extra: S3Extra,
         **sdk_extra: Any,
     ) -> MediaResponse:
         response = await self.s3client.client.get_object(
             Bucket=repo_extra["namespace"],
-            Key=filepath,
+            Key=storage_path,
             **sdk_extra,
         )
         if not response:
@@ -123,36 +123,36 @@ class S3Connector(AbstractConnector[S3Extra]):
 
     async def delete(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
         repo_extra: S3Extra,
         **sdk_extra: Any,
     ):
         bucket_name = repo_extra["namespace"]
         await self.s3client.client.delete_object(
             Bucket=bucket_name,
-            Key=filepath,
+            Key=storage_path,
             **sdk_extra,
         )
-        logger.info(f"file with {filepath=} deleted from {bucket_name=}")
+        logger.info(f"file with {storage_path=} deleted from {bucket_name=}")
 
     async def copy_object(
         self,
         repo_extra: S3Extra,
-        from_filepath: Filepath,
-        to_filepath: Filepath,
+        from_storage_path: Filepath,
+        to_storage_path: Filepath,
         to_namespace: Namespace,
         **sdk_extra: Any,
     ):
         bucket_name = repo_extra["namespace"]
 
         await self.s3client.client.copy_object(
-            CopySource={"Bucket": bucket_name, "Key": from_filepath},
+            CopySource={"Bucket": bucket_name, "Key": from_storage_path},
             Bucket=to_namespace,
-            Key=to_filepath,
+            Key=to_storage_path,
             **sdk_extra,
         )
         logger.info(
-            f"file from {bucket_name=} with {from_filepath=} copied to {to_namespace=}"
+            f"file from {bucket_name=} with {from_storage_path=} copied to {to_namespace=}"
         )
 
     async def list_objects(
@@ -175,6 +175,6 @@ class S3Connector(AbstractConnector[S3Extra]):
         )
 
         return ListResponse(
-            filepaths=tuple(obj["Key"] for obj in response.get("Contents", [])),
+            storage_paths=tuple(obj["Key"] for obj in response.get("Contents", [])),
             continuation_token=response.get("NextContinuationToken"),
         )

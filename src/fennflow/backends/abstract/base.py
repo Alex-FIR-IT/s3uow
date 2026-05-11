@@ -30,7 +30,7 @@ class AbstractBackend(ABC):
     @abstractmethod
     async def get(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
     ) -> OperationRecord | None: ...
 
     @abstractmethod
@@ -39,7 +39,7 @@ class AbstractBackend(ABC):
     @abstractmethod
     async def exists(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
     ) -> bool: ...
 
     @abstractmethod

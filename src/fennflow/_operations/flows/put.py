@@ -35,7 +35,7 @@ class PutFlow(AbstractFlow):
     ):
 
         result = await connector.delete(
-            filepath=operation.filepath,
+            storage_path=operation.storage_path,
             repo_extra=operation.repo_extra,
             **provider_extra,
         )

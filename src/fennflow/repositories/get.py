@@ -54,13 +54,13 @@ class GetRepository(AtRepository):
         """
         tasks = []
         for path in paths:
-            filepath = self._join_path(path)
-            operation = await self._uow.backend.get(filepath)
+            storage_path = self._join_path(path)
+            operation = await self._uow.backend.get(storage_path)
 
             if operation and operation.is_visible(self._uow._session_id):
                 tasks.append(
                     self._uow.connector.get(
-                        filepath=filepath,
+                        storage_path=storage_path,
                         repo_extra=self.repo_extra,
                         **provider_extra,
                     )

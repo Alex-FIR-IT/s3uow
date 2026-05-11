@@ -31,11 +31,11 @@ class SelectOperation:
     def predicates(self):
         return (
             lambda record: (
-                self.kwargs["path"] is OMIT or record.filepath == self.kwargs["path"]
+                self.kwargs["path"] is OMIT or record.storage_path == self.kwargs["path"]
             ),
             lambda record: (
                 self.kwargs["prefix"] is OMIT
-                or record.filepath.startswith(self.kwargs["prefix"])
+                or record.storage_path.startswith(self.kwargs["prefix"])
             ),
             lambda record: (
                 self.kwargs["status"] is OMIT or record.status == self.kwargs["status"]

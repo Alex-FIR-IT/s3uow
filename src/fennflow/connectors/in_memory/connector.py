@@ -69,20 +69,20 @@ class InMemoryConnector(AbstractConnector):
         **extra,  # noqa: ARG002
     ) -> None:
         namespace = repo_extra["namespace"]
-        self.storage[namespace][file.filepath] = file
+        self.storage[namespace][file.storage_path] = file
         logger.info(f"{file=} uploaded to {namespace=}")
 
     async def get(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
         repo_extra: RepoExtra,
         **extra: dict[Any, Any],  # noqa: ARG002
     ) -> MediaResponse:
 
-        if filepath not in self.storage[repo_extra["namespace"]]:
+        if storage_path not in self.storage[repo_extra["namespace"]]:
             return MediaResponse()
 
-        file = self.storage[repo_extra["namespace"]][filepath]
+        file = self.storage[repo_extra["namespace"]][storage_path]
 
         return MediaResponse(
             media=(
@@ -96,23 +96,23 @@ class InMemoryConnector(AbstractConnector):
 
     async def delete(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
         repo_extra: RepoExtra,
         **extra: dict[Any, Any],  # noqa: ARG002
     ):
-        self.storage[repo_extra["namespace"]].pop(filepath, None)
+        self.storage[repo_extra["namespace"]].pop(storage_path, None)
 
     async def copy_object(
         self,
         repo_extra: RepoExtra,
-        from_filepath: Filepath,
-        to_filepath: Filepath,
+        from_storage_path: Filepath,
+        to_storage_path: Filepath,
         to_namespace: Namespace,
         **extra: dict[Any, Any],  # noqa: ARG002
     ):
-        file = self.storage[repo_extra["namespace"]].get(from_filepath)
+        file = self.storage[repo_extra["namespace"]].get(from_storage_path)
         if file:
-            self.storage[to_namespace][to_filepath] = file
+            self.storage[to_namespace][to_storage_path] = file
 
     @classmethod
     def drop_all(cls) -> None:
@@ -126,26 +126,26 @@ class InMemoryConnector(AbstractConnector):
         continuation_token: Omittable[str] | None = OMIT,
         **extra: dict[Any, Any],  # noqa: ARG002
     ) -> ListResponse:
-        filtered_filepaths = []
-        all_filepaths = sorted(self.storage[repo_extra["namespace"]])
+        filtered_storage_paths = []
+        all_storage_paths = sorted(self.storage[repo_extra["namespace"]])
 
         if continuation_token:
-            index = bisect.bisect_right(all_filepaths, continuation_token)
+            index = bisect.bisect_right(all_storage_paths, continuation_token)
         else:
             index = 0
 
-        for filepath in islice(all_filepaths, index, None):
+        for storage_path in islice(all_storage_paths, index, None):
             if 0 >= limit:
-                continuation_token = filepath
+                continuation_token = storage_path
                 break
 
-            if filepath.startswith(prefix):
-                filtered_filepaths.append(filepath)
+            if storage_path.startswith(prefix):
+                filtered_storage_paths.append(storage_path)
                 limit -= 1
         else:
             continuation_token = None
 
         return ListResponse(
-            filepaths=filtered_filepaths,
+            storage_paths=filtered_storage_paths,
             continuation_token=continuation_token,
         )

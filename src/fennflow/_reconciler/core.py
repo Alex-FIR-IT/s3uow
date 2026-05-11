@@ -100,10 +100,10 @@ class Reconciler:
         page: ListResponse,
         repo_extra: RepoExtra,
     ) -> Generator[OperationRecord, None, None]:
-        for filepath in page:
+        for storage_path in page:
             yield OperationRecord(
                 session_id=session_id,
-                filepath=filepath,
+                storage_path=storage_path,
                 operation_type=OperationTypeEnum.PUT,
                 status=OperationStatusEnum.UPLOADED,
                 repo_extra=repo_extra,

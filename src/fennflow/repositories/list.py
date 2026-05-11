@@ -24,10 +24,10 @@ class ListRepository(AtRepository):
                 path. Defaults to ``""`` (list everything under the current path).
             continuation_token: Opaque token returned by a previous call to
                 continue paginating.
-            limit: Maximum number of filepaths to return. Defaults to ``1000``.
+            limit: Maximum number of storage_paths to return. Defaults to ``1000``.
 
         Returns:
-            ListResponse: A container of filepaths matching the query. Includes
+            ListResponse: A container of storage_paths matching the query. Includes
                 a ``continuation_token`` if more results are available, otherwise
                 ``None``.
 
@@ -52,6 +52,6 @@ class ListRepository(AtRepository):
         )
 
         return ListResponse(
-            filepaths=tuple(op.filepath for op in operation_page),
+            storage_paths=tuple(op.storage_path for op in operation_page),
             continuation_token=operation_page.continuation_token,
         )

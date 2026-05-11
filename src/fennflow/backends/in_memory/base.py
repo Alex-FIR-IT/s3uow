@@ -63,27 +63,27 @@ class InMemoryBackend(AbstractBackend):
         self,
         record: OperationRecord,
     ) -> None:
-        self._operations[record.filepath] = record
+        self._operations[record.storage_path] = record
 
     async def exists(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
     ) -> bool:
-        return filepath in self.storage[self._config.namespace]
+        return storage_path in self.storage[self._config.namespace]
 
     async def get_from_storage(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
     ) -> OperationRecord | None:
-        return self.storage[self._config.namespace].get(filepath)
+        return self.storage[self._config.namespace].get(storage_path)
 
     async def get(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
     ) -> OperationRecord | None:
-        return self._operations.get(filepath) or self.storage[
+        return self._operations.get(storage_path) or self.storage[
             self._config.namespace
-        ].get(filepath)
+        ].get(storage_path)
 
     async def list_pending(
         self,
@@ -137,14 +137,14 @@ class InMemoryBackend(AbstractBackend):
     ):
         for key, operation in self._operations.items():
             storage_operation = await self.get_from_storage(
-                filepath=operation.filepath,
+                storage_path=operation.storage_path,
             )
 
             if storage_operation and storage_operation.is_locked(
                 current_session_id=operation.session_id
             ):
                 raise RecordAlreadyExistsException(
-                    f"{operation.filepath=} already exists"
+                    f"{operation.storage_path=} already exists"
                 )
             self.storage[self._config.namespace][key] = operation
 
@@ -195,19 +195,19 @@ class InMemoryBackend(AbstractBackend):
         on_conflict: OnConflictDoEnum,
     ) -> None:
         for operation in operations:
-            op_in_storage = self.namespaced_storage.get(operation.filepath)
+            op_in_storage = self.namespaced_storage.get(operation.storage_path)
 
             if op_in_storage:
                 match on_conflict:
                     case OnConflictDoEnum.DO_NOTHING:
                         continue
                     case OnConflictDoEnum.REPLACE:
-                        self.namespaced_storage[operation.filepath] = operation
+                        self.namespaced_storage[operation.storage_path] = operation
                     case OnConflictDoEnum.RAISE:
                         raise ValueError(
-                            f"There is already record with {operation.filepath=}"
+                            f"There is already record with {operation.storage_path=}"
                         )
                     case _:
                         raise AssertionError("Unhandled conflict strategy.")
             else:
-                self.namespaced_storage[operation.filepath] = operation
+                self.namespaced_storage[operation.storage_path] = operation

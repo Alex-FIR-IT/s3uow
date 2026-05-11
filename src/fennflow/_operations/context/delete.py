@@ -11,5 +11,5 @@ if TYPE_CHECKING:
 
 @dataclass(slots=True)
 class DeleteContext(BaseContext):
-    to_filepath: Filepath
+    to_storage_path: Filepath
     to_namespace: Namespace

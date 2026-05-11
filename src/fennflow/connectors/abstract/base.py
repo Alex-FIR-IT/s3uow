@@ -49,7 +49,7 @@ class AbstractConnector(ABC, Generic[RepoExtraType]):
     @abstractmethod
     async def get(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
         repo_extra: RepoExtraType,
         **extra: dict[Any, Any],
     ) -> MediaResponse:
@@ -58,7 +58,7 @@ class AbstractConnector(ABC, Generic[RepoExtraType]):
     @abstractmethod
     async def delete(
         self,
-        filepath: Filepath,
+        storage_path: Filepath,
         repo_extra: RepoExtraType,
         **extra: dict[Any, Any],
     ):
@@ -68,8 +68,8 @@ class AbstractConnector(ABC, Generic[RepoExtraType]):
     async def copy_object(
         self,
         repo_extra: RepoExtraType,
-        from_filepath: Filepath,
-        to_filepath: Filepath,
+        from_storage_path: Filepath,
+        to_storage_path: Filepath,
         to_namespace: Namespace,
         **extra: dict[Any, Any],
     ):

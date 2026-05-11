@@ -24,14 +24,14 @@ class DeleteRepository(AtRepository):
             True if the file was deleted, False if it did not exist.
 
         """
-        filepath = self._join_path(path)
-        operation = await self._uow.backend.get(filepath)
+        storage_path = self._join_path(path)
+        operation = await self._uow.backend.get(storage_path)
 
         if operation is None or not operation.is_visible(self._uow._session_id):
             return False
 
         context = DeleteContext(
-            to_filepath=self._join_path(
+            to_storage_path=self._join_path(
                 "tmp",
                 f"session_id_{operation.session_id}",
                 f"operation_id_{operation.session_id}",
@@ -44,7 +44,7 @@ class DeleteRepository(AtRepository):
         operation = OperationRecord(
             operation_type=OperationTypeEnum.DELETE,
             status=OperationStatusEnum.PENDING,
-            filepath=operation.filepath,
+            storage_path=operation.storage_path,
             context=context,
             session_id=self._uow._session_id,
             repo_extra=self.repo_extra,

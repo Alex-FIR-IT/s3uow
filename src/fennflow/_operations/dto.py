@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 @dataclass(slots=True)
 class OperationRecord:
     session_id: uuid.UUID
-    filepath: Filepath
+    storage_path: Filepath
     repo_extra: RepoExtra
     operation_type: OperationTypeEnum
     status: OperationStatusEnum

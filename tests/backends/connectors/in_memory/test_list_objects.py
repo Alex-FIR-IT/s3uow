@@ -21,7 +21,7 @@ from fennflow.files.responses.list import ListResponse
             1000,
             OMIT,
             ListResponse(
-                filepaths=["foo/a.txt", "foo/b.txt"],
+                storage_paths=["foo/a.txt", "foo/b.txt"],
                 continuation_token=None,
             ),
         ),
@@ -38,7 +38,7 @@ from fennflow.files.responses.list import ListResponse
             2,
             OMIT,
             ListResponse(
-                filepaths=["foo/a.txt", "foo/b.txt"],
+                storage_paths=["foo/a.txt", "foo/b.txt"],
                 continuation_token="foo/c.txt",
             ),
         ),
@@ -55,7 +55,7 @@ from fennflow.files.responses.list import ListResponse
             1000,
             "foo/a.txt",
             ListResponse(
-                filepaths=["foo/b.txt", "foo/c.txt"],
+                storage_paths=["foo/b.txt", "foo/c.txt"],
                 continuation_token=None,
             ),
         ),
@@ -73,7 +73,7 @@ from fennflow.files.responses.list import ListResponse
             2,
             "foo/a.txt",
             ListResponse(
-                filepaths=["foo/b.txt", "foo/c.txt"],
+                storage_paths=["foo/b.txt", "foo/c.txt"],
                 continuation_token="foo/d.txt",
             ),
         ),
@@ -89,7 +89,7 @@ from fennflow.files.responses.list import ListResponse
             1000,
             OMIT,
             ListResponse(
-                filepaths=[],
+                storage_paths=[],
                 continuation_token=None,
             ),
         ),
@@ -102,7 +102,7 @@ from fennflow.files.responses.list import ListResponse
             1000,
             OMIT,
             ListResponse(
-                filepaths=[],
+                storage_paths=[],
                 continuation_token=None,
             ),
         ),
@@ -118,7 +118,7 @@ from fennflow.files.responses.list import ListResponse
             1000,
             "zzz.txt",
             ListResponse(
-                filepaths=[],
+                storage_paths=[],
                 continuation_token=None,
             ),
         ),
@@ -168,7 +168,7 @@ async def test_list_objects_sorts_storage_before_listing(
             repo_extra={"namespace": "ns"},
         )
 
-    assert result.filepaths == [
+    assert result.storage_paths == [
         "foo/a.txt",
         "foo/b.txt",
         "foo/c.txt",
@@ -195,5 +195,5 @@ async def test_list_objects_with_zero_limit(
             limit=0,
         )
 
-    assert result.filepaths == []
+    assert result.storage_paths == []
     assert result.continuation_token == "foo/a.txt"

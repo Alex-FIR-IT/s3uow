@@ -38,10 +38,10 @@ async def test_delete_not_calling_connector_for_status_deleted(
     delete_count = 0
     original_delete = InMemoryConnector.delete
 
-    async def tracking_delete(self, filepath, repo_extra, **extra):
+    async def tracking_delete(self, storage_path, repo_extra, **extra):
         nonlocal delete_count
         delete_count += 1
-        await original_delete(self, filepath, repo_extra, **extra)
+        await original_delete(self, storage_path, repo_extra, **extra)
 
     monkeypatch.setattr(InMemoryConnector, "delete", tracking_delete)
 
