@@ -64,7 +64,7 @@ class UnitOfWork:
         connector:
             Performs actual storage operations (e.g. S3 API calls)
 
-        operation_executor:
+       ._operation_executor:
             Executes and compensates operations
 
     Methods:
@@ -90,7 +90,7 @@ class UnitOfWork:
         self._connector = ConnectorFactory.from_config(
             config=self._resolved_config.connector
         )
-        self.operation_executor = OperationExecutor(
+        self._operation_executor = OperationExecutor(
             connector=self.connector,
         )
 
@@ -145,7 +145,7 @@ class UnitOfWork:
 
     async def _finalize_operation(self, operation: OperationRecord) -> None:
         try:
-            await self.operation_executor.finalize(operation)
+            await self._operation_executor.finalize(operation)
         except Exception:
             logger.warning(
                 "Finalization failed.",
@@ -182,7 +182,7 @@ class UnitOfWork:
         finalize_operations = []
         for operation in reversed(operations):
             try:
-                await self.operation_executor.compensate(operation)
+                await self._operation_executor.compensate(operation)
             except Exception:
                 logger.exception(
                     "Compensation failed.",

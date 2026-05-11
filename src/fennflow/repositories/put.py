@@ -61,7 +61,7 @@ class PutRepository(AtRepository):
 
             await self._uow.backend.add(operation)
             tasks.append(
-                self._uow.operation_executor.execute(
+                self._uow._operation_executor.execute(
                     operation,
                     **provider_extra,
                 )
