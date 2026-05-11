@@ -1,9 +1,12 @@
-from collections.abc import Iterator
-from dataclasses import dataclass
+from __future__ import annotations
 
-from pydantic import Field
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
-from fennflow._new_types import Filepath
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    from fennflow._new_types import Filepath
 
 
 @dataclass(slots=True)
@@ -27,7 +30,7 @@ class ListResponse:
             )
     """
 
-    filepaths: tuple[Filepath, ...] = Field(default_factory=tuple)
+    filepaths: list[Filepath] | tuple[Filepath, ...] = field(default_factory=tuple)
     continuation_token: str | None = None
 
     def __iter__(self) -> Iterator[Filepath]:
