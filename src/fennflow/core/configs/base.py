@@ -1,5 +1,6 @@
 from typing_extensions import TypedDict
 
+from fennflow._reconciler import ReconcileConfig
 from fennflow.backends.types.config import BackendConfig
 from fennflow.connectors.types.config import ConnectorConfig
 
@@ -24,3 +25,4 @@ class ConfigDict(TypedDict, total=False):
 
     backend: BackendConfig
     connector: ConnectorConfig
+    reconcile: ReconcileConfig
