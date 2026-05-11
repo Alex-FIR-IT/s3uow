@@ -55,4 +55,4 @@ class AtRepository(BaseRepository):
         Returns:
             The normalized current path string.
         """
-        return Path.normalize_path(self._path)
+        return Path.normalize_folder(self._path)
