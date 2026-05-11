@@ -1,5 +1,6 @@
-from typing import NewType
+from typing_extensions import TypeAliasType
 
-Filepath = NewType("Filepath", str)
-Namespace = NewType("Namespace", str)
+UowQualName = TypeAliasType("UowQualName", str)
+Filepath = TypeAliasType("Filepath", str)
+Namespace = TypeAliasType("Namespace", str)
 BucketName = Namespace
