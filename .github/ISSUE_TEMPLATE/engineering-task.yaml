@@ -1,0 +1,49 @@
+name: ⚙️ fennflow Engineering Task
+description: "Internal engineering task (CI, tooling, testing, typing, infrastructure)"
+labels: [ "infra" ]
+assignees: [ "Alex-FIR-IT" ]
+
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for improving fennflow’s engineering quality ✊
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        Please describe the engineering or infrastructure task in detail.
+
+        This may include:
+        * CI/CD improvements (GitHub Actions, pipelines)
+        * Type checking (mypy, pyright)
+        * Linting / formatting (ruff, black)
+        * Testing infrastructure or coverage improvements
+        * Build / packaging / dependency management changes
+
+        Include context and motivation for why this change is needed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: |
+        Describe the impact of this change on the development process or codebase quality.
+
+        Examples:
+        * Improved maintainability
+        * Faster CI feedback
+        * Better type safety
+        * Reduced technical debt
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: |
+        Add any links, tools, or examples that might help understand the task better.
