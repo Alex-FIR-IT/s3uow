@@ -4,6 +4,7 @@ import logging
 import mimetypes
 import os
 from abc import ABC
+from functools import total_ordering
 from hashlib import sha256
 from typing import TYPE_CHECKING, Any, Self
 
@@ -36,6 +37,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+@total_ordering
 class BaseContent(BaseModel, ABC):
     """Base class for all content types."""
 
@@ -149,3 +151,9 @@ class BaseContent(BaseModel, ABC):
         logger.debug(f"Generated metadata for {self=}: {metadata=}")
 
         return {**self.extra_metadata, **metadata}
+
+    def __lt__(self, other):
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return self.filename < other.filename
