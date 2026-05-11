@@ -1,12 +1,14 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
-from fennflow._operations.dto import OperationRecord
 from fennflow._operations.enums import OperationStatusEnum
 from fennflow._operations.flows.abstract import AbstractFlow
-from fennflow.connectors.abstract import AbstractConnector
 
 if TYPE_CHECKING:
     from fennflow._operations.context.delete import DeleteContext
+    from fennflow._operations.dto import OperationRecord
+    from fennflow.connectors.abstract import AbstractConnector
 
 
 class DeleteFlow(AbstractFlow):
@@ -35,8 +37,8 @@ class DeleteFlow(AbstractFlow):
     @staticmethod
     async def compensate(
         *,
-        operation: "OperationRecord",
-        connector: "AbstractConnector",
+        operation: OperationRecord,
+        connector: AbstractConnector,
         **provider_extra,
     ):
         ctx: DeleteContext = operation.context
@@ -57,8 +59,8 @@ class DeleteFlow(AbstractFlow):
     @staticmethod
     async def finalize(
         *,
-        operation: "OperationRecord",
-        connector: "AbstractConnector",
+        operation: OperationRecord,
+        connector: AbstractConnector,
         **provider_extra,
     ):
         ctx: DeleteContext = operation.context
