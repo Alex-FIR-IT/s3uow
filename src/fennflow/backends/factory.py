@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from .registry import backend_registry
@@ -11,7 +13,7 @@ class BackendFactory:
     """Factory for creating backends from config."""
 
     @staticmethod
-    def from_config(config: "BackendConfig") -> "AbstractBackend":
+    def from_config(config: BackendConfig) -> AbstractBackend:
 
         backend_cls = backend_registry.get(config.__class__.__name__)
         if not backend_cls:
