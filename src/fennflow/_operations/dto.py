@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 from uuid import UUID
 
+from fennflow._operations.context.abstract import BaseContext
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow._sentinel import NOT_GIVEN
 
@@ -22,8 +23,8 @@ class OperationRecord:
     filepath: Filepath
     repo_extra: RepoExtra
     operation_type: OperationTypeEnum
-    context: Context
     status: OperationStatusEnum
+    context: Context = field(default_factory=BaseContext)
     operation_id: uuid.UUID = field(default_factory=uuid.uuid4)
 
     created_at: datetime.datetime = field(
