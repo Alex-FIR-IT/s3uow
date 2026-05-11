@@ -75,7 +75,7 @@ class UnitOfWork:
             and then rolls back backend state
     """
 
-    config: ConfigDict
+    config: ConfigDict | None = None
 
     def __init__(
         self,
