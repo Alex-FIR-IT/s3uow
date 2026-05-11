@@ -5,16 +5,19 @@ from typing import TYPE_CHECKING, Any, Self
 
 from aiobotocore.session import get_session
 
+from fennflow._sentinel import OMIT, Omittable
 from fennflow.connectors.abstract import AbstractConnector
 from fennflow.connectors.s3.client import S3Client
 from fennflow.files import ContentFactory
 from fennflow.files.responses.base import MediaResponse
+from fennflow.files.responses.list import ListResponse
 from fennflow.repositories.fields.s3 import S3Extra
 
 if TYPE_CHECKING:
     from aiobotocore.session import AioSession
 
     from fennflow._new_types import Filepath, Namespace
+    from fennflow.connectors.abstract.base import RepoExtraType
     from fennflow.connectors.s3 import S3ConnectorConfig
     from fennflow.files.types import BinaryMedia
 
@@ -34,13 +37,27 @@ class S3Connector(AbstractConnector[S3Extra]):
             )
     """
 
-    aio_session: AioSession = None
+    _aio_session: AioSession | None = None
+
+    def __init__(
+        self,
+        config: S3ConnectorConfig,
+    ):
+        self._config = config
+        self._client: S3Client | None = None
+
+    @property
+    def aio_session(self) -> AioSession:
+        if self.__class__._aio_session is None:
+            raise RuntimeError("AioSession is not initialized.")
+
+        return self.__class__._aio_session
 
     async def open(
         self,
     ) -> Self:
-        if self.__class__.aio_session is None:
-            self.__class__.aio_session = get_session()
+        if self.__class__._aio_session is None:
+            self.__class__._aio_session = get_session()
 
         self._client = await S3Client(
             config=self._config,
@@ -55,13 +72,6 @@ class S3Connector(AbstractConnector[S3Extra]):
             await self._client.close()
             self._client = None
 
-    def __init__(
-        self,
-        config: S3ConnectorConfig,
-    ):
-        self._config = config
-        self._client: S3Client | None = None
-
     @property
     def s3client(
         self,
@@ -74,7 +84,7 @@ class S3Connector(AbstractConnector[S3Extra]):
         self,
         file: BinaryMedia,
         repo_extra: S3Extra,
-        **sdk_extra: dict[Any, Any],
+        **sdk_extra: Any,
     ) -> None:
         bucket_name = repo_extra["namespace"]
         await self.s3client.client.put_object(
@@ -91,7 +101,7 @@ class S3Connector(AbstractConnector[S3Extra]):
         self,
         filepath: Filepath,
         repo_extra: S3Extra,
-        **sdk_extra: dict,
+        **sdk_extra: Any,
     ) -> MediaResponse:
         response = await self.s3client.client.get_object(
             Bucket=repo_extra["namespace"],
@@ -115,7 +125,7 @@ class S3Connector(AbstractConnector[S3Extra]):
         self,
         filepath: Filepath,
         repo_extra: S3Extra,
-        **sdk_extra: dict[Any, Any],
+        **sdk_extra: Any,
     ):
         bucket_name = repo_extra["namespace"]
         await self.s3client.client.delete_object(
@@ -131,7 +141,7 @@ class S3Connector(AbstractConnector[S3Extra]):
         from_filepath: Filepath,
         to_filepath: Filepath,
         to_namespace: Namespace,
-        **sdk_extra: dict[Any, Any],
+        **sdk_extra: Any,
     ):
         bucket_name = repo_extra["namespace"]
 
