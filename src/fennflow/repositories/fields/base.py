@@ -24,8 +24,6 @@ class RepoField(Generic[RepoType]):
     Args:
         repo_cls: The repository class to instantiate.
         namespace: The storage namespace (e.g. S3 bucket name) for this repository.
-        **repo_extra: Additional connector-specific configuration
-        passed to the repository.
 
     Example:
         class UOW(UnitOfWork):
@@ -37,12 +35,10 @@ class RepoField(Generic[RepoType]):
         self,
         repo_cls: type[RepoType],
         *,
-        namespace: str,
-        **repo_extra,
+        namespace: Namespace,
     ):
         self.repo_cls = repo_cls
-        repo_extra["namespace"] = namespace
-        self.repo_extra = repo_extra
+        self.repo_extra: RepoExtra = {"namespace": namespace}
 
     def __set_name__(
         self,
