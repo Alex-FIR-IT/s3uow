@@ -1,6 +1,7 @@
 import pytest
 
 from fennflow import ConfigDict
+from fennflow._reconciler._orchestrator import ReconcileOrchestrator
 from fennflow.backends import InMemoryBackend, InMemoryBackendConfig
 from fennflow.connectors import InMemoryConnector, InMemoryConnectorConfig
 from fennflow.files import TextContent
@@ -48,3 +49,4 @@ def text_files():
 def reset_inmemory_state():
     InMemoryBackend.drop_all()
     InMemoryConnector.drop_all()
+    ReconcileOrchestrator._reconciled_on_startup = set()
