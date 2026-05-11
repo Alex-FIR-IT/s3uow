@@ -6,7 +6,8 @@ import uuid
 from typing import TYPE_CHECKING
 
 from fennflow._operations.executor import OperationExecutor
-from fennflow._resolver import resolve_config
+from fennflow._reconciler._orchestrator import ReconcileOrchestrator
+from fennflow._resolver import ConfigResolver
 from fennflow.backends import BackendFactory
 from fennflow.connectors import ConnectorFactory
 
@@ -115,9 +116,32 @@ class UnitOfWork:
     async def __aenter__(
         self,
     ):
-        await self.connector.open()
-        await self.backend.open()
-        return self
+        try:
+            await asyncio.gather(
+                self.connector.open(),
+                self.backend.open(),
+            )
+
+            await ReconcileOrchestrator().reconcile_if_needed(uow=self)
+
+            return self
+
+        except Exception:
+            await self._cleanup()
+            raise
+
+    async def __aexit__(
+        self,
+        exc_type,
+        exc,
+        tb,
+    ):
+        if exc_type is not None or not self._auto_commit:
+            await self.rollback()
+        elif self._auto_commit:
+            await self.commit()
+
+        await self._cleanup()
 
     async def _finalize_operation(self, operation: OperationRecord) -> None:
         try:
@@ -177,16 +201,9 @@ class UnitOfWork:
 
         await self._finalize_operations(finalize_operations)
 
-    async def __aexit__(
-        self,
-        exc_type,
-        exc,
-        tb,
-    ):
-        if exc_type is not None or not self._auto_commit:
-            await self.rollback()
-        elif self._auto_commit:
-            await self.commit()
-
-        await self.connector.close()
-        await self.backend.close()
+    async def _cleanup(self) -> None:
+        await asyncio.gather(
+            self.connector.close(),
+            self.backend.close(),
+            return_exceptions=True,
+        )
