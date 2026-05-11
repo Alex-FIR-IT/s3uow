@@ -1,15 +1,19 @@
 from __future__ import annotations
 
+import bisect
 import logging
 from collections import defaultdict
 from typing import TYPE_CHECKING, Any, Self
 
+from fennflow._sentinel import OMIT, Omittable
 from fennflow.connectors.abstract import AbstractConnector
 from fennflow.files import ContentFactory
 from fennflow.files.responses.base import MediaResponse
+from fennflow.files.responses.list import ListResponse
 
 if TYPE_CHECKING:
     from fennflow._new_types import Filepath, Namespace
+    from fennflow.connectors.abstract.base import RepoExtraType
     from fennflow.connectors.in_memory.config import InMemoryConnectorConfig
     from fennflow.files.types import BinaryMedia
     from fennflow.repositories.fields.base import RepoExtra
@@ -112,3 +116,35 @@ class InMemoryConnector(AbstractConnector):
     @classmethod
     def drop_all(cls) -> None:
         cls._storage = defaultdict(dict)
+
+    async def list_objects(
+        self,
+        prefix: str,
+        repo_extra: RepoExtraType,
+        limit: int = 1000,
+        continuation_token: Omittable[str] | None = OMIT,
+        **extra: dict[Any, Any],  # noqa: ARG002
+    ) -> ListResponse:
+        files = []
+        filepaths = sorted(self.storage[repo_extra["namespace"]])
+
+        if continuation_token:
+            index = bisect.bisect_right(filepaths, continuation_token)
+        else:
+            index = 0
+
+        for filepath in filepaths[index:]:
+            if 0 >= limit:
+                continuation_token = filepath
+                break
+
+            if filepath.startswith(prefix):
+                files.append(self.storage[repo_extra["namespace"]][filepath])
+                limit -= 1
+        else:
+            continuation_token = None
+
+        return ListResponse(
+            filepaths=filepaths,
+            continuation_token=continuation_token,
+        )

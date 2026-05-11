@@ -154,3 +154,27 @@ class S3Connector(AbstractConnector[S3Extra]):
         logger.info(
             f"file from {bucket_name=} with {from_filepath=} copied to {to_namespace=}"
         )
+
+    async def list_objects(
+        self,
+        prefix: str,
+        repo_extra: RepoExtraType,
+        limit: int = 1000,
+        continuation_token: Omittable[str] | None = OMIT,
+        **extra: Any,
+    ) -> ListResponse:
+
+        if continuation_token:
+            extra["ContinuationToken"] = continuation_token
+
+        response = await self.s3client.client.list_objects_v2(
+            Bucket=repo_extra["namespace"],
+            Prefix=prefix,
+            MaxKeys=limit,
+            **extra,
+        )
+
+        return ListResponse(
+            filepaths=tuple(obj["Key"] for obj in response.get("Contents", [])),
+            continuation_token=response.get("NextContinuationToken"),
+        )

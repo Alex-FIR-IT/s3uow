@@ -3,11 +3,13 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, Generic, Self, TypeVar
 
+from fennflow._sentinel import OMIT, Omittable
 from fennflow.repositories.fields.base import RepoExtra
 
 if TYPE_CHECKING:
     from fennflow._new_types import Filepath, Namespace
     from fennflow.files.responses.base import MediaResponse
+    from fennflow.files.responses.list import ListResponse
     from fennflow.files.types import BinaryMedia
 
 
@@ -72,3 +74,14 @@ class AbstractConnector(ABC, Generic[RepoExtraType]):
         **extra: dict[Any, Any],
     ):
         """Copy a file within or across namespaces."""
+
+    @abstractmethod
+    async def list_objects(
+        self,
+        prefix: str,
+        repo_extra: RepoExtraType,
+        limit: int = 1000,
+        continuation_token: Omittable[str] | None = OMIT,
+        **extra: dict[Any, Any],
+    ) -> ListResponse:
+        """List all files in storage."""
