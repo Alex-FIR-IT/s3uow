@@ -8,7 +8,7 @@ from fennflow.repositories import RepoField
 if TYPE_CHECKING:
     from collections.abc import Generator
 
-    from fennflow.uow.base import UnitOfWork
+    from fennflow.uow.core import UnitOfWork
 
 
 @dataclass(slots=True, frozen=True)

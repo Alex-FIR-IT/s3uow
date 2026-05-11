@@ -2,4 +2,4 @@ __all__ = [
     "UnitOfWork",
 ]
 
-from .base import UnitOfWork
+from .core import UnitOfWork

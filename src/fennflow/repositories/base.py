@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from fennflow.repositories.fields.base import RepoExtra
-    from fennflow.uow.base import UnitOfWork
+    from fennflow.uow.core import UnitOfWork
 
 
 class BaseRepository:  # noqa: B903
