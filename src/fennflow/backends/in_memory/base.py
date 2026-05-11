@@ -8,9 +8,11 @@ from typing_extensions import Unpack
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow.backends.abstract.base import AbstractBackend
 from fennflow.backends.abstract.exceptions import RecordAlreadyExistsException
+from fennflow.backends.enums import OnConflictDoEnum
 from fennflow.backends.in_memory._select import SelectOperation
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
     from uuid import UUID
 
     from fennflow._new_types import Filepath, Namespace
@@ -183,3 +185,29 @@ class InMemoryBackend(AbstractBackend):
             limit=limit,
             visible_for_session_id=session_id,
         )
+
+    async def is_empty(self) -> bool:
+        return not bool(self.namespaced_storage)
+
+    async def insert(
+        self,
+        operations: Iterable[OperationRecord],
+        on_conflict: OnConflictDoEnum,
+    ) -> None:
+        for operation in operations:
+            op_in_storage = self.namespaced_storage.get(operation.filepath)
+
+            if op_in_storage:
+                match on_conflict:
+                    case OnConflictDoEnum.DO_NOTHING:
+                        continue
+                    case OnConflictDoEnum.REPLACE:
+                        self.namespaced_storage[operation.filepath] = operation
+                    case OnConflictDoEnum.RAISE:
+                        raise ValueError(
+                            f"There is already record with {operation.filepath=}"
+                        )
+                    case _:
+                        raise AssertionError("Unhandled conflict strategy.")
+            else:
+                self.namespaced_storage[operation.filepath] = operation
