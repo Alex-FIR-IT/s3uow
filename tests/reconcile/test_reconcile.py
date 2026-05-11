@@ -1,6 +1,5 @@
 import pytest
 
-from fennflow._operations.enums import OperationStatusEnum
 from fennflow.connectors import InMemoryConnector
 
 
