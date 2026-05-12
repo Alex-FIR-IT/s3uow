@@ -51,23 +51,29 @@ import asyncio
 from fennflow import ConfigDict, UnitOfWork
 from fennflow.backends import InMemoryBackendConfig
 from fennflow.connectors import S3ConnectorConfig
-from fennflow.files import TextContent
-from fennflow.repositories import DeleteRepository, GetRepository, PutRepository
-from fennflow.repositories import S3RepoField
+from fennflow.files import BinaryContent, JsonContent, TextContent
+from fennflow.repositories import (
+    DeleteRepository,
+    GetRepository,
+    ListRepository,
+    PutRepository,
+    S3RepoField,
+    )
 
 
 # 1. Define your repository with mixins
-class UserFiles(
+class CrudRepository(
     PutRepository,
     DeleteRepository,
     GetRepository,
+    ListRepository,
     ):
     pass
 
 
 # 2. Set up your Unit of Work
 class UOW(UnitOfWork):
-    user_files = S3RepoField(UserFiles, bucket_name="user-files")
+    my_files = S3RepoField(CrudRepository, bucket_name="my_files")
     config = ConfigDict(
         backend=InMemoryBackendConfig(),
         connector=S3ConnectorConfig(),
@@ -75,20 +81,22 @@ class UOW(UnitOfWork):
 
 
 async def main():
-    # Auto-commit on success, auto-rollback with compensation on failure
+    text_file = TextContent.from_content("Hello, world!")
+    json_file = JsonContent.from_content([1, 2, 3])
+    binary_file = BinaryContent(data=b"some bytes", media_type="text/plain")
+
     async with UOW() as uow:
-        file1 = TextContent.from_content("Hello, World!")
-        file2 = TextContent.from_content("Hello, World2!")
+        await uow.my_files.at("folder1").put(
+            text_file,
+            json_file,
+            binary_file,
+            )
 
-        # Upload files scoped to a path
-        await uow.user_files.at("user1/").put(file1, file2)
+        paths = await uow.my_files.at("folder1").list()
+        print(paths)  # ListResponse[Filepath, ...]
 
-        # Get a file
-        response = await uow.user_files.at("user1/").get(file2.filename)
-        print(response.media[0].content)  # "Hello, World2!"
-
-        # Delete a file
-        await uow.user_files.at("user1/").delete(file1.filename)
+        files = await uow.my_files.get(*paths)
+        print(files)  # MediaResponse[TextContent, JsonContent, BinaryContent]
 
 
 if __name__ == "__main__":
