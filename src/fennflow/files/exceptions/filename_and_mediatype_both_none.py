@@ -1,4 +1,7 @@
-class FileNameAndMediaTypeBothNoneException(Exception):
+from fennflow.files.exceptions.base import FileException
+
+
+class FileNameAndMediaTypeBothNoneException(FileException):
     """Exception raised when both media type and filename are None."""
 
     def __init__(

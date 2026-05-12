@@ -7,6 +7,7 @@ from fennflow._decorators import reraise_with
 from fennflow._operations.dto import OperationRecord
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow._reconciler.enums import ReconcileStrategyEnum
+from fennflow._reconciler.exceptions import ReconcileFailedException
 from fennflow.backends.enums import OnConflictDoEnum
 from fennflow.repositories import RepoField
 
@@ -28,11 +29,6 @@ reconcile_to_on_conflict_strategy = {
     ReconcileStrategyEnum.INSERT_MISSING: OnConflictDoEnum.DO_NOTHING,
     ReconcileStrategyEnum.FILL_IF_EMPTY: OnConflictDoEnum.RAISE,
 }
-
-
-class ReconcileFailedException(Exception):
-    def __init__(self, message="Reconcile failed", *args):
-        super().__init__(message, *args)
 
 
 class Reconciler:

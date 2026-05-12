@@ -7,8 +7,8 @@ from typing_extensions import Unpack
 
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow.backends.abstract.base import AbstractBackend
-from fennflow.backends.abstract.exceptions import RecordAlreadyExistsException
 from fennflow.backends.enums import OnConflictDoEnum
+from fennflow.backends.exceptions import RecordAlreadyExistsException
 from fennflow.backends.in_memory._select import SelectOperation
 
 if TYPE_CHECKING:

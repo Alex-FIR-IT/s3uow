@@ -2,7 +2,7 @@ import asyncio
 
 import pytest
 
-from fennflow.backends.abstract.exceptions import RecordAlreadyExistsException
+from fennflow.backends.exceptions import RecordAlreadyExistsException
 
 
 @pytest.mark.asyncio

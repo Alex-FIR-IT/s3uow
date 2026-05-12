@@ -8,7 +8,7 @@ from fennflow.files.exceptions.extension_cannot_be_guessed import (
     ExtensionCannotBeGuessed,
 )
 from fennflow.files.exceptions.media_type_cannot_be_guessed import (
-    MediaTypeCannotBeGuessed,
+    MediaTypeCannotBeGuessedException,
 )
 
 
@@ -16,7 +16,7 @@ def test_only_filename_specified():
     file = BinaryContent(data=b"hi", filename="test.txt")
     assert file.media_type == "text/plain"
 
-    with pytest.raises(MediaTypeCannotBeGuessed):
+    with pytest.raises(MediaTypeCannotBeGuessedException):
         file = BinaryContent(data=b"hi", filename="test")
 
 

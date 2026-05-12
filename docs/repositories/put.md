@@ -50,7 +50,8 @@ async def put(
 
 ```python
 from fennflow.files import TextContent, JsonContent
-from fennflow.backends.abstract.exceptions import RecordAlreadyExistsException
+from fennflow.backends\.exceptions
+import RecordAlreadyExistsException
 
 async with UOW() as uow:
     file1 = TextContent.from_content("hello")

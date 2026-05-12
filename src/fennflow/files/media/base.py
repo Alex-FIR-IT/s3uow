@@ -27,7 +27,7 @@ from fennflow.files.exceptions.filename_and_mediatype_both_none import (
 )
 from fennflow.files.exceptions.filename_is_none import FilenameIsNoneException
 from fennflow.files.exceptions.media_type_cannot_be_guessed import (
-    MediaTypeCannotBeGuessed,
+    MediaTypeCannotBeGuessedException,
 )
 from fennflow.files.exceptions.storage_prefix_is_none import (
     StoragePrefixIsNoneException,
@@ -96,7 +96,7 @@ class BaseContent(BaseModel, ABC):
         elif filename:
             guessed_media_type = mimetypes.guess_type(filename, strict=False)[0]
             if guessed_media_type is None:
-                raise MediaTypeCannotBeGuessed(filename=filename)
+                raise MediaTypeCannotBeGuessedException(filename=filename)
             data["media_type"] = guessed_media_type
 
         else:

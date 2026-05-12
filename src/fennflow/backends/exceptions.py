@@ -1,4 +1,7 @@
-class BaseBackendException(Exception):
+from fennflow._base_exception import FennFlowException
+
+
+class BaseBackendException(FennFlowException):
     """Base exception for all FennFlow backend errors."""
 
 

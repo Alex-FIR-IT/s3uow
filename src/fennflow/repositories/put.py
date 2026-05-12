@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from fennflow._operations.context.put import PutContext
 from fennflow._operations.dto import OperationRecord
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
-from fennflow.backends.abstract.exceptions import RecordAlreadyExistsException
+from fennflow.backends.exceptions import RecordAlreadyExistsException
 from fennflow.repositories.at import AtRepository
 
 if TYPE_CHECKING:

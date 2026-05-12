@@ -1,7 +1,9 @@
 import os.path
 
+from fennflow.files.exceptions.base import FileException
 
-class MediaTypeCannotBeGuessed(Exception):
+
+class MediaTypeCannotBeGuessedException(FileException):
     """Raised when the media type cannot be guessed from the filename."""
 
     def __init__(self, filename: str):
