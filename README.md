@@ -10,7 +10,7 @@
 Working with aiobotocore often feels like handling raw bytes and dicts. `FennFlow` wraps S3 operations into a high-level
 Unit of Work pattern, providing:
 
-- **Atomic-like multi-step operations** — if something fails, previous actions are automatically compensated (Saga
+- **Atomic-like multistep operations** — if something fails, previous actions are automatically compensated (Saga
   Pattern).
 - **Clean Architecture** — treat S3 as proper repositories using mixins (`PutRepository`, `GetRepository`, etc.).
 - **Pydantic-powered models** — work with `TextContent`, `JsonContent`, `ImageContent` and others instead of raw bytes.
