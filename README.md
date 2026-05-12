@@ -1,4 +1,27 @@
-# FennFlow &middot; [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen)](https://github.com/Alex-FIR-IT/fennflow/blob/master/LICENSE) [![Static Badge](https://img.shields.io/badge/Roadmap-green?logo=github)](https://github.com/users/Alex-FIR-IT/projects/2/views/2) [![last commit](https://img.shields.io/github/last-commit/Alex-FIR-IT/fennflow?logo=github)](https://github.com/Alex-FIR-IT/fennflow/commits/master/) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/3db23fc6c6f248f2926731b0bdf0d012)](https://app.codacy.com/gh/Alex-FIR-IT/FennFlow/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/3db23fc6c6f248f2926731b0bdf0d012)](https://app.codacy.com/gh/Alex-FIR-IT/FennFlow/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage) [![Tests & Coverage](https://github.com/Alex-FIR-IT/FennFlow/actions/workflows/coverage-report.yml/badge.svg?branch=master)](https://github.com/Alex-FIR-IT/FennFlow/actions/workflows/coverage-report.yml)
+<div align="center">
+    <a href="https://github.com/Alex-FIR-IT/FennFlow">
+    <picture>
+      <img src="https://c438939f-e2e4-4a9c-a938-fc6e872413f4.selstorage.ru/github.png" alt="FennFlow">
+    </picture>
+  </a>
+</div>
+<div align="center">
+  <h3>Atomic-like S3 Framework, the Pydantic way</h3>
+</div>
+<div align="center">
+  <a href="https://github.com/Alex-FIR-IT/FennFlow/actions/workflows/coverage-report.yml"><img src="https://github.com/Alex-FIR-IT/FennFlow/actions/workflows/coverage-report.yml/badge.svg?branch=master" alt="CI"></a>
+  <a href="https://app.codacy.com/gh/Alex-FIR-IT/FennFlow/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage"><img src="https://app.codacy.com/project/badge/Coverage/3db23fc6c6f248f2926731b0bdf0d012" alt="Codacy Coverage"></a>
+  <a href="https://github.com/users/Alex-FIR-IT/projects/2/views/2"><img src="https://img.shields.io/badge/Roadmap-green?logo=github" alt="Roadmap"></a>
+  <a href="https://github.com/Alex-FIR-IT/fennflow/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen" alt="License: MIT"></a>
+  <a href="https://github.com/Alex-FIR-IT/fennflow/commits/master/"><img src="https://img.shields.io/github/last-commit/Alex-FIR-IT/fennflow?logo=github" alt="Last Commit"></a>
+  <a href="https://app.codacy.com/gh/Alex-FIR-IT/FennFlow/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/3db23fc6c6f248f2926731b0bdf0d012" alt="Codacy Grade"></a>
+</div>
+
+---
+
+**Documentation**: [docs/README.md](docs/README.md)
+
+---
 
 ### <em>FennFlow is a Python s3 framework designed to help you quickly, confidently, and painlessly manipulate files in your object storage implementing Saga-like compensation flow.</em>
 
