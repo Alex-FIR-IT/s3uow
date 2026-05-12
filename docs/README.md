@@ -57,7 +57,7 @@ response.texts  # tuple[TextContent, ...]
 response.images  # tuple[ImageContent, ...]
 response.videos  # tuple[VideoContent, ...]
 response.audios  # tuple[AudioContent, ...]
-response.pdfs  # tuple[PdfContent, ...]
+response.documents  # tuple[DocumentContent, ...]
 ```
 
 ### Filtering

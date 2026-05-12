@@ -5,7 +5,7 @@ from .media import (
     BinaryContent,
     ImageContent,
     JsonContent,
-    PdfContent,
+    DocumentContent,
     TextContent,
     UrlContent,
     VideoContent,
@@ -16,7 +16,7 @@ VideoOrAudio: TypeAlias = VideoContent | AudioContent
 BinaryMedia: TypeAlias = (
     JsonContent
     | VideoContent
-    | PdfContent
+    | DocumentContent
     | ImageContent
     | AudioContent
     | TextContent

@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING, Self, TypeVar, overload
 
 from fennflow.files.media import (
     AudioContent,
+    DocumentContent,
     ImageContent,
-    PdfContent,
     TextContent,
     VideoContent,
 )
@@ -112,8 +112,8 @@ class MediaResponse:
         return self.filter(AudioContent)
 
     @property
-    def pdfs(self) -> tuple[PdfContent, ...]:
-        return self.filter(PdfContent)
+    def documents(self) -> tuple[DocumentContent, ...]:
+        return self.filter(DocumentContent)
 
     def __iter__(self) -> Iterator[Media]:
         return iter(self.media)

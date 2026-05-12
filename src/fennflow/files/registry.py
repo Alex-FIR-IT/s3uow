@@ -3,9 +3,9 @@ from __future__ import annotations
 from fennflow.files.media import (
     AudioContent,
     BinaryContent,
+    DocumentContent,
     ImageContent,
     JsonContent,
-    PdfContent,
     TextContent,
     VideoContent,
 )
@@ -17,5 +17,5 @@ content_registry: dict[str, type[BinaryContent]] = {
     "application/json": JsonContent,
     "audio/": AudioContent,
     "video/": VideoContent,
-    "application/pdf": PdfContent,
+    "application/pdf": DocumentContent,
 }
