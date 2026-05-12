@@ -2,9 +2,6 @@
 
 ### <em>FennFlow is a Python s3 framework designed to help you quickly, confidently, and painlessly manipulate files in your object storage implementing Saga-like compensation flow.</em>
 
-> ⚠️ Project Status: Experimental / Work in Progress  
-> This library is in early development (Alpha). The API is subject to change. **NOT READY** for production use yet.
-
 ## Why use FennFlow?
 
 Working with aiobotocore often feels like handling raw bytes and dicts. `FennFlow` wraps S3 operations into a high-level
