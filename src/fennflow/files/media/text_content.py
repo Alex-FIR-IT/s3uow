@@ -1,5 +1,6 @@
 from typing import Literal, Self
 
+from ..._sentinel import OMIT, Omittable, is_given
 from .abstract.content import ContentPropertyAbstract
 from .abstract.from_content import FromContentAbstract
 from .binary_content import BinaryContent
@@ -39,13 +40,19 @@ class TextContent(
     def from_content(
         cls,
         data: str,
-        encoding: str = "utf-8",
         media_type: str = "text/plain",
-        filename: str | None = None,
+        encoding: str = "utf-8",
+        filename: Omittable[str] = OMIT,
+        **kwargs,  # noqa: ARG003
     ) -> Self:
+        extra = {}
+
+        if is_given(filename):
+            extra["filename"] = filename
+
         return cls(
             data=data.encode(encoding),
             media_type=media_type,
             encoding=encoding,
-            filename=filename,
+            **extra,
         )

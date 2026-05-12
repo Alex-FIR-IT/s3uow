@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Self
+
+from fennflow._sentinel import OMIT, Omittable
 
 
 class FromContentAbstract(ABC):
@@ -16,6 +20,8 @@ class FromContentAbstract(ABC):
         data: Any,
         media_type: str,
         encoding: str = "utf-8",
+        filename: Omittable[str] = OMIT,
+        **kwargs: Any,
     ) -> Self:
         """Create a media content instance from raw data.
 
@@ -23,6 +29,8 @@ class FromContentAbstract(ABC):
             data: The raw data to create the content from.
             media_type: The MIME type of the content (e.g. ``"text/plain"``).
             encoding: The text encoding. Defaults to ``"utf-8"``.
+            filename: The name of the file. Will be generated if not provided.
+            kwargs: Any additional keyword arguments to pass to the constructor.
 
         Returns:
             A new instance of the media content class.

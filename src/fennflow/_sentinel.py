@@ -1,4 +1,6 @@
-from typing import Literal, TypeVar, Union
+from __future__ import annotations
+
+from typing import Literal, TypeGuard, TypeVar, Union
 
 _T = TypeVar("_T")
 
@@ -56,3 +58,7 @@ class Omit:
 OMIT = Omit()
 
 Omittable = Union[_T, Omit]  # noqa: UP007
+
+
+def is_given(obj: _T | NotGiven | Omit) -> TypeGuard[_T]:
+    return not isinstance(obj, NotGiven) and not isinstance(obj, Omit)

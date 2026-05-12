@@ -5,6 +5,7 @@ from typing import Generic, Literal, TypeVar
 
 from pydantic import JsonValue
 
+from ..._sentinel import OMIT, Omittable, is_given
 from .abstract.content import ContentPropertyAbstract
 from .abstract.from_content import FromContentAbstract
 from .binary_content import BinaryContent
@@ -45,8 +46,9 @@ class JsonContent(
     def from_content(
         cls,
         data: Value,
-        encoding: str = "utf-8",
         media_type: str = "application/json",
+        encoding: str = "utf-8",
+        filename: Omittable[str] = OMIT,
         ensure_ascii: bool = False,
         indent: int | str | None = None,
         **extra_json_dumps_kwargs,
@@ -57,8 +59,14 @@ class JsonContent(
             indent=indent,
             **extra_json_dumps_kwargs,
         )
+
+        extra = {}
+        if is_given(filename):
+            extra["filename"] = filename
+
         return cls(
             data=dumped_data.encode(encoding),
             media_type=media_type,
             encoding=encoding,
+            **extra,
         )

@@ -3,6 +3,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
+from fennflow._sentinel import OMIT, Omittable
+
 if TYPE_CHECKING:
     from collections.abc import Iterable
     from uuid import UUID
@@ -77,9 +79,9 @@ class AbstractBackend(ABC):
     async def get_visible(
         self,
         prefix: str,
-        continuation_token: str,
         limit: int,
         session_id: UUID,
+        continuation_token: Omittable[str] = OMIT,
     ) -> OperationPage: ...
 
     @abstractmethod

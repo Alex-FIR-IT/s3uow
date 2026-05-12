@@ -22,7 +22,6 @@ class DeleteFlow(AbstractFlow):
         ctx: DeleteContext = operation.context
         await connector.copy_object(
             from_storage_path=operation.storage_path,
-            from_bucket_name=operation.namespace,
             to_storage_path=ctx.to_storage_path,
             to_namespace=ctx.to_namespace,
             repo_extra=operation.repo_extra,
@@ -44,7 +43,6 @@ class DeleteFlow(AbstractFlow):
         ctx: DeleteContext = operation.context
         await connector.copy_object(
             from_storage_path=ctx.to_storage_path,
-            from_bucket_name=ctx.to_namespace,
             to_storage_path=operation.storage_path,
             to_namespace=operation.namespace,
             repo_extra=operation.repo_extra,

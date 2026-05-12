@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from typing_extensions import Unpack
 
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
+from fennflow._sentinel import OMIT, Omittable
 from fennflow.backends.abstract.base import AbstractBackend
 from fennflow.backends.enums import OnConflictDoEnum
 from fennflow.backends.exceptions import RecordAlreadyExistsException
@@ -175,9 +176,9 @@ class InMemoryBackend(AbstractBackend):
     async def get_visible(
         self,
         prefix: str,
-        continuation_token: str,
         limit: int,
         session_id: UUID,
+        continuation_token: Omittable[str] = OMIT,
     ) -> OperationPage:
         return await self.select(
             prefix=prefix,

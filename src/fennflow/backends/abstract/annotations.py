@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 
     from fennflow._new_types import StoragePath
     from fennflow._operations.enums import OperationStatusEnum
+    from fennflow._sentinel import Omittable
 
 
 class SelectParams(TypedDict):
@@ -23,5 +24,5 @@ class SelectParams(TypedDict):
     operation_id: NotRequired[UUID]
     is_expired: NotRequired[bool]
     limit: NotRequired[int]
-    continuation_token: NotRequired[str]
+    continuation_token: Omittable[str]
     visible_for_session_id: NotRequired[UUID]
