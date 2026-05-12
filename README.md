@@ -17,18 +17,19 @@ Unit of Work pattern, providing:
 
 ## Supported Connectors
 
-| Connector | Config Class              | Documentation                               |
-|-----------|---------------------------|---------------------------------------------|
-| AWS S3    | `S3ConnectorConfig`       | [Quick start](docs/connectors/s3.md)        |
-| In-Memory | `InMemoryConnectorConfig` | [Quick start](docs/connectors/in-memory.md) |
+| Connector           | Description                                  | Documentation                               |
+|---------------------|----------------------------------------------|---------------------------------------------|
+| AWS S3              | s3 compatible object storage via aiobotocore | [Quick start](docs/connectors/s3.md)        |
+| In-Memory (default) | great for and tests and development          | [Quick start](docs/connectors/in-memory.md) |
 
 ## Supported Backends
 
-FennFlow supports multiple backends for saga metadata and locking, just like Celery.
+FennFlow uses backend as a source of truth for your file storage.
+No matter what your file storage contains, backend ensures your data is consistent.
 
-| Backend             | Config Class            | Description                                         | Documenration                             |
-|---------------------|-------------------------|-----------------------------------------------------|-------------------------------------------|
-| In-Memory (default) | `InMemoryBackendConfig` | great for and tests, development and small projects | [Quick start](docs/backends/in-memory.md) |
+| Backend             | Description                                         | Documenration                             |
+|---------------------|-----------------------------------------------------|-------------------------------------------|
+| In-Memory (default) | great for and tests, development and small projects | [Quick start](docs/backends/in-memory.md) |
 
 ### Backend Comparison
 
