@@ -11,7 +11,80 @@ requires-python = ">=3.13"
 dependencies = [
     "aiobotocore>=3.0.0",
     "pydantic>=2.0.0",
+    "certifi>=2023.11.17"
 ]
+
+[dependency-groups]
+dev = [
+    "types-aiobotocore[s3]",
+    "pytest>=9.0.0",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=7.1.0",
+]
+lint = ["mypy>=1.11.2", "ruff>=0.14.14"]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.6",
+    "mkdocstrings-python>=2.0.3",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+include = ["src/fennflow/**/*.py"]
+
+[tool.ruff.lint]
+preview = true  # For `PLW1514`
+extend-select = [
+    "Q",
+    "RUF100",
+    "RUF018", # https://docs.astral.sh/ruff/rules/assignment-in-assert/
+    "C90",
+    "UP",
+    "I",
+    "D",
+    "TID251",
+    "PLW1514", # https://docs.astral.sh/ruff/rules/unspecified-encoding/
+    "E",
+    "F",
+    "B",
+    "ARG",
+    "TC",
+    "PLW",
+    "PLE",
+]
+
+flake8-quotes = { inline-quotes = "double", multiline-quotes = "double" }
+mccabe = { max-complexity = 15 }
+ignore = [
+    "D100", # ignore missing docstring in module
+    "D102", # ignore missing docstring in public method
+    "D104", # ignore missing docstring in public package
+    "D105", # ignore missing docstring in magic methods
+    "D107", # ignore missing docstring in __init__ methods
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["D"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+known-first-party = ["fennflow"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"typing.assert_never".msg = "Use typing_extensions.assert_never instead."
+"typing.Unpack".msg = "Use typing_extensions.Unpack instead."
+"typing.TypeAliasType".msg = "Use typing_extensions.TypeAliasType instead."
+
+[tool.ruff.format]
+# don't format python in docstrings, pytest-examples takes care of it
+docstring-code-format = false
+quote-style = "double"
+skip-magic-trailing-comma = false
+
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/fennflow"]
@@ -19,9 +92,6 @@ packages = ["src/fennflow"]
 [tool.hatch.version]
 path = "src/fennflow/__init__.py"
 
-[dependency-groups]
-docs = [
-    "mkdocs>=1.6.1",
-    "mkdocs-material>=9.7.6",
-    "mkdocstrings-python>=2.0.3",
-]
+
+[tool.bandit.tests]
+skips = ["B101", "B105", "B106"]

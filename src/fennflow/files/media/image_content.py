@@ -1,10 +1,13 @@
-from typing import Literal
-
 from .binary_content import BinaryContent
 
 
 class ImageContent(BinaryContent):
-    kind: Literal["image"] = "image"
+    """Media content representing an image file.
+
+    Attributes:
+        height: Height of the image in pixels, if known.
+        width: Width of the image in pixels, if known.
+    """
 
     height: int | None = None
     width: int | None = None

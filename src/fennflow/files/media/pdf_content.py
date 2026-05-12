@@ -1,7 +1,5 @@
-from typing import Literal
-
 from .binary_content import BinaryContent
 
 
-class PdfContent(BinaryContent):
-    kind: Literal["pdf"] = "pdf"
+class DocumentContent(BinaryContent):
+    """Media content representing a document."""

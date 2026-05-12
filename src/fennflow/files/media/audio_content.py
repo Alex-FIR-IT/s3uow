@@ -1,9 +1,11 @@
-from typing import Literal
-
 from .binary_content import BinaryContent
 
 
 class AudioContent(BinaryContent):
-    kind: Literal["audio"] = "audio"
+    """Media content representing an audio file.
+
+    Attributes:
+        duration: Duration of the audio in seconds, if known.
+    """
 
     duration: int | None = None

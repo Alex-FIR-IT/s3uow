@@ -10,4 +10,7 @@ wheels/
 .venv
 
 .idea
+.env
+.notes
 site
+main.py
