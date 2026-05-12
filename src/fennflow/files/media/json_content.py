@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Generic, Literal, TypeVar
+from typing import Generic, TypeVar
 
 from pydantic import JsonValue
 
@@ -34,7 +34,6 @@ class JsonContent(
         await uow.user_files.at("user1/").put(file)
     """
 
-    kind: Literal["json"] = "json"
     encoding: str = "utf-8"
 
     @property

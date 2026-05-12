@@ -1,5 +1,3 @@
-from typing import Literal
-
 from .binary_content import BinaryContent
 
 
@@ -9,7 +7,5 @@ class AudioContent(BinaryContent):
     Attributes:
         duration: Duration of the audio in seconds, if known.
     """
-
-    kind: Literal["audio"] = "audio"
 
     duration: int | None = None

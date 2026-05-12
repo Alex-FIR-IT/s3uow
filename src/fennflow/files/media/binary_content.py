@@ -13,7 +13,6 @@ class BinaryContent(BaseContent):
     """Base class for binary content type."""
 
     data: bytes = Field(repr=False)
-    kind: str = "binary"
 
     @property
     def data_size_mb(self) -> float:

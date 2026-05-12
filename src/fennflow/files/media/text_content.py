@@ -1,4 +1,4 @@
-from typing import Literal, Self
+from typing import Self
 
 from ..._sentinel import OMIT, Omittable, is_given
 from .abstract.content import ContentPropertyAbstract
@@ -26,7 +26,6 @@ class TextContent(
         await uow.user_files.at("user1/").put(file)
     """
 
-    kind: Literal["txt"] = "txt"
     encoding: str = "utf-8"
 
     @property

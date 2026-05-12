@@ -46,7 +46,6 @@ class BaseContent(BaseModel, ABC):
     data: Any
     filename: str
     media_type: str
-    kind: str = "base"
     _storage_prefix: str | None = None
     extra_metadata: dict[str, str] = Field(default_factory=dict)
 
