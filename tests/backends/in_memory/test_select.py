@@ -62,7 +62,7 @@ def make_record(**kwargs) -> OperationRecord:
 
 
 def inject(uow, storage_path: str, record: OperationRecord) -> None:
-    uow.backend._storage[uow.backend._config.namespace][storage_path] = record
+    uow.backend._storage[uow.backend._config.scope][storage_path] = record
 
 
 # --- status ---

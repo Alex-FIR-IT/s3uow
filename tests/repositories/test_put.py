@@ -40,7 +40,7 @@ async def test_concurrent_put_same_file_raises(uow_cls, text_files):
         assert any(isinstance(r, RecordAlreadyExistsException) for r in results)
 
     async with uow_cls() as uow:
-        assert len(uow.backend.storage[uow.backend._config.namespace]) == 1
+        assert len(uow.backend.storage[uow.backend._config.scope]) == 1
 
 
 @pytest.mark.asyncio

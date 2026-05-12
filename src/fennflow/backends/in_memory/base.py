@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
     from uuid import UUID
 
-    from fennflow._new_types import Namespace, StoragePath
+    from fennflow._new_types import BackendScope, StoragePath
     from fennflow._operations.dto import OperationRecord
     from fennflow.backends.abstract.annotations import SelectParams
     from fennflow.backends.in_memory import InMemoryBackendConfig
@@ -25,7 +25,9 @@ if TYPE_CHECKING:
 class InMemoryBackend(AbstractBackend):
     """In-memory backend for managing file operations within a Unit of Work."""
 
-    _storage: defaultdict[Namespace, dict[StoragePath, OperationRecord]] | None = None
+    _storage: defaultdict[BackendScope, dict[StoragePath, OperationRecord]] | None = (
+        None
+    )
 
     def __init__(
         self,
@@ -38,7 +40,7 @@ class InMemoryBackend(AbstractBackend):
     @property
     def storage(
         self,
-    ) -> defaultdict[Namespace, dict[StoragePath, OperationRecord]]:
+    ) -> defaultdict[BackendScope, dict[StoragePath, OperationRecord]]:
         if self.__class__._storage is None:
             raise RuntimeError(
                 "Cannot get in-memory storage. InMemoryBackend is not initialized.",
@@ -46,8 +48,8 @@ class InMemoryBackend(AbstractBackend):
         return self.__class__._storage
 
     @property
-    def namespaced_storage(self) -> dict[StoragePath, OperationRecord]:
-        return self.storage[self._config.namespace]
+    def scoped_storage(self) -> dict[StoragePath, OperationRecord]:
+        return self.storage[self._config.scope]
 
     async def open(
         self,
@@ -69,20 +71,20 @@ class InMemoryBackend(AbstractBackend):
         self,
         storage_path: StoragePath,
     ) -> bool:
-        return storage_path in self.storage[self._config.namespace]
+        return storage_path in self.storage[self._config.scope]
 
     async def get_from_storage(
         self,
         storage_path: StoragePath,
     ) -> OperationRecord | None:
-        return self.storage[self._config.namespace].get(storage_path)
+        return self.storage[self._config.scope].get(storage_path)
 
     async def get(
         self,
         storage_path: StoragePath,
     ) -> OperationRecord | None:
         return self._operations.get(storage_path) or self.storage[
-            self._config.namespace
+            self._config.scope
         ].get(storage_path)
 
     async def list_pending(
@@ -146,7 +148,7 @@ class InMemoryBackend(AbstractBackend):
                 raise RecordAlreadyExistsException(
                     f"{operation.storage_path=} already exists"
                 )
-            self.storage[self._config.namespace][key] = operation
+            self.storage[self._config.scope][key] = operation
 
     async def rollback(
         self,
@@ -168,9 +170,7 @@ class InMemoryBackend(AbstractBackend):
     ) -> OperationPage:
         select = SelectOperation(**kwargs)
 
-        return select.select(
-            record=(record for record in self.namespaced_storage.values())
-        )
+        return select.select(record=(record for record in self.scoped_storage.values()))
 
     async def get_visible(
         self,
@@ -187,7 +187,7 @@ class InMemoryBackend(AbstractBackend):
         )
 
     async def is_empty(self) -> bool:
-        return not bool(self.namespaced_storage)
+        return not bool(self.scoped_storage)
 
     async def insert(
         self,
@@ -195,14 +195,14 @@ class InMemoryBackend(AbstractBackend):
         on_conflict: OnConflictDoEnum,
     ) -> None:
         for operation in operations:
-            op_in_storage = self.namespaced_storage.get(operation.storage_path)
+            op_in_storage = self.scoped_storage.get(operation.storage_path)
 
             if op_in_storage:
                 match on_conflict:
                     case OnConflictDoEnum.DO_NOTHING:
                         continue
                     case OnConflictDoEnum.REPLACE:
-                        self.namespaced_storage[operation.storage_path] = operation
+                        self.scoped_storage[operation.storage_path] = operation
                     case OnConflictDoEnum.RAISE:
                         raise ValueError(
                             f"There is already record with {operation.storage_path=}"
@@ -210,4 +210,4 @@ class InMemoryBackend(AbstractBackend):
                     case _:
                         raise AssertionError("Unhandled conflict strategy.")
             else:
-                self.namespaced_storage[operation.storage_path] = operation
+                self.scoped_storage[operation.storage_path] = operation
