@@ -3,9 +3,9 @@ from typing import TypeAlias
 from .media import (
     AudioContent,
     BinaryContent,
+    DocumentContent,
     ImageContent,
     JsonContent,
-    DocumentContent,
     TextContent,
     UrlContent,
     VideoContent,
