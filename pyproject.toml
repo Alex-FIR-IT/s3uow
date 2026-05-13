@@ -78,6 +78,9 @@ exclude = [
     "/docs",
 ]
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/fennflow"]
+
 
 [tool.ruff]
 line-length = 88
@@ -138,10 +141,6 @@ convention = "google"
 docstring-code-format = false
 quote-style = "double"
 skip-magic-trailing-comma = false
-
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/fennflow"]
 
 
 [tool.bandit.tests]
