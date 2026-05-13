@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Literal, TypeGuard, TypeVar, Union
 
 _T = TypeVar("_T")
 
 
 # Sentinel class used until PEP 0661 is accepted
+
+
+@dataclass(slots=True, frozen=True)
 class NotGiven:
     """A sentinel singleton class used to distinguish omitted keyword arguments.
 
@@ -34,6 +38,7 @@ class NotGiven:
 NOT_GIVEN = NotGiven()
 
 
+@dataclass(slots=True, frozen=True)
 class Omit:
     """To explicitly omit something from being sent in a request, use `omit`.
 
