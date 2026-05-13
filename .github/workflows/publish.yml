@@ -8,7 +8,7 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    environment: testpypi
+    environment: pypi
     permissions:
       id-token: write   # required for Trusted Publishing
       contents: write   # required to create GitHub Release
@@ -26,8 +26,6 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1
-        with:
-          repository-url: https://test.pypi.org/legacy/ # delete after tests
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3
