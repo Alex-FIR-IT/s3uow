@@ -29,6 +29,8 @@ Welcome to the FennFlow documentation.
 | `PutRepository`    | `put()`    | Upload files to storage     | [📖 Docs](repositories/put.md)    |
 | `GetRepository`    | `get()`    | Retrieve files from storage | [📖 Docs](repositories/get.md)    |
 | `DeleteRepository` | `delete()` | Delete files from storage   | [📖 Docs](repositories/delete.md) |
+| `ListRepository`   | `list()`   | Retrieve filepaths to files | [📖 Docs](repositories/list.md)   |
+| `AtRepository`     | `at()`     | Change current directory    | [📖 Docs](repositories/at.md)     |
 
 ## Working with Responses
 
