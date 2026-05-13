@@ -20,7 +20,7 @@
 
 ---
 
-**Documentation**: [docs/README.md](docs/README.md)
+**Documentation**: [docs/README.md](https://github.com/Alex-FIR-IT/FennFlow/blob/master/docs/README.md)
 
 ---
 
@@ -127,5 +127,6 @@ if __name__ == "__main__":
 
 ## Next Steps
 
-Read the [docs](docs/README.md) to learn more about working with FennFlow.
+Read the [docs](https://github.com/Alex-FIR-IT/FennFlow/blob/master/docs/README.md) to learn more about working with
+FennFlow.
 
