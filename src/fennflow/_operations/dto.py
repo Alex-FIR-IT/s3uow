@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 from uuid import UUID
 
+from fennflow._datetime import now
 from fennflow._operations.context.abstract import BaseContext
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow._sentinel import NOT_GIVEN
@@ -28,15 +29,10 @@ class OperationRecord:
     operation_id: uuid.UUID = field(default_factory=uuid.uuid4)
 
     created_at: datetime.datetime = field(
-        default_factory=lambda: datetime.datetime.now(tz=datetime.UTC)
-    )
-    updated_at: datetime.datetime = field(
-        default_factory=lambda: datetime.datetime.now(tz=datetime.UTC)
+        default_factory=now,
     )
     expired_at: datetime.datetime = field(
-        default_factory=lambda: (
-            datetime.datetime.now(tz=datetime.UTC) + datetime.timedelta(seconds=30)
-        )
+        default_factory=lambda: now() + datetime.timedelta(seconds=30)
     )
     error: str | None | NotGiven = NOT_GIVEN
 
@@ -62,7 +58,7 @@ class OperationRecord:
 
     @property
     def is_expired(self):
-        return self.expired_at < datetime.datetime.now(tz=datetime.UTC)
+        return self.expired_at < now()
 
     @property
     def is_dangling(self) -> bool:

@@ -1,9 +1,14 @@
-from typing import Self
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from ..._sentinel import OMIT, Omittable, is_given
 from .abstract.content import ContentPropertyAbstract
 from .abstract.from_content import FromContentAbstract
 from .binary_content import BinaryContent
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 class TextContent(

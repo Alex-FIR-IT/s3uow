@@ -154,13 +154,11 @@ async def test_is_expired(uow_cls):
     async with uow_cls() as uow:
         expired = make_record(
             storage_path="folder1/expired.txt",
-            expired_at=datetime.datetime.now(tz=datetime.UTC)
-            - datetime.timedelta(seconds=1),
+            expired_at=now() - datetime.timedelta(seconds=1),
         )
         active = make_record(
             storage_path="folder1/active.txt",
-            expired_at=datetime.datetime.now(tz=datetime.UTC)
-            + datetime.timedelta(seconds=60),
+            expired_at=now() + datetime.timedelta(seconds=60),
         )
         inject(uow, "folder1/expired.txt", expired)
         inject(uow, "folder1/active.txt", active)
