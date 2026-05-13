@@ -30,9 +30,6 @@ class OperationRecord:
     created_at: datetime.datetime = field(
         default_factory=lambda: datetime.datetime.now(tz=datetime.UTC)
     )
-    updated_at: datetime.datetime = field(
-        default_factory=lambda: datetime.datetime.now(tz=datetime.UTC)
-    )
     expired_at: datetime.datetime = field(
         default_factory=lambda: (
             datetime.datetime.now(tz=datetime.UTC) + datetime.timedelta(seconds=30)
