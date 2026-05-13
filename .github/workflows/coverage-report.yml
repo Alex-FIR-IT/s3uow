@@ -60,10 +60,10 @@ jobs:
         uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8
         with:
           merge-multiple: true
-          path: .coverage
+          path: .coverage-data
 
       - name: Combine coverage
-        run: uv run coverage combine .coverage/
+        run: uv run coverage combine .coverage-data/
 
       - name: Convert to XML
         run: uv run coverage xml
