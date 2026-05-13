@@ -58,7 +58,7 @@ class OperationRecord:
 
     @property
     def is_expired(self):
-        return self.expired_at < datetime.datetime.now(tz=datetime.UTC)
+        return self.expired_at < now()
 
     @property
     def is_dangling(self) -> bool:
