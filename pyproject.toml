@@ -1,18 +1,58 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "uv-dynamic-versioning>=0.7.0"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "pep440"
+bump = true
+
+
 
 [project]
 name = "fennflow"
-dynamic = ["version"]           # ← важно!
+dynamic = ["version"]
 description = "Atomic-like S3 Framework with Saga Pattern, the Pydantic way"
+
+authors = [
+    { name = "AlexFIR", email = "osintfir@gmail.com" },
+]
+license = "MIT"
+license-files = ["LICENSE"]
 readme = "README.md"
-requires-python = ">=3.13"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+requires-python = ">=3.10"
 dependencies = [
     "aiobotocore>=3.0.0",
     "pydantic>=2.0.0",
     "certifi>=2023.11.17"
 ]
+
+
+[project.urls]
+Homepage = "https://github.com/Alex-FIR-IT/FennFlow"
+Source = "https://github.com/Alex-FIR-IT/FennFlow"
+Documentation = "https://github.com/Alex-FIR-IT/FennFlow/blob/master/docs/README.md"
+
 
 [dependency-groups]
 dev = [
@@ -27,6 +67,13 @@ docs = [
     "mkdocs-material>=9.7.6",
     "mkdocstrings-python>=2.0.3",
 ]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/tests",
+    "/docs",
+]
+
 
 [tool.ruff]
 line-length = 88
@@ -88,9 +135,6 @@ skip-magic-trailing-comma = false
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/fennflow"]
-
-[tool.hatch.version]
-path = "src/fennflow/__init__.py"
 
 
 [tool.bandit.tests]
