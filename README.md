@@ -12,7 +12,7 @@
   <a href="https://github.com/Alex-FIR-IT/FennFlow/actions/workflows/coverage-report.yml"><img src="https://github.com/Alex-FIR-IT/FennFlow/actions/workflows/coverage-report.yml/badge.svg?branch=master" alt="CI"></a>
   <a href="https://app.codacy.com/gh/Alex-FIR-IT/FennFlow/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage"><img src="https://app.codacy.com/project/badge/Coverage/3db23fc6c6f248f2926731b0bdf0d012" alt="Codacy Coverage"></a>
   <a href="https://github.com/users/Alex-FIR-IT/projects/2/views/2"><img src="https://img.shields.io/badge/Roadmap-green?logo=github" alt="Roadmap"></a>
-  <a href="https://github.com/Alex-FIR-IT"><img src="https://img.shields.io/pypi/pyversions/fennflow?logo=python&logoColor=white" alt="versions"></a>
+  <a href="https://github.com/Alex-FIR-IT"><img src="https://img.shields.io/pypi/pyversions/fennflow?style=flat&logo=python&logoColor=white" alt="versions"></a>
   <a href="https://github.com/Alex-FIR-IT/fennflow/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen" alt="License: MIT"></a>
   <a href="https://github.com/Alex-FIR-IT/fennflow/commits/master/"><img src="https://img.shields.io/github/last-commit/Alex-FIR-IT/fennflow?logo=github" alt="Last Commit"></a>
   <a href="https://app.codacy.com/gh/Alex-FIR-IT/FennFlow/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/3db23fc6c6f248f2926731b0bdf0d012" alt="Codacy Grade"></a>
