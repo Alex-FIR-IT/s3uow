@@ -126,6 +126,7 @@ convention = "google"
 "typing.Unpack".msg = "Use typing_extensions.Unpack instead."
 "typing.NotRequired".msg = "Use typing_extensions.NotRequired instead."
 "typing.Required".msg = "Use typing_extensions.Required instead."
+"typing.Self".msg = "Use typing_extensions.Self instead."
 "typing.TypeAliasType".msg = "Use typing_extensions.TypeAliasType instead."
 
 [tool.ruff.format]

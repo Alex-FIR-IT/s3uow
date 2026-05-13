@@ -4,7 +4,7 @@ import bisect
 import logging
 from collections import defaultdict
 from itertools import islice
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Any
 
 from fennflow._sentinel import OMIT, Omittable
 from fennflow.connectors.abstract import AbstractConnector
@@ -13,12 +13,13 @@ from fennflow.files.responses.base import MediaResponse
 from fennflow.files.responses.list import ListResponse
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from fennflow._new_types import Namespace, StoragePath
     from fennflow.connectors.abstract.base import RepoExtraType
     from fennflow.connectors.in_memory.config import InMemoryConnectorConfig
     from fennflow.files.types import BinaryMedia
     from fennflow.repositories.fields.base import RepoExtra
-
 
 logger = logging.getLogger(__name__)
 

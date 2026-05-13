@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from aiobotocore.session import AioSession, ClientCreatorContext
     from types_aiobotocore_s3 import S3Client as S3ClientAiobotocore
+    from typing_extensions import Self
 
     from fennflow.connectors.s3 import S3ConnectorConfig
 

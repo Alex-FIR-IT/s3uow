@@ -6,7 +6,7 @@ import os
 from abc import ABC
 from functools import total_ordering
 from hashlib import sha256
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Any
 
 from pydantic import (
     BaseModel,
@@ -34,6 +34,8 @@ from fennflow.files.exceptions.storage_prefix_is_none import (
 )
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from fennflow._new_types import StoragePath
 
 logger = logging.getLogger(__name__)

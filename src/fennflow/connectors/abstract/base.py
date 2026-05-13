@@ -1,17 +1,18 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Generic, Self, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 from fennflow._sentinel import OMIT, Omittable
 from fennflow.repositories.fields.base import RepoExtra
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from fennflow._new_types import Namespace, StoragePath
     from fennflow.files.responses.base import MediaResponse
     from fennflow.files.responses.list import ListResponse
     from fennflow.files.types import BinaryMedia
-
 
 RepoExtraType = TypeVar("RepoExtraType", bound=RepoExtra)
 

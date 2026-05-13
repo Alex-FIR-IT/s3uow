@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING
 
 from fennflow._path import Path
 
 from .base import BaseRepository
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from fennflow._new_types import StoragePath
 
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Any
 
 from aiobotocore.session import get_session
 
@@ -15,6 +15,7 @@ from fennflow.repositories.fields.s3 import S3Extra
 
 if TYPE_CHECKING:
     from aiobotocore.session import AioSession
+    from typing_extensions import Self
 
     from fennflow._new_types import Namespace, StoragePath
     from fennflow.connectors.abstract.base import RepoExtraType

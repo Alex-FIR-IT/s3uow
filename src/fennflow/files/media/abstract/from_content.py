@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Self
+from typing import TYPE_CHECKING, Any
 
 from fennflow._sentinel import OMIT, Omittable
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 class FromContentAbstract(ABC):
