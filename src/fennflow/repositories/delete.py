@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from fennflow._operations.context.delete import DeleteContext
 from fennflow._operations.dto import OperationRecord
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
@@ -13,7 +15,7 @@ class DeleteRepository(AtRepository):
     Implements Saga-based deletion with automatic compensation on failure.
     """
 
-    async def delete(self, path: str, **provider_extra) -> bool:
+    async def delete(self, path: str, **provider_extra: Any) -> bool:
         """Delete a file from storage.
 
         Args:
