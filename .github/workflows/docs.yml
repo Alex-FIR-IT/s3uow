@@ -3,7 +3,7 @@ name: Deploy Docs
 on:
   push:
     branches:
-      - docs/bring-docs-up-to-date
+      - master
   workflow_dispatch:
 
 permissions:
