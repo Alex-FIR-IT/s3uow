@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from fennflow._reconciler.enums import ReconcileFrequencyEnum, ReconcileStrategyEnum
+from fennflow.reconciler.enums import ReconcileFrequencyEnum, ReconcileStrategyEnum
 
 
 @dataclass(slots=True, frozen=True)

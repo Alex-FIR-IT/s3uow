@@ -3,13 +3,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from fennflow._reconciler import (
+from fennflow.backends.in_memory import InMemoryBackendConfig
+from fennflow.connectors import InMemoryConnectorConfig
+from fennflow.reconciler import (
     ReconcileConfig,
     ReconcileFrequencyEnum,
     ReconcileStrategyEnum,
 )
-from fennflow.backends.in_memory import InMemoryBackendConfig
-from fennflow.connectors import InMemoryConnectorConfig
 
 if TYPE_CHECKING:
     from fennflow import ConfigDict
