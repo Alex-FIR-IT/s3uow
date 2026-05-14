@@ -34,11 +34,33 @@ extra_css:
 plugins:
   - search
   - glightbox
+  - social
   - mkdocstrings:
       handlers:
         python:
           paths: [ src ]
-
+  - llmstxt:
+      full_output: llms-full.txt
+      markdown_description: |-
+        FennFlow is a Python S3 framework providing atomic-like file operations
+        with Saga-pattern compensation, built on top of aiobotocore with
+        Pydantic-powered content models and a Unit of Work abstraction.
+      sections:
+        Introduction:
+          - index.md
+          - install.md
+          - help.md
+        Core Concepts:
+          - core_concepts/uow.md
+          - core_concepts/connectors.md
+          - core_concepts/backends.md
+          - core_concepts/repositories.md
+          - core_concepts/files.md
+          - core_concepts/reconciler.md
+        Advanced Features:
+          - advanced_features/reconciler.md
+        API Reference:
+          - api.md
 nav:
   - index.md
   - Installation: install.md
