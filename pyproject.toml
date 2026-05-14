@@ -25,6 +25,7 @@ license-files = ["LICENSE"]
 readme = "README.md"
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
@@ -37,7 +38,10 @@ classifiers = [
     "Intended Audience :: Information Technology",
     "Operating System :: OS Independent",
     "Topic :: Internet",
+    "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Typing :: Typed",
 ]
 
 requires-python = ">=3.10"
@@ -49,10 +53,10 @@ dependencies = [
 
 
 [project.urls]
-Homepage = "https://github.com/Alex-FIR-IT/FennFlow"
 Source = "https://github.com/Alex-FIR-IT/FennFlow"
 Documentation = "https://github.com/Alex-FIR-IT/FennFlow/blob/master/docs/README.md"
-
+Changelog = "https://github.com/Alex-FIR-IT/FennFlow/releases"
+Roadmap = "https://github.com/users/Alex-FIR-IT/projects/2/views/2"
 
 [dependency-groups]
 dev = [
@@ -66,6 +70,7 @@ docs = [
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.7.6",
     "mkdocstrings-python>=2.0.3",
+    "mkdocs-glightbox>=0.4.0",
 ]
 
 [tool.hatch.build.targets.sdist]
@@ -73,6 +78,9 @@ exclude = [
     "/tests",
     "/docs",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fennflow"]
 
 
 [tool.ruff]
@@ -134,10 +142,6 @@ convention = "google"
 docstring-code-format = false
 quote-style = "double"
 skip-magic-trailing-comma = false
-
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/fennflow"]
 
 
 [tool.bandit.tests]

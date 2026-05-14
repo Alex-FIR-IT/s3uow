@@ -1,0 +1,57 @@
+:root [data-md-color-primary="custom-dark"] {
+    --md-primary-fg-color: #0D1117;
+    --md-primary-fg-color--transparent: rgba(13, 17, 23, 0.7);
+    --md-primary-bg-color: #FFFFFF;
+    --md-primary-bg-color--light: #FFFFFF;
+}
+
+:root [data-md-color-accent="custom-gold"] {
+    --md-accent-fg-color: #EBB655;
+    --md-accent-fg-color--transparent: rgba(235, 182, 85, 0.3);
+    --md-accent-bg-color: #FFFFFF;
+}
+
+/* Полная замена основного фона сайта на #0D1117 */
+:root [data-md-color-scheme="slate"] {
+    --md-default-bg-color: #0D1117;
+    --md-default-bg-color--light: rgba(13, 17, 23, 0.7);
+    --md-code-bg-color: #161b22;
+    --md-default-fg-color: #FFFFFF;
+    --md-default-fg-color--light: rgba(255, 255, 255, 0.7);
+    --md-default-fg-color--lighter: rgba(255, 255, 255, 0.4);
+}
+
+/* Цвет активных пунктов меню слева */
+.md-nav__link--active {
+    color: #EBB655 !important;
+}
+
+/* Цвет ссылок в тексте */
+.md-content a {
+    color: #EBB655;
+}
+
+
+/* Делает шапку золотистой */
+.md-header {
+    background-color: #EBB655 !important;
+}
+
+/* Элементы внутри шапки (текст, иконки, кнопка поиска) делает черными */
+.md-header,
+.md-header__button,
+.md-header__title,
+.md-search__input,
+.md-search__icon {
+    color: #0D1117 !important;
+}
+
+/* Иконка GitHub репозитория в шапке */
+.md-source__icon svg {
+    fill: #0D1117 !important;
+}
+
+/* Текст внутри блока репозитория */
+.md-source__fact, .md-source__repository {
+    color: #0D1117 !important;
+}

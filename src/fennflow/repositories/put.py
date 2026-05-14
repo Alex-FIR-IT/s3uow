@@ -40,7 +40,11 @@ class PutRepository(AtRepository):
 
     """
 
-    async def put(self, *files: BinaryMedia, **provider_extra):
+    async def put(
+            self,
+            *files: BinaryMedia,
+            **provider_extra,
+            ) -> None:
         tasks = []
         for file in files:
             file._storage_prefix = self.cwd
@@ -57,14 +61,14 @@ class PutRepository(AtRepository):
                 context=PutContext(file=file),
                 session_id=self._uow._session_id,
                 repo_extra=self.repo_extra,
-            )
+                )
 
             await self._uow.backend.add(operation)
             tasks.append(
                 self._uow._operation_executor.execute(
                     operation,
                     **provider_extra,
+                    ),
                 )
-            )
         await self._uow.backend.flush()
         await asyncio.gather(*tasks)

@@ -9,11 +9,11 @@ class ListRepository(AtRepository):
     """Repository for retrieving a files from storage within the current scope."""
 
     async def list(
-        self,
-        prefix: str = "",
-        continuation_token: Omittable[str] = OMIT,
-        limit: int = 1000,
-    ):
+            self,
+            prefix: str = "",
+            continuation_token: Omittable[str] = OMIT,
+            limit: int = 1000,
+            ) -> ListResponse:
         """Uploads files under the current path, optionally filtered by prefix.
 
         Files are visible if they are uploaded (committed) or pending within the
@@ -49,9 +49,9 @@ class ListRepository(AtRepository):
             continuation_token=continuation_token,
             limit=limit,
             session_id=self._uow._session_id,
-        )
+            )
 
         return ListResponse(
             storage_paths=tuple(op.storage_path for op in operation_page),
             continuation_token=operation_page.continuation_token,
-        )
+            )
