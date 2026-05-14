@@ -107,10 +107,10 @@ class Reconciler:
         Raises:
             ReconcileFailedException: If any error occurs during reconciliation.
         """
-        for repo in self.uow_fields:
-            if not await self._should_reconcile(strategy=strategy):
-                continue
+        if not await self._should_reconcile(strategy=strategy):
+            return
 
+        for repo in self.uow_fields:
             on_conflict = reconcile_to_on_conflict_strategy[strategy]
 
             async for page in self._iter_pages(repo, batch_size=batch_size):
