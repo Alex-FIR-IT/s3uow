@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from fennflow._reconciler import Reconciler, ReconcileStrategyEnum
+from fennflow.reconciler import Reconciler, ReconcileStrategyEnum
 
 
 @pytest.mark.parametrize(

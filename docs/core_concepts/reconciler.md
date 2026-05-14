@@ -9,7 +9,7 @@ invisible to `GetRepository`,  `ListRepository`, etc.
 Reconciliation is configured via `ReconcileConfig` inside `ConfigDict`. These are default settings:
 
 ```python
-from fennflow._reconciler import ReconcileConfig, ReconcileFrequencyEnum, ReconcileStrategyEnum
+from fennflow.reconciler import ReconcileConfig, ReconcileFrequencyEnum, ReconcileStrategyEnum
 
 
 class UOW(UnitOfWork):

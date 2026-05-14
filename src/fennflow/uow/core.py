@@ -6,10 +6,10 @@ import uuid
 from typing import TYPE_CHECKING
 
 from fennflow._operations.executor import OperationExecutor
-from fennflow._reconciler._orchestrator import ReconcileOrchestrator
 from fennflow._resolver import ConfigResolver
 from fennflow.backends import BackendFactory
 from fennflow.connectors import ConnectorFactory
+from fennflow.reconciler._orchestrator import ReconcileOrchestrator
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -169,9 +169,9 @@ class UnitOfWork:
             await self.backend.mark_done(operation)
 
         await self.backend.flush()
-        await self.backend.clear_session()
 
         await self._finalize_operations(operations)
+        await self.backend.clear_session()
 
     async def rollback(
         self,

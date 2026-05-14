@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from typing_extensions import Unpack
 
+from fennflow._operations.context.abstract import BaseContext
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow._sentinel import OMIT, Omittable
 from fennflow.backends.abstract.base import AbstractBackend
@@ -133,6 +134,9 @@ class InMemoryBackend(AbstractBackend):
     async def clear_session(
         self,
     ) -> None:
+        for op in self._operations.values():
+            op.context = BaseContext()
+
         self._operations.clear()
 
     async def flush(
