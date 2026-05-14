@@ -32,6 +32,14 @@ class UnitOfWork:
     - execution and compensation logic (Saga pattern)
 
     **Example**::
+        class UOW(UnitOfWork):
+            config = ConfigDict(
+                backend=PostgresBackendConfig(...),
+                connector=S3ConnectorConfig(...),
+            )
+            user_files = S3RepoField(UserFiles, bucket_name="bucket_name")
+            # or
+            # user_files = RepoField(UserFiles, namespace="bucket_name")
 
         async with UOW() as uow:
             await uow.user_files.at("user1/").put(file)
@@ -41,16 +49,6 @@ class UnitOfWork:
         commits all operations if the context exits successfully
     - If an exception occurs or `auto_commit=False`:
         triggers rollback with compensation logic
-
-    Example:
-        class UOW(UnitOfWork):
-            config = ConfigDict(
-                backend=PostgresBackendConfig(...),
-                connector=S3ConnectorConfig(...),
-            )
-            user_files = S3RepoField(UserFiles, bucket_name="bucket_name")
-            # or
-            # user_files = RepoField(UserFiles, namespace="bucket_name")
 
     Important:
     - Users should NOT interact with backend or connector directly

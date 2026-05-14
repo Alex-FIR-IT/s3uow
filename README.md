@@ -20,7 +20,7 @@
 
 ---
 
-**Documentation**: [docs/README.md](https://github.com/Alex-FIR-IT/FennFlow/blob/master/docs/README.md)
+**Documentation**: [📖 Docs](https://alex-fir-it.github.io/FennFlow/)
 
 ---
 
@@ -38,19 +38,19 @@ Unit of Work pattern, providing:
 
 ## Supported Connectors
 
-| Connector           | Description                                  | Documentation                               |
-|---------------------|----------------------------------------------|---------------------------------------------|
-| AWS S3              | s3 compatible object storage via aiobotocore | [Quick start](docs/connectors/s3.md)        |
-| In-Memory (default) | great for and tests and development          | [Quick start](docs/connectors/in-memory.md) |
+| Connector           | Description                                  | Documentation                                                                                 |
+|---------------------|----------------------------------------------|-----------------------------------------------------------------------------------------------|
+| AWS S3              | s3 compatible object storage via aiobotocore | [📖 Docs](https://alex-fir-it.github.io/FennFlow/core_concepts/connectors/#s3connector)       |
+| In-Memory (default) | great for and tests and development          | [📖 Docs](https://alex-fir-it.github.io/FennFlow/core_concepts/connectors/#inmemoryconnector) |
 
 ## Supported Backends
 
 FennFlow uses backend as a source of truth for your file storage.
 No matter what your file storage contains, backend ensures your data is consistent.
 
-| Backend             | Description                                         | Documenration                             |
-|---------------------|-----------------------------------------------------|-------------------------------------------|
-| In-Memory (default) | great for and tests, development and small projects | [Quick start](docs/backends/in-memory.md) |
+| Backend             | Description                                         | Documenration                                                                             |
+|---------------------|-----------------------------------------------------|-------------------------------------------------------------------------------------------|
+| In-Memory (default) | great for and tests, development and small projects | [📖 Docs](https://alex-fir-it.github.io/FennFlow/core_concepts/backends/#inmemorybackend) |
 
 ### Backend Comparison
 
@@ -125,8 +125,11 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+(This example is complete, it can be run “as is”, assuming you’ve installed the fennflow package)
+
 ## Next Steps
 
-Read the [docs](https://github.com/Alex-FIR-IT/FennFlow/blob/master/docs/README.md) to learn more about working with
+Read the [docs](https://alex-fir-it.github.io/FennFlow/) to learn more about working with
 FennFlow.
 
+Read the [API Reference](https://alex-fir-it.github.io/FennFlow/api/)  to understand FennFlow AI’s interface.
