@@ -1,16 +1,108 @@
 site_name: FennFlow
 site_description: Atomic-like S3 Framework, the Pydantic way
 strict: true
+site_url: https://alex-fir-it.github.io
+
+repo_name: Alex-FIR-IT/FennFlow
+repo_url: https://github.com/Alex-FIR-IT/FennFlow
+
 theme:
   name: material
+  palette:
+    scheme: slate
+    primary: custom-dark
+    accent: custom-gold
+  icon:
+    logo: material/xml
+  favicon: assets/dark_muzzle.png
+  features:
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - navigation.path
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tracking
+    - toc.follow
+    - announce.dismiss
 
+extra_css:
+  - stylesheets/custom.css
 plugins:
   - search
+  - glightbox
   - mkdocstrings:
       handlers:
         python:
           paths: [ src ]
 
 nav:
-  - Home: index.md
-  - API: api.md
+  - index.md
+  - Installation: install.md
+  - Getting Help: help.md
+  - Core Concepts:
+      - Uow: core_concepts/uow.md
+      - Connectors: core_concepts/connectors.md
+      - Backends: core_concepts/backends.md
+      - Repositories: core_concepts/repositories.md
+      - Files: core_concepts/files.md
+      - Reconciler: core_concepts/reconciler.md
+  - Advanced Features:
+      - Reconciler: advanced_features/reconciler.md
+  - API Reference: api.md
+
+
+extra:
+  # hide the "Made with Material for MkDocs" message
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Alex-FIR-IT/FennFlow
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/fennflow/
+
+
+markdown_extensions:
+  - tables
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.mark
+  - pymdownx.superfences
+  - pymdownx.snippets
+  - pymdownx.tilde
+  - pymdownx.inlinehilite
+  - pymdownx.highlight:
+      pygments_lang_class: true
+  - pymdownx.extra:
+      pymdownx.superfences:
+        custom_fences:
+          - name: mermaid
+            class: mermaid
+            format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - sane_lists # this means you can start a list from any number
+  - material.extensions.preview:
+      targets:
+        include:
+          - '*'
+
+
+# https://www.mkdocs.org/user-guide/configuration/#validation
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
