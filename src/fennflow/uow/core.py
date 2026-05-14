@@ -169,9 +169,9 @@ class UnitOfWork:
             await self.backend.mark_done(operation)
 
         await self.backend.flush()
-        await self.backend.clear_session()
 
         await self._finalize_operations(operations)
+        await self.backend.clear_session()
 
     async def rollback(
         self,
