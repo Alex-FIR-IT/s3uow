@@ -34,7 +34,9 @@ extra_css:
 plugins:
   - search
   - glightbox
-  - social
+  - social:
+      cards_layout_options:
+        logo: docs/assets/dark_muzzle.png
   - mkdocstrings:
       handlers:
         python:
