@@ -1,8 +1,8 @@
 from typing_extensions import TypedDict
 
-from fennflow._reconciler import ReconcileConfig
 from fennflow.backends.types.config import BackendConfig
 from fennflow.connectors.types.config import ConnectorConfig
+from fennflow.reconciler import ReconcileConfig
 
 
 class ConfigDict(TypedDict, total=False):

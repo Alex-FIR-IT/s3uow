@@ -4,8 +4,8 @@ import asyncio
 import logging
 from typing import TYPE_CHECKING, Any, ClassVar
 
-from fennflow._reconciler.core import Reconciler
-from fennflow._reconciler.enums import ReconcileFrequencyEnum
+from fennflow.reconciler.core import Reconciler
+from fennflow.reconciler.enums import ReconcileFrequencyEnum
 from fennflow.uow.inspector import UowInspector
 
 if TYPE_CHECKING:

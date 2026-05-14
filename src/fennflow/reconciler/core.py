@@ -6,9 +6,9 @@ from typing import TYPE_CHECKING
 from fennflow._decorators import reraise_with
 from fennflow._operations.dto import OperationRecord
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
-from fennflow._reconciler.enums import ReconcileStrategyEnum
-from fennflow._reconciler.exceptions import ReconcileFailedException
 from fennflow.backends.enums import OnConflictDoEnum
+from fennflow.reconciler.enums import ReconcileStrategyEnum
+from fennflow.reconciler.exceptions import ReconcileFailedException
 from fennflow.repositories import RepoField
 
 if TYPE_CHECKING:
@@ -32,6 +32,49 @@ reconcile_to_on_conflict_strategy = {
 
 
 class Reconciler:
+    """Synchronizes backend state with actual connector (storage) state.
+
+    On startup or session start, the backend may be out of sync with the
+    real storage (e.g. after a crash with ``InMemoryBackend``, or on first
+    connection with a persistent backend). ``Reconciler`` restores consistency
+    by listing files from the connector and inserting them into the backend
+    according to the chosen strategy.
+
+    Called internally by ``ReconcileOrchestrator`` in UnitOfWork.__aenter__.
+
+    Args:
+        uow_fields: Repository field descriptors to reconcile.
+            Each field provides the namespace and repo config needed to
+            list objects from the connector.
+        backend: The backend to sync state into.
+        connector: The storage connector to read the source-of-truth from.
+
+    Example::
+
+        import asyncio
+
+        from fennflow.reconciler import Reconciler, ReconcileStrategyEnum
+        from fennflow.uow import UowInspector
+
+
+        async def main():
+            async with UOW() as uow:
+                uow_inspector = UowInspector(uow=uow)
+                reconcile = Reconciler(
+                    uow_fields=uow_inspector.get_repo_fields(),
+                    connector=uow.connector,
+                    backend=uow.backend,
+                    )
+                await reconcile.reconcile(
+                    session_id=uow._session_id,
+                    batch_size=500,
+                    strategy=ReconcileStrategyEnum.REPLACE,
+                    )
+
+        if __name__ == "__main__":
+            asyncio.run(main())
+    """
+
     def __init__(
         self,
         uow_fields: Iterable[RepoField],
@@ -49,6 +92,21 @@ class Reconciler:
         strategy: ReconcileStrategyEnum,
         batch_size: int,
     ) -> None:
+        """Reconcile all registered repository fields against the connector.
+
+        Iterates over each ``RepoField``, lists its objects from the connector
+        in pages, and inserts them into the backend. The conflict resolution
+        behavior is determined by ``strategy``.
+
+        Args:
+            session_id: Session ID to stamp on inserted ``OperationRecord``s.
+            strategy: Controls whether to skip reconciliation, overwrite existing
+                records, or only insert missing ones. See ``ReconcileStrategyEnum``.
+            batch_size: Number of objects to fetch per page from the connector.
+
+        Raises:
+            ReconcileFailedException: If any error occurs during reconciliation.
+        """
         for repo in self.uow_fields:
             if not await self._should_reconcile(strategy=strategy):
                 continue
