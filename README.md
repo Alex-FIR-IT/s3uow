@@ -133,4 +133,4 @@ if __name__ == "__main__":
 Read the [docs](https://alex-fir-it.github.io/FennFlow/) to learn more about working with
 FennFlow.
 
-Read the [API Reference](https://alex-fir-it.github.io/FennFlow/api/)  to understand FennFlow AI’s interface.
+Read the [API Reference](https://alex-fir-it.github.io/FennFlow/api/)  to understand FennFlow’s interface.
