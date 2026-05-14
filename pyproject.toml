@@ -71,6 +71,8 @@ docs = [
     "mkdocs-material>=9.7.6",
     "mkdocstrings-python>=2.0.3",
     "mkdocs-glightbox>=0.4.0",
+    "mkdocs-material[imaging]>=9.7.0",
+    "mkdocs-llmstxt>=0.2.0",
 ]
 
 [tool.hatch.build.targets.sdist]
