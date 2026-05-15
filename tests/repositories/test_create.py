@@ -3,6 +3,7 @@ import asyncio
 import pytest
 
 from fennflow.backends.exceptions import RecordAlreadyExistsException
+from fennflow.repositories.exceptions import FilepathsCollisionError
 
 
 @pytest.mark.asyncio
@@ -57,3 +58,10 @@ async def test_create_multiple_files(uow_cls, text_files):
         for file in text_files:
             result = await uow.user_files.at("user/").get(file.filename)
             assert result.media[0].data == file.data
+
+
+@pytest.mark.asyncio
+async def test_create_file_multiple_times(uow_cls, text_files):
+    async with uow_cls() as uow:
+        with pytest.raises(FilepathsCollisionError):
+            await uow.user_files.at("user/").create(text_files[0], text_files[0])

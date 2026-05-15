@@ -7,13 +7,19 @@ from fennflow._operations.context.create import CreateContext
 from fennflow._operations.dto import OperationRecord
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow.backends.exceptions import RecordAlreadyExistsException
+from fennflow.repositories._validation_mixins.validate_duplicate import (
+    ValidateDuplicatesMixin,
+)
 from fennflow.repositories.at import AtRepository
 
 if TYPE_CHECKING:
     from fennflow.files.types import BinaryMedia
 
 
-class CreateRepository(AtRepository):
+class CreateRepository(
+    AtRepository,
+    ValidateDuplicatesMixin,
+):
     """Repository for uploading (creating) files in the storage.
 
     This repository implements the "create" operation, which uploads new files
@@ -31,7 +37,10 @@ class CreateRepository(AtRepository):
     - Backend commit is executed on uow.commit
 
     **Raises**:
-        FileAlreadyExistError: If a file with the same path already exists in a backend
+        RecordAlreadyExistsException:
+            If a file with the same path already exists in a backend
+        FilepathsCollisionError:
+            If files with the same filepath are passed
 
     """
 
@@ -40,6 +49,7 @@ class CreateRepository(AtRepository):
         *files: BinaryMedia,
         **provider_extra,
     ) -> None:
+        self.validate_duplicates_from_files(files)
         tasks = []
         for file in files:
             file._storage_prefix = self.cwd
