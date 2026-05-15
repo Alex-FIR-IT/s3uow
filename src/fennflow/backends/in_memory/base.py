@@ -75,7 +75,7 @@ class InMemoryBackend(AbstractBackend):
     ) -> bool:
         return storage_path in self.storage[self._config.scope]
 
-    async def get_from_storage(
+    async def get_from_backend(
         self,
         storage_path: StoragePath,
     ) -> OperationRecord | None:
@@ -146,7 +146,7 @@ class InMemoryBackend(AbstractBackend):
         self,
     ):
         for key, operation in self._operations.items():
-            storage_operation = await self.get_from_storage(
+            storage_operation = await self.get_from_backend(
                 storage_path=operation.storage_path,
             )
 
