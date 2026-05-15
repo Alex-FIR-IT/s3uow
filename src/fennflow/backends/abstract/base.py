@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from fennflow._sentinel import OMIT, Omittable
+from fennflow.backends.enums import OnConflictDoEnum
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -12,7 +13,6 @@ if TYPE_CHECKING:
     from fennflow._new_types import StoragePath
     from fennflow._operations.dto import OperationRecord
     from fennflow.backends.abstract.config import AbstractBackendConfig
-    from fennflow.backends.enums import OnConflictDoEnum
     from fennflow.backends.responses import OperationPage
 
 
@@ -36,7 +36,23 @@ class AbstractBackend(ABC):
     ) -> OperationRecord | None: ...
 
     @abstractmethod
-    async def add(self, record: OperationRecord) -> None: ...
+    async def get_from_backend(
+        self,
+        storage_path: StoragePath,
+    ) -> OperationRecord | None: ...
+
+    async def get_from_current_session(
+        self,
+        storage_path: StoragePath,
+    ) -> OperationRecord | None:
+        return self._operations.get(storage_path)
+
+    @abstractmethod
+    async def add(
+        self,
+        record: OperationRecord,
+        on_conflict: OnConflictDoEnum = OnConflictDoEnum.RAISE,
+    ) -> None: ...
 
     @abstractmethod
     async def exists(
