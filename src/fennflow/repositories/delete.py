@@ -33,22 +33,11 @@ class DeleteRepository(AtRepository):
         if operation is None or not operation.is_visible(self._uow._session_id):
             return False
 
-        context = DeleteContext(
-            to_storage_path=self._join_path(
-                "tmp",
-                f"session_id_{operation.session_id}",
-                f"operation_id_{operation.session_id}",
-                self._path,
-                path,
-            ),
-            to_namespace=self.repo_extra["namespace"],
-        )
-
         operation = OperationRecord(
             operation_type=OperationTypeEnum.DELETE,
             status=OperationStatusEnum.PENDING,
             storage_path=operation.storage_path,
-            context=context,
+            context=self.__get_context(operation=operation),
             session_id=self._uow._session_id,
             repo_extra=self.repo_extra,
         )
