@@ -67,6 +67,7 @@ nav:
   - index.md
   - Installation: install.md
   - Getting Help: help.md
+  - Overview: overview.md
   - Core Concepts:
       - Uow: core_concepts/uow.md
       - Connectors: core_concepts/connectors.md
