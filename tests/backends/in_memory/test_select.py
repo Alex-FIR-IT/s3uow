@@ -12,15 +12,15 @@ from fennflow.backends import InMemoryBackendConfig
 from fennflow.connectors import InMemoryConnectorConfig
 from fennflow.files import TextContent
 from fennflow.repositories import (
+    CreateRepository,
     DeleteRepository,
     GetRepository,
-    PutRepository,
     RepoField,
 )
 
 
 class UserFiles(
-    PutRepository,
+    CreateRepository,
     DeleteRepository,
     GetRepository,
 ):
@@ -53,7 +53,7 @@ def make_record(**kwargs) -> OperationRecord:
         "session_id": uuid.uuid4(),
         "storage_path": "folder1/file.txt",
         "repo_extra": {},
-        "operation_type": OperationTypeEnum.PUT,
+        "operation_type": OperationTypeEnum.CREATE,
         "context": {},
         "status": OperationStatusEnum.PENDING,
     }
@@ -71,7 +71,7 @@ def inject(uow, storage_path: str, record: OperationRecord) -> None:
 @pytest.mark.asyncio
 async def test_status_pending_before_commit(uow_cls):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(TextContent.from_content("Hello"))
+        await uow.user_files.at("folder1/").create(TextContent.from_content("Hello"))
 
         page = await uow.backend.select(status=OperationStatusEnum.PENDING)
         assert len(page.operations) == 1
@@ -81,7 +81,7 @@ async def test_status_pending_before_commit(uow_cls):
 @pytest.mark.asyncio
 async def test_status_uploaded_after_commit(uow_cls):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(TextContent.from_content("Hello"))
+        await uow.user_files.at("folder1/").create(TextContent.from_content("Hello"))
         await uow.commit()
 
         page = await uow.backend.select(status=OperationStatusEnum.UPLOADED)
@@ -95,8 +95,8 @@ async def test_status_uploaded_after_commit(uow_cls):
 @pytest.mark.asyncio
 async def test_prefix_filter(uow_cls):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(TextContent.from_content("a"))
-        await uow.user_files.at("folder2/").put(TextContent.from_content("b"))
+        await uow.user_files.at("folder1/").create(TextContent.from_content("a"))
+        await uow.user_files.at("folder2/").create(TextContent.from_content("b"))
 
         page = await uow.backend.select(prefix="folder1/")
         assert len(page.operations) == 1
@@ -109,10 +109,10 @@ async def test_prefix_filter(uow_cls):
 @pytest.mark.asyncio
 async def test_prefix_and_status_combined(uow_cls):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(TextContent.from_content("a"))
-        await uow.user_files.at("folder2/").put(TextContent.from_content("b"))
+        await uow.user_files.at("folder1/").create(TextContent.from_content("a"))
+        await uow.user_files.at("folder2/").create(TextContent.from_content("b"))
         await uow.commit()
-        await uow.user_files.at("folder1/").put(TextContent.from_content("c"))
+        await uow.user_files.at("folder1/").create(TextContent.from_content("c"))
 
         page = await uow.backend.select(
             prefix="folder1/", status=OperationStatusEnum.PENDING
@@ -176,7 +176,7 @@ async def test_is_expired(uow_cls):
 async def test_results_ordered_by_created_at(uow_cls):
     async with uow_cls() as uow:
         for i in range(4):
-            await uow.user_files.at("folder1/").put(
+            await uow.user_files.at("folder1/").create(
                 TextContent.from_content(f"file{i}")
             )
 
@@ -192,7 +192,7 @@ async def test_results_ordered_by_created_at(uow_cls):
 async def test_pagination_limit(uow_cls):
     async with uow_cls() as uow:
         for i in range(5):
-            await uow.user_files.at("folder1/").put(
+            await uow.user_files.at("folder1/").create(
                 TextContent.from_content(f"file{i}")
             )
 
@@ -205,7 +205,7 @@ async def test_pagination_limit(uow_cls):
 async def test_pagination_continuation_token_no_overlap(uow_cls):
     async with uow_cls() as uow:
         for i in range(5):
-            await uow.user_files.at("folder1/").put(
+            await uow.user_files.at("folder1/").create(
                 TextContent.from_content(f"file{i}")
             )
 
@@ -223,7 +223,7 @@ async def test_pagination_continuation_token_no_overlap(uow_cls):
 async def test_pagination_all_pages_cover_all_records(uow_cls):
     async with uow_cls() as uow:
         for i in range(5):
-            await uow.user_files.at("folder1/").put(
+            await uow.user_files.at("folder1/").create(
                 TextContent.from_content(f"file{i}")
             )
 
@@ -245,7 +245,7 @@ async def test_pagination_all_pages_cover_all_records(uow_cls):
 async def test_limit_equals_total_records_no_token(uow_cls):
     async with uow_cls() as uow:
         for i in range(3):
-            await uow.user_files.at("folder1/").put(
+            await uow.user_files.at("folder1/").create(
                 TextContent.from_content(f"file{i}")
             )
 
@@ -258,7 +258,7 @@ async def test_limit_equals_total_records_no_token(uow_cls):
 async def test_continuation_token_on_last_record_returns_no_token(uow_cls):
     async with uow_cls() as uow:
         for i in range(3):
-            await uow.user_files.at("folder1/").put(
+            await uow.user_files.at("folder1/").create(
                 TextContent.from_content(f"file{i}")
             )
 
@@ -273,7 +273,7 @@ async def test_continuation_token_on_last_record_returns_no_token(uow_cls):
 async def test_pagination_token_works_after_status_change(uow_cls):
     async with uow_cls() as uow:
         for i in range(4):
-            await uow.user_files.at("folder1/").put(
+            await uow.user_files.at("folder1/").create(
                 TextContent.from_content(f"file{i}")
             )
 

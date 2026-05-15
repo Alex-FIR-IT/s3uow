@@ -34,7 +34,7 @@ Unit of Work pattern, providing:
 
 - **Atomic-like multistep operations** — if something fails, previous actions are automatically compensated (Saga
   Pattern).
-- **Clean Architecture** — treat S3 as proper repositories using mixins (`PutRepository`, `GetRepository`, etc.).
+- **Clean Architecture** — treat S3 as proper repositories using mixins (`CreateRepository`, `GetRepository`, etc.).
 - **Pydantic-powered models** — work with `TextContent`, `JsonContent`, `ImageContent` and others instead of raw bytes.
 
 ## Supported Connectors
@@ -79,14 +79,14 @@ from fennflow.repositories import (
     DeleteRepository,
     GetRepository,
     ListRepository,
-    PutRepository,
+    CreateRepository,
     S3RepoField,
     )
 
 
 # 1. Define your repository with mixins
 class CrudRepository(
-    PutRepository,
+    CreateRepository,
     DeleteRepository,
     GetRepository,
     ListRepository,

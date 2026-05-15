@@ -15,7 +15,7 @@ def text_files():
 @pytest.mark.asyncio
 async def test_list_returns_empty_before_commit(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(text_files[0])
+        await uow.user_files.at("folder1/").create(text_files[0])
 
         async with uow_cls() as other_uow:
             result = await other_uow.user_files.at("").list("folder1/")
@@ -25,7 +25,7 @@ async def test_list_returns_empty_before_commit(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_list_returns_pending_within_same_session(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(text_files[0])
+        await uow.user_files.at("folder1/").create(text_files[0])
 
         result = await uow.user_files.at("").list("folder1/")
         assert len(result) == 1
@@ -34,7 +34,7 @@ async def test_list_returns_pending_within_same_session(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_list_returns_uploaded_after_commit(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(text_files[0])
+        await uow.user_files.at("folder1/").create(text_files[0])
         await uow.commit()
 
         result = await uow.user_files.at("").list("folder1/")
@@ -44,7 +44,7 @@ async def test_list_returns_uploaded_after_commit(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_list_uploaded_visible_to_other_session(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(text_files[0])
+        await uow.user_files.at("folder1/").create(text_files[0])
         await uow.commit()
 
     async with uow_cls() as other_uow:
@@ -58,8 +58,8 @@ async def test_list_uploaded_visible_to_other_session(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_list_filters_by_prefix(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(text_files[0])
-        await uow.user_files.at("folder2/").put(text_files[1])
+        await uow.user_files.at("folder1/").create(text_files[0])
+        await uow.user_files.at("folder2/").create(text_files[1])
         await uow.commit()
 
         result = await uow.user_files.at("").list("folder1/")
@@ -73,7 +73,7 @@ async def test_list_filters_by_prefix(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_list_pagination_limit(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(*text_files)
+        await uow.user_files.at("folder1/").create(*text_files)
         await uow.commit()
 
         result = await uow.user_files.at("").list("folder1/", limit=2)
@@ -84,7 +84,7 @@ async def test_list_pagination_limit(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_list_pagination_no_overlap(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(*text_files)
+        await uow.user_files.at("folder1/").create(*text_files)
         await uow.commit()
 
         page1 = await uow.user_files.at("").list("folder1/", limit=2)
@@ -100,7 +100,7 @@ async def test_list_pagination_no_overlap(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_list_pagination_covers_all(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(*text_files)
+        await uow.user_files.at("folder1/").create(*text_files)
         await uow.commit()
 
         all_storage_paths = set()
@@ -120,7 +120,7 @@ async def test_list_pagination_covers_all(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_list_limit_equals_total_no_token(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(*text_files)
+        await uow.user_files.at("folder1/").create(*text_files)
         await uow.commit()
 
         result = await uow.user_files.at("").list("folder1/", limit=len(text_files))
@@ -142,7 +142,7 @@ async def test_list_empty_folder(uow_cls):
 @pytest.mark.asyncio
 async def test_list_does_not_return_deleted(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(text_files[0])
+        await uow.user_files.at("folder1/").create(text_files[0])
         await uow.commit()
         await uow.user_files.at("folder1/").delete(text_files[0].filename)
         await uow.commit()
@@ -154,7 +154,7 @@ async def test_list_does_not_return_deleted(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_list_pending_from_other_session_not_visible(uow_cls, text_files):
     async with uow_cls() as session_a:
-        await session_a.user_files.at("folder1/").put(text_files[0])  # not committed
+        await session_a.user_files.at("folder1/").create(text_files[0])  # not committed
 
         async with uow_cls() as session_b:
             result = await session_b.user_files.at("").list("folder1/")
@@ -164,7 +164,7 @@ async def test_list_pending_from_other_session_not_visible(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_list_partial_return_after_delete(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("folder1/").put(*text_files)
+        await uow.user_files.at("folder1/").create(*text_files)
         await uow.commit()
         await uow.user_files.at("folder1/").delete(text_files[0].filename)
         result = await uow.user_files.at("folder1/").list()

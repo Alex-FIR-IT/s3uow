@@ -6,8 +6,10 @@ from collections import defaultdict
 from itertools import islice
 from typing import TYPE_CHECKING, Any
 
+from fennflow._decorators import reraise_with
 from fennflow._sentinel import OMIT, Omittable
 from fennflow.connectors.abstract import AbstractConnector
+from fennflow.connectors.exceptions import NoSuchKeyException
 from fennflow.files import ContentFactory
 from fennflow.files.responses.base import MediaResponse
 from fennflow.files.responses.list import ListResponse
@@ -103,6 +105,7 @@ class InMemoryConnector(AbstractConnector):
     ):
         self.storage[repo_extra["namespace"]].pop(storage_path, None)
 
+    @reraise_with(NoSuchKeyException(), catch=KeyError)
     async def copy_object(
         self,
         repo_extra: RepoExtra,
@@ -111,9 +114,8 @@ class InMemoryConnector(AbstractConnector):
         to_namespace: Namespace,
         **extra: dict[Any, Any],  # noqa: ARG002
     ):
-        file = self.storage[repo_extra["namespace"]].get(from_storage_path)
-        if file:
-            self.storage[to_namespace][to_storage_path] = file
+        file = self.storage[repo_extra["namespace"]][from_storage_path]
+        self.storage[to_namespace][to_storage_path] = file
 
     @classmethod
     def drop_all(cls) -> None:

@@ -6,7 +6,7 @@ from fennflow._operations.enums import OperationStatusEnum
 @pytest.mark.asyncio
 async def test_manual_rollback(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("user/").put(*text_files)
+        await uow.user_files.at("user/").create(*text_files)
         await uow.rollback()
 
     async with uow_cls() as uow:
@@ -19,7 +19,7 @@ async def test_manual_rollback(uow_cls, text_files):
 async def test_rollback_on_exception(uow_cls, text_files):
     try:
         async with uow_cls() as uow:
-            await uow.user_files.at("user/").put(*text_files)
+            await uow.user_files.at("user/").create(*text_files)
 
             raise RuntimeError("boom")
 
@@ -36,7 +36,7 @@ async def test_rollback_on_exception(uow_cls, text_files):
 async def test_backend_marks_failed_after_rollback(uow_cls, text_files):
     try:
         async with uow_cls() as uow:
-            await uow.user_files.at("user/").put(*text_files)
+            await uow.user_files.at("user/").create(*text_files)
             raise RuntimeError("boom")
     except RuntimeError:
         pass

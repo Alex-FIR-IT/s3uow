@@ -1,59 +1,107 @@
-import asyncio
+from copy import deepcopy
 
 import pytest
 
-from fennflow.backends.exceptions import RecordAlreadyExistsException
+from fennflow.files import TextContent
+from fennflow.repositories.exceptions import FilepathsCollisionError
 
 
 @pytest.mark.asyncio
-async def test_put_same_file_twice_raises(uow_cls, text_files):
-    async with uow_cls() as uow:
-        await uow.user_files.at("user/").put(text_files[0])
-        with pytest.raises(RecordAlreadyExistsException):
-            await uow.user_files.at("user/").put(text_files[0])
-
-    async with uow_cls() as uow:
-        with pytest.raises(RecordAlreadyExistsException):
-            await uow.user_files.at("user/").put(text_files[0])
-
-
-@pytest.mark.asyncio
-async def test_put_same_file_twice_in_different_sessions_raises(uow_cls, text_files):
+async def test_simple_put(uow_cls, text_files):
     async with uow_cls() as uow:
         await uow.user_files.at("user/").put(text_files[0])
 
-    async with uow_cls() as uow:
-        with pytest.raises(RecordAlreadyExistsException):
-            await uow.user_files.at("user/").put(text_files[0])
+        response = await uow.user_files.at("user/").get(text_files[0].filename)
+        print("TYPES:", type(response[0]), type(text_files[0]))
+        print("DIFFERENCE:", response[0].model_dump() == text_files[0].model_dump())
+        assert response[0].data == text_files[0].data
 
 
 @pytest.mark.asyncio
-async def test_concurrent_put_same_file_raises(uow_cls, text_files):
-    # two UoWs trying to put the same storage_path simultaneously
-    # one should win, one should raise
-    async with uow_cls() as uow1, uow_cls() as uow2:
-        results = await asyncio.gather(
-            uow1.user_files.at("user/").put(text_files[0]),
-            uow2.user_files.at("user/").put(text_files[0]),
-            return_exceptions=True,
+async def test_upsert(uow_cls, text_files):
+    async with uow_cls() as uow:
+        await uow.user_files.at("user/").put(text_files[0])
+
+        another_file = deepcopy(text_files[0])
+        another_file.data = b"another_file_data"
+        await uow.user_files.at("user/").put(another_file)
+
+        response = await uow.user_files.at("user/").get(another_file.filename)
+        response2 = await uow.user_files.at("user/").get(text_files[0].filename)
+
+        assert response[0].data != text_files[0].data
+        assert response[0].data == another_file.data
+        assert response == response2
+
+
+@pytest.mark.asyncio
+async def test_upsert_last_file_is_saved(uow_cls):
+    async with uow_cls() as uow:
+        files = []
+        filename = "text.txt"
+        for index in range(100):
+            files.append(
+                TextContent.from_content(
+                    f"{index}",
+                    filename=filename,
+                )
+            )
+        for file in files:
+            await uow.user_files.at("user/").put(file)
+
+        response = await uow.user_files.at("user/").get(filename)
+
+        assert response[0].data == files[-1].data
+
+
+@pytest.mark.asyncio
+async def test_upsert_rollback_returned_original_file(uow_cls):
+    async with uow_cls() as uow:
+        files = []
+        filename = "text.txt"
+        for index in range(100):
+            files.append(
+                TextContent.from_content(
+                    f"{index}",
+                    filename=filename,
+                )
+            )
+        original_file = TextContent.from_content(
+            data="orignal_file_data",
+            filename=filename,
         )
-        assert any(isinstance(r, RecordAlreadyExistsException) for r in results)
+        await uow.user_files.at("user/").put(original_file)
+        await uow.commit()
 
-    async with uow_cls() as uow:
-        assert len(uow.backend.storage[uow.backend._config.scope]) == 1
+        for file in files:
+            await uow.user_files.at("user/").put(file)
+
+        response = await uow.user_files.at("user/").get(filename)
+        assert response[0].data == files[-1].data
+        assert response[0].data != original_file.data
+
+        await uow.rollback()
+
+        response = await uow.user_files.at("user/").get(filename)
+        assert response[0].data != files[-1].data
+        assert response[0].data == original_file.data
 
 
 @pytest.mark.asyncio
-async def test_put_empty_files_list(uow_cls):
+async def test_put_multiply_files_with_same_name_raises(uow_cls):
     async with uow_cls() as uow:
-        await uow.user_files.at("user/").put()  # no files
+        files = []
+        filename = "text.txt"
+        for index in range(100):
+            files.append(
+                TextContent.from_content(
+                    f"{index}",
+                    filename=filename,
+                )
+            )
+        with pytest.raises(FilepathsCollisionError):
+            await uow.user_files.at("user/").put(*files)
 
+        response = await uow.user_files.at("user/").get(filename)
 
-@pytest.mark.asyncio
-async def test_put_multiple_files(uow_cls, text_files):
-    async with uow_cls() as uow:
-        await uow.user_files.at("user/").put(*text_files)
-
-        for file in text_files:
-            result = await uow.user_files.at("user/").get(file.filename)
-            assert result.media[0].data == file.data
+        assert len(response) == 0

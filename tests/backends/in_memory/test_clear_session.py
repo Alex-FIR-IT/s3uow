@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 async def test_operation_context_is_cleared_with_commit(uow_cls):
     async with uow_cls() as uow:
         for i in range(5):
-            await uow.user_files.at("folder1/").put(
+            await uow.user_files.at("folder1/").create(
                 TextContent.from_content(f"file{i}")
             )
 
@@ -33,7 +33,7 @@ async def test_operation_context_is_cleared_with_commit(uow_cls):
 async def test_operation_context_is_cleared_in_new_session(uow_cls):
     async with uow_cls() as uow:
         for i in range(5):
-            await uow.user_files.at("folder1/").put(
+            await uow.user_files.at("folder1/").create(
                 TextContent.from_content(f"file{i}")
             )
 

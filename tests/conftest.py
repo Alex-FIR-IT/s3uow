@@ -6,17 +6,19 @@ from fennflow.connectors import InMemoryConnector, InMemoryConnectorConfig
 from fennflow.files import TextContent
 from fennflow.reconciler._orchestrator import ReconcileOrchestrator
 from fennflow.repositories import (
+    CreateRepository,
     DeleteRepository,
     GetRepository,
-    PutRepository,
     RepoField,
 )
 from fennflow.repositories.list import ListRepository
+from fennflow.repositories.put import PutRepository
 from fennflow.uow import UnitOfWork
 
 
 class UserFiles(
     PutRepository,
+    CreateRepository,
     DeleteRepository,
     GetRepository,
     ListRepository,

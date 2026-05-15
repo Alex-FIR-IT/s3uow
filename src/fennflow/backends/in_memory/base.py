@@ -66,7 +66,20 @@ class InMemoryBackend(AbstractBackend):
     async def add(
         self,
         record: OperationRecord,
+        on_conflict: OnConflictDoEnum = OnConflictDoEnum.RAISE,
     ) -> None:
+        existing_record = self._operations.get(record.storage_path)
+
+        if existing_record is not None:
+            if on_conflict == OnConflictDoEnum.RAISE:
+                raise RecordAlreadyExistsException()
+            elif on_conflict == OnConflictDoEnum.DO_NOTHING:
+                return
+            elif on_conflict == OnConflictDoEnum.REPLACE:
+                self._operations[record.storage_path] = record
+            else:
+                raise AssertionError("Unhandled conflict strategy.")
+
         self._operations[record.storage_path] = record
 
     async def exists(
@@ -75,7 +88,7 @@ class InMemoryBackend(AbstractBackend):
     ) -> bool:
         return storage_path in self.storage[self._config.scope]
 
-    async def get_from_storage(
+    async def get_from_backend(
         self,
         storage_path: StoragePath,
     ) -> OperationRecord | None:
@@ -100,7 +113,10 @@ class InMemoryBackend(AbstractBackend):
         self,
         operation: OperationRecord,
     ) -> None:
-        if operation.operation_type == OperationTypeEnum.PUT:
+        if operation.operation_type in {
+            OperationTypeEnum.CREATE,
+            OperationTypeEnum.PUT,
+        }:
             operation.status = OperationStatusEnum.UPLOADED
         elif operation.operation_type == OperationTypeEnum.DELETE:
             operation.status = OperationStatusEnum.DELETED
@@ -143,7 +159,7 @@ class InMemoryBackend(AbstractBackend):
         self,
     ):
         for key, operation in self._operations.items():
-            storage_operation = await self.get_from_storage(
+            storage_operation = await self.get_from_backend(
                 storage_path=operation.storage_path,
             )
 

@@ -33,7 +33,7 @@ async def test_partial_put_failure_compensates_succeeded(
 
     with pytest.raises(RuntimeError, match="Simulated failure"):
         async with uow_cls() as uow:
-            await uow.user_files.at("user/").put(*text_files)
+            await uow.user_files.at("user/").create(*text_files)
 
     # verify failure actually happened
     assert put_count == 2, f"Expected 2 put attempts, got {put_count}"
@@ -79,7 +79,7 @@ async def test_partial_put_failure_compensates_deletes(
 
     with pytest.raises(RuntimeError, match="Simulated failure"):
         async with uow_cls() as uow:
-            await uow.user_files.at("user/").put(*text_files)
+            await uow.user_files.at("user/").create(*text_files)
 
     # verify failure actually happened
     assert put_count == 2, f"Expected 2 put attempts, got {put_count}"
@@ -107,7 +107,7 @@ async def test_file_recovery_after_deleting_on_rollback(
     text_files,
 ):
     async with uow_cls() as uow:
-        await uow.user_files.at("user/").put(text_files[0])
+        await uow.user_files.at("user/").create(text_files[0])
 
     async with uow_cls(auto_commit=False) as uow:
         get_response = await uow.user_files.at("user/").get(text_files[0].filename)
