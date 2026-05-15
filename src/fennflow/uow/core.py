@@ -195,9 +195,9 @@ class UnitOfWork:
                 finalize_operations.append(operation)
 
         await self.backend.flush()
-        await self.backend.clear_session()
 
         await self._finalize_operations(finalize_operations)
+        await self.backend.clear_session()
 
     async def _cleanup(self) -> None:
         await asyncio.gather(
