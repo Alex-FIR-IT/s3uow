@@ -4,9 +4,12 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from aiobotocore.session import get_session
+from botocore.exceptions import ClientError
 
+from fennflow._decorators import reraise_with
 from fennflow._sentinel import OMIT, Omittable
 from fennflow.connectors.abstract import AbstractConnector
+from fennflow.connectors.exceptions import NoSuchKeyException
 from fennflow.connectors.s3.client import S3Client
 from fennflow.files import ContentFactory
 from fennflow.files.responses.base import MediaResponse
@@ -136,6 +139,12 @@ class S3Connector(AbstractConnector[S3Extra]):
         )
         logger.debug(f"file with {storage_path=} deleted from {bucket_name=}")
 
+    @reraise_with(
+        NoSuchKeyException(),
+        catch=lambda e: (
+            isinstance(e, ClientError) and e.response["Error"]["Code"] == "NoSuchKey"
+        ),
+    )
     async def copy_object(
         self,
         repo_extra: S3Extra,
