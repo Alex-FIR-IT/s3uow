@@ -12,10 +12,12 @@ from fennflow.repositories import (
     RepoField,
 )
 from fennflow.repositories.list import ListRepository
+from fennflow.repositories.put import PutRepository
 from fennflow.uow import UnitOfWork
 
 
 class UserFiles(
+    PutRepository,
     CreateRepository,
     DeleteRepository,
     GetRepository,
