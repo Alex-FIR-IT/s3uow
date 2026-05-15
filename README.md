@@ -79,14 +79,14 @@ from fennflow.repositories import (
     DeleteRepository,
     GetRepository,
     ListRepository,
-    CreateRepository,
+    PutRepository,
     S3RepoField,
     )
 
 
 # 1. Define your repository with mixins
 class CrudRepository(
-    CreateRepository,
+    PutRepository,
     DeleteRepository,
     GetRepository,
     ListRepository,

@@ -9,7 +9,7 @@ FennFlow uses a mixin pattern. You compose a repository class from the capabilit
 
 ```python
 from fennflow.repositories import (
-    CreateRepository,
+    PutRepository,
     GetRepository,
     DeleteRepository,
     ListRepository,
@@ -17,7 +17,7 @@ from fennflow.repositories import (
 
 
 class CrudRepository(
-    CreateRepository,
+    PutRepository,
     DeleteRepository,
     GetRepository,
     ListRepository,
@@ -29,10 +29,11 @@ Available mixins:
 
 | Mixin              | Operation                            | Participates in Saga |
 |--------------------|--------------------------------------|----------------------|
-| `CreateRepository` | Upload one or more files             | Yes                  |
+| `PutRepository`    | Upsert one or more files             | Yes                  |
 | `GetRepository`    | Download one or more files           | No (read-only)       |
 | `DeleteRepository` | Delete a file                        | Yes                  |
 | `ListRepository`   | List files by prefix with pagination | No (read-only)       |
+| `CreateRepository` | Upload one or more files             | Yes                  |
 
 Read-only operations (such as `GetRepository` and `ListRepository`) consult the backend before touching storage. If the
 backend has no record of a file, no network request is made.

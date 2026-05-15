@@ -17,15 +17,15 @@ if TYPE_CHECKING:
 
 
 class PutRepository(AtRepository, ValidateDuplicatesMixin):
-    """Repository for uploading (creating) files in the storage.
+    """Repository for upserting files in the storage.
 
-    This repository implements the "create" operation, which uploads new files
+    This repository implements the "put" operation, which uploads new files
     to the configured storage (e.g. S3) within the current Unit of Work.
 
     **Example**::
 
         file1 = TextContent.from_content("This is the first file.")
-        await uow.user_files.at("user1/").create(file1)
+        await uow.user_files.at("user1/").put(file1)
 
     **Behavior**:
 
@@ -34,7 +34,8 @@ class PutRepository(AtRepository, ValidateDuplicatesMixin):
     - Backend commit is executed on uow.commit
 
     **Raises**:
-        FileAlreadyExistError: If a file with the same path already exists in a backend
+        FilepathsCollisionError:
+            If files with the same filepath are passed
 
     """
 
