@@ -21,6 +21,8 @@
 
 ---
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e62886e189fc4107ae00579ae9f3cc6e)](https://app.codacy.com/gh/Alex-FIR-IT/FennFlow?utm_source=github.com&utm_medium=referral&utm_content=Alex-FIR-IT/FennFlow&utm_campaign=Badge_Grade)
+
 **Documentation**: [📖 Docs](https://alex-fir-it.github.io/FennFlow/)
 
 ---
