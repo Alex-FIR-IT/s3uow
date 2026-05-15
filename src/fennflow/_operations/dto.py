@@ -9,6 +9,7 @@ from uuid import UUID
 from fennflow._datetime import now
 from fennflow._operations.context.abstract import BaseContext
 from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
+from fennflow._operations.tmp_path_builder import TmpPathBuilder
 from fennflow._sentinel import NOT_GIVEN
 
 if TYPE_CHECKING:
@@ -84,3 +85,10 @@ class OperationRecord:
             OperationTypeEnum.CREATE,
             OperationTypeEnum.PUT,
         }
+
+    @property
+    def is_put_type(self) -> bool:
+        return self.operation_type == OperationTypeEnum.PUT
+
+    def generate_tmp_path(self) -> StoragePath:
+        return TmpPathBuilder.from_operation(self)
