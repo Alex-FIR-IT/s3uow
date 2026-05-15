@@ -13,12 +13,14 @@ __all__ = [
     "NoSuchKeyException",
     "ReconcileFailedException",
     "RecordAlreadyExistsException",
+    "RecordLockedException",
     "StoragePrefixIsNoneException",
 ]
 from fennflow._base_exception import FennFlowException
 from fennflow.backends.exceptions import (
     BaseBackendException,
     RecordAlreadyExistsException,
+    RecordLockedException,
 )
 from fennflow.connectors.exceptions import BaseConnectorException, NoSuchKeyException
 from fennflow.files.exceptions import (

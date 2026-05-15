@@ -65,3 +65,11 @@ async def test_create_file_multiple_times(uow_cls, text_files):
     async with uow_cls() as uow:
         with pytest.raises(FilepathsCollisionError):
             await uow.user_files.at("user/").create(text_files[0], text_files[0])
+
+
+# @pytest.mark.asyncio
+# async def test_create_files_after_rollback(uow_cls, text_files):
+#     async with uow_cls() as uow:
+#         await uow.user_files.at("user/").create(text_files[0])
+#         await uow.rollback()
+#         await uow.user_files.at("user/").create(text_files[0])
