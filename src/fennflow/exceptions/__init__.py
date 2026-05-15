@@ -1,12 +1,16 @@
 __all__ = [
     "BaseBackendException",
+    "BaseConnectorException",
+    "BaseRepositoryException",
     "CannotParseExtensionException",
     "ExtensionCannotBeGuessed",
     "FennFlowException",
     "FileException",
     "FileNameAndMediaTypeBothNoneException",
     "FilenameIsNoneException",
+    "FilepathsCollisionError",
     "MediaTypeCannotBeGuessedException",
+    "NoSuchKeyException",
     "ReconcileFailedException",
     "RecordAlreadyExistsException",
     "StoragePrefixIsNoneException",
@@ -16,6 +20,7 @@ from fennflow.backends.exceptions import (
     BaseBackendException,
     RecordAlreadyExistsException,
 )
+from fennflow.connectors.exceptions import BaseConnectorException, NoSuchKeyException
 from fennflow.files.exceptions import (
     CannotParseExtensionException,
     ExtensionCannotBeGuessed,
@@ -26,3 +31,7 @@ from fennflow.files.exceptions import (
     StoragePrefixIsNoneException,
 )
 from fennflow.reconciler.exceptions import ReconcileFailedException
+from fennflow.repositories.exceptions import (
+    BaseRepositoryException,
+    FilepathsCollisionError,
+)
