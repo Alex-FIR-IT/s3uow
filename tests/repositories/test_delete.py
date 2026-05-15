@@ -6,7 +6,7 @@ from fennflow.connectors import InMemoryConnector
 @pytest.mark.asyncio
 async def test_delete_removes_file(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("user/").put(*text_files)
+        await uow.user_files.at("user/").create(*text_files)
 
         await uow.user_files.at("user/").delete(text_files[0].filename)
 
@@ -20,7 +20,7 @@ async def test_delete_removes_file(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_delete_after_commit(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("user/").put(*text_files)
+        await uow.user_files.at("user/").create(*text_files)
         await uow.commit()
         await uow.user_files.at("user/").delete(text_files[0].filename)
 
@@ -46,7 +46,7 @@ async def test_delete_not_calling_connector_for_status_deleted(
     monkeypatch.setattr(InMemoryConnector, "delete", tracking_delete)
 
     async with uow_cls() as uow:
-        await uow.user_files.at("user/").put(*text_files)
+        await uow.user_files.at("user/").create(*text_files)
         await uow.user_files.at("user/").delete(text_files[0].filename)
         assert delete_count == 1
         await uow.user_files.at("user/").delete(text_files[0].filename)

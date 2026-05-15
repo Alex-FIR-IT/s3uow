@@ -14,7 +14,7 @@ async def test_get_non_existing_returns_empty(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_put_and_get(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.put(*text_files)
+        await uow.user_files.create(*text_files)
 
         result = await uow.user_files.get(text_files[0].filename)
 
@@ -30,7 +30,7 @@ async def test_put_and_get(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_get_several_files_at_once(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.put(*text_files)
+        await uow.user_files.create(*text_files)
 
         result = await uow.user_files.get(
             text_files[0].filename,
@@ -53,7 +53,7 @@ async def test_get_several_files_at_once(uow_cls, text_files):
 @pytest.mark.asyncio
 async def test_get_without_storage_paths(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.put(*text_files)
+        await uow.user_files.create(*text_files)
 
         result = await uow.user_files.get()
 
@@ -82,7 +82,7 @@ async def test_not_calling_connector_for_not_uploaded(
         assert len(response) == 0
         assert get_count == 0
 
-        await uow.user_files.put(*text_files)
+        await uow.user_files.create(*text_files)
 
         response = await uow.user_files.get(text_files[0].filename)
 

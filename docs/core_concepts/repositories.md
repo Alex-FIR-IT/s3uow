@@ -9,7 +9,7 @@ FennFlow uses a mixin pattern. You compose a repository class from the capabilit
 
 ```python
 from fennflow.repositories import (
-    PutRepository,
+    CreateRepository,
     GetRepository,
     DeleteRepository,
     ListRepository,
@@ -17,7 +17,7 @@ from fennflow.repositories import (
 
 
 class CrudRepository(
-    PutRepository,
+    CreateRepository,
     DeleteRepository,
     GetRepository,
     ListRepository,
@@ -29,7 +29,7 @@ Available mixins:
 
 | Mixin              | Operation                            | Participates in Saga |
 |--------------------|--------------------------------------|----------------------|
-| `PutRepository`    | Upload one or more files             | Yes                  |
+| `CreateRepository` | Upload one or more files             | Yes                  |
 | `GetRepository`    | Download one or more files           | No (read-only)       |
 | `DeleteRepository` | Delete a file                        | Yes                  |
 | `ListRepository`   | List files by prefix with pagination | No (read-only)       |

@@ -194,7 +194,7 @@ async def test_reconcile_on_non_empty_connector(
                 session_id=uuid4(),
                 storage_path=text_files[0].filename,
                 status=OperationStatusEnum.UPLOADED,
-                operation_type=OperationTypeEnum.PUT,
+                operation_type=OperationTypeEnum.CREATE,
                 repo_extra=TestUOW.user_files.repo_extra,
             )
         )

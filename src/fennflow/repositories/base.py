@@ -11,7 +11,7 @@ class BaseRepository:  # noqa: B903
     """Base class for all FennFlow repositories.
 
     Provides access to the UnitOfWork, current path, and connector configuration.
-    Not meant to be used directly — use mixins like PutRepository, GetRepository etc.
+    Not meant to be used directly — use mixins like CreateRepository, GetRepository etc.
 
     Args:
         uow: The UnitOfWork instance managing this repository's session.

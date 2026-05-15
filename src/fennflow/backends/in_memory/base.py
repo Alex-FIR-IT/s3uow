@@ -100,7 +100,10 @@ class InMemoryBackend(AbstractBackend):
         self,
         operation: OperationRecord,
     ) -> None:
-        if operation.operation_type == OperationTypeEnum.PUT:
+        if operation.operation_type in {
+            OperationTypeEnum.CREATE,
+            OperationTypeEnum.PUT,
+        }:
             operation.status = OperationStatusEnum.UPLOADED
         elif operation.operation_type == OperationTypeEnum.DELETE:
             operation.status = OperationStatusEnum.DELETED

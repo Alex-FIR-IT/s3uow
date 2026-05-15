@@ -7,7 +7,6 @@ from uuid import UUID
 from typing_extensions import Unpack
 
 from fennflow._datetime import now
-from fennflow._operations.enums import OperationStatusEnum, OperationTypeEnum
 from fennflow._sentinel import OMIT
 from fennflow.backends.abstract.annotations import SelectParams
 from fennflow.backends.responses import OperationPage
@@ -60,11 +59,11 @@ class SelectOperation:
             ),
             lambda record: (
                 self.kwargs["visible_for_session_id"] is OMIT
-                or record.status == OperationStatusEnum.UPLOADED
+                or record.is_uploaded
                 or (
-                    record.status == OperationStatusEnum.PENDING
+                    record.is_pending
                     and record.session_id == self.kwargs["visible_for_session_id"]
-                    and record.operation_type == OperationTypeEnum.PUT
+                    and record.is_upserting_type
                 )
             ),
         )

@@ -16,10 +16,10 @@ Subclass `UnitOfWork`, declare your repositories as class-level fields, and set 
 from fennflow import ConfigDict, UnitOfWork
 from fennflow.backends import InMemoryBackendConfig
 from fennflow.connectors import S3ConnectorConfig
-from fennflow.repositories import PutRepository, GetRepository, S3RepoField
+from fennflow.repositories import CreateRepository, GetRepository, S3RepoField
 
 
-class MyRepo(PutRepository, GetRepository):
+class MyRepo(CreateRepository, GetRepository):
     pass
 
 

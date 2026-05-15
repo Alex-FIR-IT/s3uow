@@ -6,35 +6,35 @@ from fennflow.backends.exceptions import RecordAlreadyExistsException
 
 
 @pytest.mark.asyncio
-async def test_put_same_file_twice_raises(uow_cls, text_files):
+async def test_create_same_file_twice_raises(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("user/").put(text_files[0])
+        await uow.user_files.at("user/").create(text_files[0])
         with pytest.raises(RecordAlreadyExistsException):
-            await uow.user_files.at("user/").put(text_files[0])
+            await uow.user_files.at("user/").create(text_files[0])
 
     async with uow_cls() as uow:
         with pytest.raises(RecordAlreadyExistsException):
-            await uow.user_files.at("user/").put(text_files[0])
+            await uow.user_files.at("user/").create(text_files[0])
 
 
 @pytest.mark.asyncio
-async def test_put_same_file_twice_in_different_sessions_raises(uow_cls, text_files):
+async def test_create_same_file_twice_in_different_sessions_raises(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("user/").put(text_files[0])
+        await uow.user_files.at("user/").create(text_files[0])
 
     async with uow_cls() as uow:
         with pytest.raises(RecordAlreadyExistsException):
-            await uow.user_files.at("user/").put(text_files[0])
+            await uow.user_files.at("user/").create(text_files[0])
 
 
 @pytest.mark.asyncio
-async def test_concurrent_put_same_file_raises(uow_cls, text_files):
-    # two UoWs trying to put the same storage_path simultaneously
+async def test_concurrent_create_same_file_raises(uow_cls, text_files):
+    # two UoWs trying to create the same storage_path simultaneously
     # one should win, one should raise
     async with uow_cls() as uow1, uow_cls() as uow2:
         results = await asyncio.gather(
-            uow1.user_files.at("user/").put(text_files[0]),
-            uow2.user_files.at("user/").put(text_files[0]),
+            uow1.user_files.at("user/").create(text_files[0]),
+            uow2.user_files.at("user/").create(text_files[0]),
             return_exceptions=True,
         )
         assert any(isinstance(r, RecordAlreadyExistsException) for r in results)
@@ -44,15 +44,15 @@ async def test_concurrent_put_same_file_raises(uow_cls, text_files):
 
 
 @pytest.mark.asyncio
-async def test_put_empty_files_list(uow_cls):
+async def test_create_empty_files_list(uow_cls):
     async with uow_cls() as uow:
-        await uow.user_files.at("user/").put()  # no files
+        await uow.user_files.at("user/").create()  # no files
 
 
 @pytest.mark.asyncio
-async def test_put_multiple_files(uow_cls, text_files):
+async def test_create_multiple_files(uow_cls, text_files):
     async with uow_cls() as uow:
-        await uow.user_files.at("user/").put(*text_files)
+        await uow.user_files.at("user/").create(*text_files)
 
         for file in text_files:
             result = await uow.user_files.at("user/").get(file.filename)

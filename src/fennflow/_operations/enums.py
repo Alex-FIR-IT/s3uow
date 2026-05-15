@@ -4,6 +4,7 @@ from enum import IntEnum, auto
 class OperationTypeEnum(IntEnum):
     """Enum for operation types."""
 
+    CREATE = auto()
     PUT = auto()
     GET = auto()
     DELETE = auto()

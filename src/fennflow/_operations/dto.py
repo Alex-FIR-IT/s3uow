@@ -75,5 +75,12 @@ class OperationRecord:
         return self.is_uploaded or (
             self.is_pending
             and self.session_id == requested_from_session_id
-            and self.operation_type == OperationTypeEnum.PUT
+            and self.is_upserting_type
         )
+
+    @property
+    def is_upserting_type(self) -> bool:
+        return self.operation_type in {
+            OperationTypeEnum.CREATE,
+            OperationTypeEnum.PUT,
+        }
