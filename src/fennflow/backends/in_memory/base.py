@@ -66,7 +66,20 @@ class InMemoryBackend(AbstractBackend):
     async def add(
         self,
         record: OperationRecord,
+        on_conflict: OnConflictDoEnum = OnConflictDoEnum.RAISE,
     ) -> None:
+        existing_record = self._operations.get(record.storage_path)
+
+        if existing_record is not None:
+            if on_conflict == OnConflictDoEnum.RAISE:
+                raise RecordAlreadyExistsException()
+            elif on_conflict == OnConflictDoEnum.DO_NOTHING:
+                return
+            elif on_conflict == OnConflictDoEnum.REPLACE:
+                self._operations[record.storage_path] = record
+            else:
+                raise AssertionError("Unhandled conflict strategy.")
+
         self._operations[record.storage_path] = record
 
     async def exists(
